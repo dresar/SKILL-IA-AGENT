@@ -15,7 +15,6 @@ import {
   Cpu
 } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";
-import { Logo } from "@/components/brand/logo";
 import { cn } from "@/lib/utils";
 
 interface AdminSidebarProps {
@@ -69,8 +68,10 @@ export function AdminSidebar({ pendingCount = 0 }: AdminSidebarProps) {
     <aside className="w-full md:w-64 shrink-0 border-b md:border-b-0 md:border-r border-slate-800/80 bg-slate-950/80 flex flex-col justify-between p-4 min-h-auto md:min-h-[calc(100vh-3.5rem)]">
       <div className="space-y-6">
         <div className="px-2 pt-1 flex items-center justify-between">
-          <Logo size="sm" />
-          <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">
+          <span className="text-xs font-mono font-semibold tracking-wider text-slate-300 uppercase">
+            Admin Menu
+          </span>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">
             v2.4
           </span>
         </div>

@@ -585,6 +585,232 @@ const FALLBACK_SKILLS = [
     ],
     showcases: [],
     assets: []
+  },
+  {
+    id: "sk-13",
+    slug: "seo-audit",
+    name: "SEO Audit Pro",
+    summary: "Technical SEO audit engine: analyzes Core Web Vitals, JSON-LD schema, sitemap indexing, and ranking factor signals.",
+    description: "Technical SEO auditing skill for autonomous AI coding agents covering Core Web Vitals, JSON-LD Schema.org, semantic H1-H4 cascades, and search crawler indexability.",
+    status: "published",
+    skillType: "workflows",
+    authorDisplay: "Corey Haines",
+    licenseSpdx: "MIT",
+    licenseUrl: "https://opensource.org/licenses/MIT",
+    sourceKind: "github",
+    sourceUrl: "https://github.com/coreyhaines31/marketingskills",
+    sourceOwner: "coreyhaines31",
+    sourceRepo: "marketingskills",
+    sourcePath: "skills/seo-audit",
+    verificationStatus: "verified",
+    featuredRank: 4,
+    publishedAt: new Date("2026-10-12"),
+    updatedAt: new Date("2026-10-12"),
+    categories: [{ id: "cat-5", slug: "workflows", name: "Workflows" }],
+    tags: [{ id: "tag-4", slug: "mcp", name: "MCP" }],
+    primaryRecipe: {
+      id: "rec-13",
+      target: "antigravity",
+      displayLabel: "Google Antigravity",
+      command: "npx skills add coreyhaines31/marketingskills@seo-audit -s seo-audit",
+      verificationStatus: "verified"
+    },
+    recipes: [
+      {
+        id: "rec-13-ag",
+        target: "antigravity",
+        displayLabel: "Google Antigravity",
+        command: "npx skills add coreyhaines31/marketingskills@seo-audit -s seo-audit",
+        sourceUrl: "https://github.com/coreyhaines31/marketingskills",
+        verificationStatus: "verified"
+      },
+      {
+        id: "rec-13-cl",
+        target: "claude",
+        displayLabel: "Claude Code",
+        command: "claude skill add coreyhaines31/marketingskills/skills/seo-audit",
+        sourceUrl: "https://github.com/coreyhaines31/marketingskills",
+        verificationStatus: "verified"
+      }
+    ],
+    showcases: [],
+    assets: []
+  },
+  {
+    id: "sk-14",
+    slug: "claude-seo",
+    name: "Claude SEO Master",
+    summary: "Algorithmic search engine optimization, programmatic content clustering, and query intent matching for Claude Code.",
+    description: "Deep algorithmic SEO optimization for Claude Code CLI and Anthropic agent workflows, with topical authority clustering, intent mapping, and keyword density calibration.",
+    status: "published",
+    skillType: "workflows",
+    authorDisplay: "Daniel Agrici",
+    licenseSpdx: "MIT",
+    licenseUrl: "https://opensource.org/licenses/MIT",
+    sourceKind: "github",
+    sourceUrl: "https://github.com/AgriciDaniel/claude-seo",
+    sourceOwner: "AgriciDaniel",
+    sourceRepo: "claude-seo",
+    sourcePath: "skills/claude-seo",
+    verificationStatus: "verified",
+    featuredRank: 5,
+    publishedAt: new Date("2026-10-12"),
+    updatedAt: new Date("2026-10-12"),
+    categories: [{ id: "cat-5", slug: "workflows", name: "Workflows" }],
+    tags: [{ id: "tag-4", slug: "mcp", name: "MCP" }],
+    primaryRecipe: {
+      id: "rec-14",
+      target: "claude",
+      displayLabel: "Claude Code",
+      command: "claude skill add AgriciDaniel/claude-seo",
+      verificationStatus: "verified"
+    },
+    recipes: [
+      {
+        id: "rec-14-cl",
+        target: "claude",
+        displayLabel: "Claude Code",
+        command: "claude skill add AgriciDaniel/claude-seo",
+        sourceUrl: "https://github.com/AgriciDaniel/claude-seo",
+        verificationStatus: "verified"
+      },
+      {
+        id: "rec-14-ag",
+        target: "antigravity",
+        displayLabel: "Google Antigravity",
+        command: "npx skills add AgriciDaniel/claude-seo -s claude-seo",
+        sourceUrl: "https://github.com/AgriciDaniel/claude-seo",
+        verificationStatus: "verified"
+      }
+    ],
+    showcases: [],
+    assets: []
+  },
+  {
+    id: "sk-15",
+    slug: "agent-browser",
+    name: "Agent Browser",
+    summary: "Headless Chromium automation layer, accessibility tree snapshotting, and authenticated action execution for agents.",
+    description: "Vercel Labs official browser interaction primitive for modern AI coding agents, providing accessibility trees, deterministic click/type actions, and DOM screen diffing.",
+    status: "published",
+    skillType: "workflows",
+    authorDisplay: "Vercel Labs",
+    licenseSpdx: "Apache-2.0",
+    licenseUrl: "https://www.apache.org/licenses/LICENSE-2.0",
+    sourceKind: "github",
+    sourceUrl: "https://github.com/vercel-labs/agent-browser",
+    sourceOwner: "vercel-labs",
+    sourceRepo: "agent-browser",
+    sourcePath: "skills/agent-browser",
+    verificationStatus: "verified",
+    featuredRank: 6,
+    publishedAt: new Date("2026-10-12"),
+    updatedAt: new Date("2026-10-12"),
+    categories: [{ id: "cat-5", slug: "workflows", name: "Workflows" }],
+    tags: [{ id: "tag-1", slug: "ui", name: "UI" }],
+    primaryRecipe: {
+      id: "rec-15",
+      target: "antigravity",
+      displayLabel: "Google Antigravity",
+      command: "npx skills add vercel-labs/agent-browser -s agent-browser",
+      verificationStatus: "verified"
+    },
+    recipes: [
+      {
+        id: "rec-15-ag",
+        target: "antigravity",
+        displayLabel: "Google Antigravity",
+        command: "npx skills add vercel-labs/agent-browser -s agent-browser",
+        sourceUrl: "https://github.com/vercel-labs/agent-browser",
+        verificationStatus: "verified"
+      }
+    ],
+    showcases: [],
+    assets: []
+  },
+  {
+    id: "sk-16",
+    slug: "linkly-social-buzz",
+    name: "Linkly Social Buzz",
+    summary: "Real-time viral AI skill telemetry, download rankings, and adoption scoring across ClawHub, Tencent SkillHub, and GitHub.",
+    description: "Official Linkly AI agent skill telemetry integration based on Linkly daily Top 100 benchmark, tracking viral velocity and platform adoption.",
+    status: "published",
+    skillType: "workflows",
+    authorDisplay: "Linkly AI",
+    licenseSpdx: "CC-BY-4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/4.0/",
+    sourceKind: "github",
+    sourceUrl: "https://github.com/LinklyAI/linkly-ai-skills",
+    sourceOwner: "LinklyAI",
+    sourceRepo: "linkly-ai-skills",
+    sourcePath: "skills/linkly-social-buzz",
+    verificationStatus: "verified",
+    featuredRank: 7,
+    publishedAt: new Date("2026-10-12"),
+    updatedAt: new Date("2026-10-12"),
+    categories: [{ id: "cat-5", slug: "workflows", name: "Workflows" }],
+    tags: [{ id: "tag-4", slug: "mcp", name: "MCP" }],
+    primaryRecipe: {
+      id: "rec-16",
+      target: "antigravity",
+      displayLabel: "Google Antigravity",
+      command: "npx skills add LinklyAI/linkly-ai-skills -s linkly-social-buzz",
+      verificationStatus: "verified"
+    },
+    recipes: [
+      {
+        id: "rec-16-ag",
+        target: "antigravity",
+        displayLabel: "Google Antigravity",
+        command: "npx skills add LinklyAI/linkly-ai-skills -s linkly-social-buzz",
+        sourceUrl: "https://github.com/LinklyAI/linkly-ai-skills",
+        verificationStatus: "verified"
+      }
+    ],
+    showcases: [],
+    assets: []
+  },
+  {
+    id: "sk-17",
+    slug: "agentskills-core",
+    name: "AgentSkills Core",
+    summary: "Official reference specification for deterministic multi-turn agent evaluation, state persistence, and rollback contracts.",
+    description: "Formal runtime standard from the AgentSkills organization defining strict contracts for AI agent tools, step determinism, and error rollbacks.",
+    status: "published",
+    skillType: "code-quality",
+    authorDisplay: "AgentSkills Core Team",
+    licenseSpdx: "MIT",
+    licenseUrl: "https://opensource.org/licenses/MIT",
+    sourceKind: "github",
+    sourceUrl: "https://github.com/agentskills/agentskills",
+    sourceOwner: "agentskills",
+    sourceRepo: "agentskills",
+    sourcePath: "skills/agentskills-core",
+    verificationStatus: "verified",
+    featuredRank: 8,
+    publishedAt: new Date("2026-10-12"),
+    updatedAt: new Date("2026-10-12"),
+    categories: [{ id: "cat-3", slug: "code-quality", name: "Code Quality" }],
+    tags: [{ id: "tag-3", slug: "clean-code", name: "Clean Code" }],
+    primaryRecipe: {
+      id: "rec-17",
+      target: "antigravity",
+      displayLabel: "Google Antigravity",
+      command: "npx skills add agentskills/agentskills -s agentskills-core",
+      verificationStatus: "verified"
+    },
+    recipes: [
+      {
+        id: "rec-17-ag",
+        target: "antigravity",
+        displayLabel: "Google Antigravity",
+        command: "npx skills add agentskills/agentskills -s agentskills-core",
+        sourceUrl: "https://github.com/agentskills/agentskills",
+        verificationStatus: "verified"
+      }
+    ],
+    showcases: [],
+    assets: []
   }
 ];
 

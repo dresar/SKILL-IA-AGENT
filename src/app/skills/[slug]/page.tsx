@@ -15,6 +15,7 @@ import { InstallBox } from "@/components/skills/install-box";
 import { ShowcaseViewer } from "@/components/skills/showcase-viewer";
 import { SkillSpecViewer } from "@/components/skills/skill-spec-viewer";
 import { SkillCard } from "@/components/skills/skill-card";
+import { LlmActionDropdown } from "@/components/common/llm-action-dropdown";
 import { Badge } from "@/components/ui/badge";
 import type { Metadata } from "next";
 import { formatDate } from "@/lib/utils";
@@ -231,18 +232,25 @@ export default async function SkillDetailPage({ params }: SkillDetailPageProps) 
               </div>
             )}
 
-            {skill.sourceUrl && (
-              <a
-                href={skill.sourceUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-accent hover:underline ml-auto"
-              >
-                <Github className="w-3.5 h-3.5" />
-                <span>Source</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
-            )}
+            <div className="ml-auto flex items-center gap-2">
+              <LlmActionDropdown
+                title={skill.name}
+                markdownContent={skill.description}
+                sourceUrl={skill.sourceUrl}
+              />
+              {skill.sourceUrl && (
+                <a
+                  href={skill.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-accent hover:underline text-xs"
+                >
+                  <Github className="w-3.5 h-3.5" />
+                  <span>Source</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              )}
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-1.5 pt-2">

@@ -12,6 +12,7 @@ import {
   Check
 } from "lucide-react";
 import { SkillCard, SkillCardData } from "./skill-card";
+import { HeroIntro } from "@/components/home/hero-intro";
 
 interface CategoryItem {
   id: string;
@@ -100,49 +101,38 @@ export function OnePageDirectory({
 
   return (
     <div className="space-y-12">
-      <section className="space-y-6 pt-2 pb-6 border-b border-border">
-        <div className="space-y-3 max-w-3xl">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-text-primary leading-[1.15]">
-            Katalog Skill & Protokol AI Agent
-          </h1>
+      <HeroIntro />
 
-          <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
-            Pusat instruksi runtime dan ekstensi untuk Google Antigravity, Claude Code, OpenCode, dan Aider. Pasang langsung via satu baris perintah CLI atau gunakan asisten AI untuk rekomendasi skill.
-          </p>
-        </div>
-
-        <div className="p-4 sm:p-5 rounded-xl border border-border bg-surface space-y-3.5 shadow-sm">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
-            <div className="relative flex-1">
-              <Sparkles className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-accent" />
-              <input
-                type="text"
-                value={aiPromptInput}
-                onChange={(e) => setAiPromptInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    handleAskAi();
-                  }
-                }}
-                placeholder="Tanyakan kebutuhan skill ke AI (contoh: desain ui minimalis, database neon, tdd)..."
-                className="h-11 w-full rounded-lg border border-border bg-background pl-10 pr-4 text-xs sm:text-sm text-text-primary placeholder:text-text-muted outline-none transition focus:border-accent focus:ring-1 focus:ring-accent"
-              />
-            </div>
-
-            <button
-              type="button"
-              onClick={() => handleAskAi()}
-              className="h-11 px-5 rounded-lg bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 shrink-0 active:scale-[0.98]"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-accent" />
-              <span>Tanya AI</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+      <div className="p-4 sm:p-5 rounded-xl border border-border bg-surface space-y-3.5 shadow-sm">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+          <div className="relative flex-1">
+            <Sparkles className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-accent" />
+            <input
+              type="text"
+              value={aiPromptInput}
+              onChange={(e) => setAiPromptInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleAskAi();
+                }
+              }}
+              placeholder="Tanyakan rekomendasi skill ke AI (contoh: SEO audit, desain UI minimalis, database Neon, TDD)..."
+              className="h-11 w-full rounded-lg border border-border bg-background pl-10 pr-4 text-xs sm:text-sm text-text-primary placeholder:text-text-muted outline-none transition focus:border-accent focus:ring-1 focus:ring-accent"
+            />
           </div>
 
+          <button
+            type="button"
+            onClick={() => handleAskAi()}
+            className="h-11 px-5 rounded-lg bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 shrink-0 active:scale-[0.98]"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-accent" />
+            <span>Tanya AI</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
         </div>
-      </section>
+      </div>
 
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">

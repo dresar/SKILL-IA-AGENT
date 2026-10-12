@@ -10,12 +10,13 @@ import {
   Sparkles,
   AlertCircle,
   Upload,
-  FileCode,
   Image as ImageIcon,
   CheckCircle2,
   HelpCircle,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  X,
+  Plus
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -27,8 +28,15 @@ const AGENT_PLATFORMS = [
   { id: "aider", label: "Aider AI" }
 ];
 
+interface UploadedImageItem {
+  id: string;
+  url: string;
+  name: string;
+}
+
 export default function SubmitSkillPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
 
   const [url, setUrl] = useState("");
   const [name, setName] = useState("");
@@ -36,7 +44,10 @@ export default function SubmitSkillPage() {
   const [category, setCategory] = useState("frontend");
   const [summary, setSummary] = useState("");
   const [skillMdContent, setSkillMdContent] = useState("");
-  const [previewImageUrl, setPreviewImageUrl] = useState("");
+
+  const [uploadedImages, setUploadedImages] = useState<UploadedImageItem[]>([]);
+  const [manualImageUrl, setManualImageUrl] = useState("");
+
   const [selectedTargets, setSelectedTargets] = useState<string[]>([
     "antigravity",
     "claude"
@@ -85,13 +96,73 @@ export default function SubmitSkillPage() {
     reader.readAsText(file);
   };
 
+  const handleImageFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const remainingSlots = 5 - uploadedImages.length;
+    if (remainingSlots <= 0) return;
+
+    const filesToProcess = Array.from(files).slice(0, remainingSlots);
+
+    filesToProcess.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64Url = event.target?.result as string;
+        if (base64Url) {
+          setUploadedImages((prev) => {
+            if (prev.length >= 5) return prev;
+            return [
+              ...prev,
+              {
+                id: `img-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+                url: base64Url,
+                name: file.name
+              }
+            ];
+          });
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+
+    if (imageInputRef.current) {
+      imageInputRef.current.value = "";
+    }
+  };
+
+  const handleAddManualImageUrl = () => {
+    if (!manualImageUrl.trim()) return;
+    if (uploadedImages.length >= 5) return;
+
+    setUploadedImages((prev) => [
+      ...prev,
+      {
+        id: `img-${Date.now()}`,
+        url: manualImageUrl.trim(),
+        name: "URL Image"
+      }
+    ]);
+    setManualImageUrl("");
+  };
+
+  const handleRemoveImage = (id: string) => {
+    setUploadedImages((prev) => prev.filter((img) => img.id !== id));
+  };
+
   const handleApplyTemplate = () => {
     setUrl("https://github.com/dresar/SKILL-IA-AGENT/tree/main/skills/tailwind-precision");
     setName("Tailwind Precision Standard");
     setAuthor("Antislop Design System");
     setCategory("frontend");
     setSummary("Aturan micro-design Tailwind: tombol non-pill compact 34px, border subtil 1px, typography tajam tanpa generic AI slop.");
-    setPreviewImageUrl("/previews/frontend-design.svg");
+    setUploadedImages([
+      {
+        id: "img-tpl-1",
+        url: "/previews/frontend-design.svg",
+        name: "frontend-design.svg"
+      }
+    ]);
     setSelectedTargets(["antigravity", "claude", "cursor", "opencode", "aider"]);
     setSkillMdContent(`---
 name: "Tailwind Precision Standard"
@@ -117,6 +188,9 @@ description: "Aturan micro-design Tailwind presisi tinggi."
     setResult(null);
 
     try {
+      const primaryPreview = uploadedImages[0]?.url || "";
+      const allPreviews = uploadedImages.map((i) => i.url);
+
       const res = await fetch("/api/skills/submit/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -127,7 +201,8 @@ description: "Aturan micro-design Tailwind presisi tinggi."
           category,
           description: summary.trim(),
           skillMdContent: skillMdContent.trim(),
-          previewImageUrl: previewImageUrl.trim(),
+          previewImageUrl: primaryPreview,
+          previewImages: allPreviews,
           targets: selectedTargets
         })
       });
@@ -144,7 +219,7 @@ description: "Aturan micro-design Tailwind presisi tinggi."
         setAuthor("");
         setSummary("");
         setSkillMdContent("");
-        setPreviewImageUrl("");
+        setUploadedImages([]);
       } else {
         setResult({
           ok: false,
@@ -217,6 +292,7 @@ description: "Aturan micro-design Tailwind presisi tinggi."
               <li><strong>YAML Frontmatter</strong>: Wajib menyertakan <code className="text-accent">name</code>, <code className="text-accent">author</code>, dan <code className="text-accent">description</code> di bagian paling atas diapit tanda <code>---</code>.</li>
               <li><strong>Instruksi Operasional</strong>: Jelaskan aturan kode, larangan (misal zero comments / anti-slop), dan batasan arsitektur.</li>
               <li><strong>Target Platform</strong>: Pilih kompatibilitas agent yang didukung (Google Antigravity, Claude Code, Cursor, OpenCode, Aider).</li>
+              <li><strong>Pratinjau Visual 1:1</strong>: Unggah hingga 5 gambar tampilan atau arsitektur rasio 1:1 untuk showcase detail skill.</li>
               <li><strong>Review Status</strong>: Setelah disubmit, skill akan otomatis masuk status <code className="text-amber-400">pending</code> untuk kurasi dan verifikasi syntax oleh tim kurator.</li>
             </ul>
           </div>
@@ -345,58 +421,111 @@ description: "Aturan micro-design Tailwind presisi tinggi."
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label htmlFor="skill-category" className="block text-xs font-semibold text-text-secondary">
-                  Kategori Utama
-                </label>
-                <select
-                  id="skill-category"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="h-10 w-full rounded-lg border border-border bg-background px-3 text-xs text-text-primary outline-none focus:border-accent"
-                >
-                  <option value="frontend">Design & UI/UX</option>
-                  <option value="code-quality">Code Quality & Zero Comments</option>
-                  <option value="database">Database & Serverless</option>
-                  <option value="workflows">Workflows & Multi-Agent</option>
-                  <option value="security">Security & Audit</option>
-                </select>
-              </div>
-
-              <div className="space-y-1.5">
-                <label htmlFor="skill-preview" className="block text-xs font-semibold text-text-secondary">
-                  URL Preview Image (Rasio 1:1)
-                </label>
-                <div className="relative">
-                  <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-                  <input
-                    id="skill-preview"
-                    type="text"
-                    value={previewImageUrl}
-                    onChange={(e) => setPreviewImageUrl(e.target.value)}
-                    placeholder="/previews/frontend-design.svg atau https://..."
-                    className="h-10 w-full rounded-lg border border-border bg-background pl-9 pr-3 text-xs text-text-primary placeholder:text-text-muted outline-none focus:border-accent"
-                  />
-                </div>
-              </div>
+            <div className="space-y-1.5">
+              <label htmlFor="skill-category" className="block text-xs font-semibold text-text-secondary">
+                Kategori Utama
+              </label>
+              <select
+                id="skill-category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="h-10 w-full rounded-lg border border-border bg-background px-3 text-xs text-text-primary outline-none focus:border-accent"
+              >
+                <option value="frontend">Design & UI/UX</option>
+                <option value="code-quality">Code Quality & Zero Comments</option>
+                <option value="database">Database & Serverless</option>
+                <option value="workflows">Workflows & Multi-Agent</option>
+                <option value="security">Security & Audit</option>
+              </select>
             </div>
 
-            {previewImageUrl && (
-              <div className="space-y-1.5">
-                <span className="block text-[11px] text-text-muted">Pratinjau Gambar 1:1</span>
-                <div className="aspect-square w-24 h-24 rounded-lg overflow-hidden border border-border bg-neutral-950 p-1">
-                  <img
-                    src={previewImageUrl}
-                    alt="Preview"
-                    className="w-full h-full object-cover rounded"
-                    onError={(e) => {
-                      (e.target as HTMLElement).style.display = "none";
-                    }}
-                  />
+            <div className="space-y-3 pt-2 border-t border-border/80">
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="block text-xs font-semibold text-text-secondary">
+                    Unggah Gambar Preview 1:1 (Maksimal 5)
+                  </label>
+                  <p className="text-[11px] text-text-muted">
+                    Format rasio 1:1 kotak (.png, .jpg, .svg, .webp). Gambar pertama akan menjadi thumbnail utama.
+                  </p>
                 </div>
+                <span className="text-xs font-mono text-accent">
+                  {uploadedImages.length} / 5
+                </span>
               </div>
-            )}
+
+              <div className="flex flex-wrap items-center gap-3">
+                <input
+                  type="file"
+                  ref={imageInputRef}
+                  accept="image/png,image/jpeg,image/svg+xml,image/webp"
+                  multiple
+                  onChange={handleImageFileSelect}
+                  className="hidden"
+                />
+
+                {uploadedImages.length < 5 && (
+                  <button
+                    type="button"
+                    onClick={() => imageInputRef.current?.click()}
+                    className="aspect-square w-24 h-24 rounded-xl border-2 border-dashed border-border hover:border-accent bg-background hover:bg-surface-raised flex flex-col items-center justify-center gap-1.5 text-text-muted hover:text-text-primary transition-all p-2"
+                  >
+                    <Plus className="w-5 h-5 text-accent" />
+                    <span className="text-[10px] font-medium text-center leading-tight">Pilih Gambar</span>
+                  </button>
+                )}
+
+                {uploadedImages.map((img, idx) => (
+                  <div
+                    key={img.id}
+                    className="relative aspect-square w-24 h-24 rounded-xl overflow-hidden border border-border bg-neutral-950 p-1 group shadow-sm"
+                  >
+                    <img
+                      src={img.url}
+                      alt={img.name}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                    <div className="absolute top-1.5 left-1.5">
+                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-neutral-950/80 text-white font-semibold">
+                        {idx === 0 ? "Utama" : `#${idx + 1}`}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(img.id)}
+                      className="absolute top-1.5 right-1.5 h-5 w-5 rounded-full bg-red-600/90 text-white flex items-center justify-center opacity-80 hover:opacity-100 transition shadow"
+                      title="Hapus gambar"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {uploadedImages.length < 5 && (
+                <div className="flex items-center gap-2 pt-1">
+                  <div className="relative flex-1">
+                    <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" />
+                    <input
+                      type="text"
+                      value={manualImageUrl}
+                      onChange={(e) => setManualImageUrl(e.target.value)}
+                      placeholder="Atau masukkan URL gambar langsung (https://...)"
+                      className="h-9 w-full rounded-lg border border-border bg-background pl-8 pr-3 text-xs text-text-primary placeholder:text-text-muted outline-none focus:border-accent"
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={handleAddManualImageUrl}
+                    className="h-9 text-xs shrink-0"
+                  >
+                    Tambah URL
+                  </Button>
+                </div>
+              )}
+            </div>
 
             <div className="space-y-2">
               <label className="block text-xs font-semibold text-text-secondary">

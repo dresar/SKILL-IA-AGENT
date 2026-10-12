@@ -90,16 +90,23 @@ export async function POST(request: NextRequest) {
           });
         }
 
-        if (cleanPreview) {
-          await db.insert(assets).values({
-            skillId: newSkill.id,
-            objectKey: `preview-${finalSlug}`,
-            publicUrl: cleanPreview,
-            mimeType: "image/svg+xml",
-            altText: `${cleanName} Preview`,
-            storageProvider: "url",
-            visibility: "public"
-          });
+        const imagesToInsert = Array.isArray(body.previewImages) && body.previewImages.length > 0
+          ? body.previewImages
+          : cleanPreview ? [cleanPreview] : [];
+
+        for (let i = 0; i < imagesToInsert.length; i++) {
+          const imgUrl = imagesToInsert[i];
+          if (imgUrl && typeof imgUrl === "string") {
+            await db.insert(assets).values({
+              skillId: newSkill.id,
+              objectKey: `preview-${finalSlug}-${i + 1}`,
+              publicUrl: imgUrl,
+              mimeType: imgUrl.startsWith("data:image/svg") ? "image/svg+xml" : imgUrl.startsWith("data:image/png") ? "image/png" : "image/jpeg",
+              altText: `${cleanName} Preview ${i + 1}`,
+              storageProvider: imgUrl.startsWith("data:") ? "base64" : "url",
+              visibility: "public"
+            });
+          }
         }
 
         const catRows = await db.select().from(categories).where(eq(categories.slug, cleanCat)).limit(1);

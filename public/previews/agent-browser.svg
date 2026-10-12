@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-agent-browser" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a101d" />
+      <stop offset="100%" stop-color="#030712" />
+    </linearGradient>
+    <linearGradient id="glow-agent-browser" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.2" />
+    </linearGradient>
+  </defs>
+  <rect width="500" height="500" rx="20" fill="url(#bg-agent-browser)" />
+  <circle cx="420" cy="80" r="140" fill="#3b82f6" opacity="0.12" />
+  <circle cx="80" cy="420" r="140" fill="#8b5cf6" opacity="0.1" />
+  <rect x="25" y="25" width="450" height="450" rx="16" fill="none" stroke="url(#glow-agent-browser)" stroke-width="1.5" />
+  
+  <rect x="45" y="50" width="110" height="24" rx="12" fill="#3b82f6" fill-opacity="0.18" stroke="#3b82f6" stroke-width="1" />
+  <text x="100" y="66" fill="#93c5fd" font-family="system-ui, sans-serif" font-size="11" font-weight="700" text-anchor="middle">VERCEL LABS</text>
+  
+  <text x="45" y="125" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="28" font-weight="800" letter-spacing="-0.5">Agent Browser</text>
+  <text x="45" y="152" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="12" font-weight="400">Headless navigation, DOM snapshot &amp; automation</text>
+  
+  <rect x="45" y="180" width="410" height="200" rx="12" fill="#000000" fill-opacity="0.6" stroke="#1e293b" stroke-width="1" />
+  <circle cx="68" cy="202" r="4" fill="#EF4444" />
+  <circle cx="82" cy="202" r="4" fill="#EAB308" />
+  <circle cx="96" cy="202" r="4" fill="#22C55E" />
+  <text x="115" y="206" fill="#64748B" font-family="monospace" font-size="10">agent-browser/runtime.sh</text>
+  
+  <text x="65" y="240" fill="#93c5fd" font-family="monospace" font-size="12">$ npx skills add vercel-labs/agent-browser</text>
+  <text x="65" y="270" fill="#60a5fa" font-family="monospace" font-size="11">✓ Headless Chromium Automation Layer</text>
+  <text x="65" y="295" fill="#a78bfa" font-family="monospace" font-size="11">✓ Semantic Accessibility Tree Extraction</text>
+  <text x="65" y="320" fill="#38bdf8" font-family="monospace" font-size="11">✓ Resilient Action Chains &amp; Screen Diffing</text>
+  <text x="65" y="350" fill="#94a3b8" font-family="monospace" font-size="10">Rank: #1 Trending Web Navigation Skill</text>
+
+  <rect x="45" y="405" width="410" height="40" rx="8" fill="#1e1b4b" fill-opacity="0.4" stroke="#3730a3" stroke-width="1" />
+  <text x="65" y="430" fill="#c7d2fe" font-family="monospace" font-size="11">Antigravity, Claude Code &amp; Cursor Ready</text>
+</svg>
