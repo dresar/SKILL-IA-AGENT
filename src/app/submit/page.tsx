@@ -23,7 +23,7 @@ export default function SubmitSkillPage() {
     setResult(null);
 
     try {
-      const res = await fetch("/api/skills/submit", {
+      const res = await fetch("/api/skills/submit/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

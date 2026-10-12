@@ -39,7 +39,7 @@ export default function AdminImportsPage() {
     setResult(null);
 
     try {
-      const res = await fetch("/api/admin/import", {
+      const res = await fetch("/api/admin/import/", {
         method: "POST",
         headers: adminHeaders,
         body: JSON.stringify({ url: url.trim() })

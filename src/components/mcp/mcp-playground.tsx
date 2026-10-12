@@ -59,7 +59,7 @@ export function McpPlayground() {
         parsed = JSON.parse(argsText);
       } catch {}
 
-      const res = await fetch("/api/mcp", {
+      const res = await fetch("/api/mcp/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

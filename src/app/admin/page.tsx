@@ -342,7 +342,7 @@ export default function AdminPage() {
     setAuditLogs([newAudit, ...auditLogs]);
 
     try {
-      await fetch("/api/admin/sync-github", {
+      await fetch("/api/admin/sync-github/", {
         method: "POST",
         headers: adminHeaders(),
         body: JSON.stringify({
@@ -410,7 +410,7 @@ export default function AdminPage() {
   const handleSyncAll = async () => {
     setFeedback("Menyinkronkan seluruh 12 skill ke folder skills/ di repositori...");
     try {
-      await fetch("/api/admin/sync-github", { headers: adminHeaders() });
+      await fetch("/api/admin/sync-github/", { headers: adminHeaders() });
       setTimeout(() => {
         setFeedback("Sinkronisasi repositori berhasil (folder skills & public/previews aktif).");
         setTimeout(() => setFeedback(null), 3000);
