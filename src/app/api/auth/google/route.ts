@@ -8,15 +8,16 @@ export async function GET(req: NextRequest) {
     const defaultSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://skills-smoky.vercel.app";
 
     if (!neonAuthUrl) {
-      return NextResponse.redirect(new URL("/login?error=neon_auth_unconfigured", req.url));
+      return NextResponse.redirect(new URL("/login/?error=neon_auth_unconfigured", req.url));
     }
 
     const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
     const proto = req.headers.get("x-forwarded-proto") || (host?.includes("localhost") ? "http" : "https");
     const origin = host ? `${proto}://${host}` : req.nextUrl.origin || defaultSiteUrl;
 
-    const redirectParam = req.nextUrl.searchParams.get("redirect") || "/";
-    const callbackURL = `${origin}/api/auth/callback/neon?redirect=${encodeURIComponent(redirectParam)}`;
+    const rawRedirect = req.nextUrl.searchParams.get("redirect") || "/";
+    const cleanRedirect = (rawRedirect.startsWith("/login") || rawRedirect.startsWith("/admin/login")) ? "/" : rawRedirect;
+    const callbackURL = `${origin}/api/auth/callback/neon/?redirect=${encodeURIComponent(cleanRedirect)}`;
 
     const res = await fetch(`${neonAuthUrl}/sign-in/social`, {
       method: "POST",
@@ -33,11 +34,18 @@ export async function GET(req: NextRequest) {
     const data = await res.json();
 
     if (data.url) {
-      return NextResponse.redirect(data.url);
+      const response = NextResponse.redirect(data.url);
+      response.cookies.set("skill_uiai_oauth_time", Date.now().toString(), {
+        path: "/",
+        maxAge: 600,
+        sameSite: "lax",
+        secure: proto === "https" || process.env.NODE_ENV === "production"
+      });
+      return response;
     }
 
-    return NextResponse.redirect(new URL("/login?error=oauth_init_failed", origin));
+    return NextResponse.redirect(new URL("/login/?error=oauth_init_failed", origin));
   } catch {
-    return NextResponse.redirect(new URL("/login?error=server_error", req.url));
+    return NextResponse.redirect(new URL("/login/?error=server_error", req.url));
   }
 }

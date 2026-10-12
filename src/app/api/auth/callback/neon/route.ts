@@ -3,7 +3,7 @@ import { pool } from "@/lib/db/client";
 import { profiles } from "@/lib/db/schema";
 import { db } from "@/lib/db/client";
 import { eq } from "drizzle-orm";
-import { ADMIN_ROLES, getAdminAccountByEmail } from "@/lib/auth/types";
+import { getAdminAccountByEmail, isAdminRole, UserRole } from "@/lib/auth/types";
 
 export const dynamic = "force-dynamic";
 
@@ -13,8 +13,9 @@ export async function GET(req: NextRequest) {
   const defaultSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://skills-smoky.vercel.app";
   const origin = host ? `${proto}://${host}` : req.nextUrl.origin || defaultSiteUrl;
 
-  const redirectParam = req.nextUrl.searchParams.get("redirect") || "/";
-  const safeRedirect = redirectParam.startsWith("/") ? redirectParam : "/";
+  const rawRedirect = req.nextUrl.searchParams.get("redirect") || "/";
+  const safeRedirect = rawRedirect.startsWith("/") ? rawRedirect : "/";
+  const clientIp = (req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "").trim();
 
   try {
     const query = `
@@ -23,6 +24,7 @@ export async function GET(req: NextRequest) {
         s.token as session_token,
         s."userId" as user_id,
         s."expiresAt" as expires_at,
+        s."ipAddress" as ip_address,
         u.id as u_id,
         u.name,
         u.email,
@@ -30,14 +32,17 @@ export async function GET(req: NextRequest) {
         u.role as user_role
       FROM neon_auth.session s
       JOIN neon_auth.user u ON s."userId" = u.id
-      ORDER BY s."createdAt" DESC
+      WHERE s."expiresAt" > NOW()
+      ORDER BY 
+        (CASE WHEN $1 <> '' AND s."ipAddress" = $1 THEN 0 ELSE 1 END),
+        s."createdAt" DESC
       LIMIT 1;
     `;
 
-    const result = await pool.query(query);
+    const result = await pool.query(query, [clientIp]);
 
     if (result.rows.length === 0) {
-      return NextResponse.redirect(new URL("/login?error=neon_session_not_found", origin));
+      return NextResponse.redirect(new URL("/login/?error=neon_session_not_found", origin));
     }
 
     const row = result.rows[0];
@@ -72,12 +77,17 @@ export async function GET(req: NextRequest) {
       provider: "google"
     };
 
-    const targetUrl = new URL(safeRedirect, origin);
+    let destination = safeRedirect;
+    if (destination.startsWith("/login") || destination.startsWith("/admin/login")) {
+      destination = isAdminRole(role) ? "/admin/" : "/";
+    }
+
+    const targetUrl = new URL(destination, origin);
     targetUrl.searchParams.set("auth_success", "true");
 
     const response = NextResponse.redirect(targetUrl);
     const maxAge = 60 * 60 * 24 * 7;
-    const isSecure = proto === "https";
+    const isSecure = proto === "https" || process.env.NODE_ENV === "production";
 
     response.cookies.set("skill_uiai_session", row.session_token || "", {
       path: "/",
@@ -109,6 +119,6 @@ export async function GET(req: NextRequest) {
 
     return response;
   } catch {
-    return NextResponse.redirect(new URL("/login?error=neon_callback_exception", origin));
+    return NextResponse.redirect(new URL("/login/?error=neon_callback_exception", origin));
   }
 }

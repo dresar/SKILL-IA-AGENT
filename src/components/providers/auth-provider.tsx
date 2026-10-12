@@ -199,8 +199,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loginWithGoogle = () => {
     if (typeof window !== "undefined") {
-      const redirectTarget = window.location.pathname + window.location.search;
-      window.location.href = `/api/auth/google/?redirect=${encodeURIComponent(redirectTarget)}`;
+      const params = new URLSearchParams(window.location.search);
+      const queryRedirect = params.get("redirect");
+      let target = queryRedirect || window.location.pathname;
+      if (target.startsWith("/login") || target.startsWith("/admin/login")) {
+        target = "/";
+      }
+      window.location.href = `/api/auth/google/?redirect=${encodeURIComponent(target)}`;
     }
   };
 

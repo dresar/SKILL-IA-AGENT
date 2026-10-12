@@ -26,11 +26,11 @@ function LoginForm() {
   const authSuccess = searchParams.get("auth_success");
 
   useEffect(() => {
-    if (authSuccess === "true" && isAuthenticated) {
-      setSuccessMsg("Berhasil masuk akun.");
+    if (authSuccess === "true") {
+      setSuccessMsg("Berhasil masuk akun. Mengalihkan...");
       const t = setTimeout(() => {
         router.push(redirectTo);
-      }, 500);
+      }, 700);
       return () => clearTimeout(t);
     }
     if (isAuthenticated) {

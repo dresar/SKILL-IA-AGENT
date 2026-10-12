@@ -9,7 +9,7 @@ export function middleware(request: NextRequest) {
     const role = request.cookies.get("skill_uiai_role")?.value;
     if (!isAdminRole(role)) {
       const url = request.nextUrl.clone();
-      url.pathname = "/admin/login";
+      url.pathname = "/admin/login/";
       return NextResponse.redirect(url);
     }
   }

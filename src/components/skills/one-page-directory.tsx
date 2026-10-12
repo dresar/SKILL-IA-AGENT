@@ -104,7 +104,7 @@ export function OnePageDirectory({
   const handleAskAi = (customQuery?: string) => {
     const target = (customQuery || aiPromptInput || searchQuery).trim();
     if (target) {
-      router.push(`/ai?q=${encodeURIComponent(target)}`);
+      router.push(`/ai/?q=${encodeURIComponent(target)}`);
     } else {
       router.push("/ai/");
     }

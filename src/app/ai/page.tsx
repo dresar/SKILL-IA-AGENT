@@ -6,7 +6,6 @@ import { useSearchParams } from "next/navigation";
 import {
   Send,
   Sparkles,
-  Lock,
   ArrowRight,
   Bot,
   User,
@@ -30,15 +29,47 @@ const STARTER_PROMPTS = [
   "Tulis draf SKILL.md untuk aturan refactoring kode ketat"
 ];
 
+function FormattedContent({ text }: { text: string }) {
+  const parts: React.ReactNode[] = [];
+  const linkRegex = /\[(.*?)\]\((.*?)\)/g;
+  let lastIndex = 0;
+  let match;
+
+  while ((match = linkRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.substring(lastIndex, match.index));
+    }
+    const label = match[1];
+    const rawHref = match[2];
+    const href = rawHref.endsWith("/") || rawHref.includes("?") || rawHref.includes("#") ? rawHref : `${rawHref}/`;
+    parts.push(
+      <Link
+        key={match.index}
+        href={href}
+        className="text-accent font-semibold underline underline-offset-2 hover:opacity-80 transition-opacity"
+      >
+        {label}
+      </Link>
+    );
+    lastIndex = linkRegex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.substring(lastIndex));
+  }
+
+  return <>{parts.length > 0 ? parts : text}</>;
+}
+
 function AiAssistantContent() {
   const searchParams = useSearchParams();
   const queryParam = searchParams.get("q");
 
-  const { user, isAuthenticated, loginDemo } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Halo! Saya adalah SkillAgent Assistant bertenaga model **step-5-preview**. Anda dapat menanyakan rekomendasi skill dari seluruh katalog, aturan SKILL.md, instruksi agentik, atau integrasi MCP server."
+      content: "Halo! Saya adalah SkillAgent Assistant bertenaga model **step-5-preview**. Anda dapat menanyakan rekomendasi skill dari seluruh database katalog, aturan SKILL.md, instruksi agentik, atau integrasi MCP server."
     }
   ]);
   const [input, setInput] = useState("");
@@ -108,51 +139,11 @@ function AiAssistantContent() {
   };
 
   useEffect(() => {
-    if (queryParam && isAuthenticated && !initialSentRef.current) {
+    if (queryParam && !initialSentRef.current) {
       initialSentRef.current = true;
       handleSend(queryParam);
     }
-  }, [queryParam, isAuthenticated]);
-
-  if (!isAuthenticated) {
-    return (
-      <div className="max-w-md mx-auto py-12 sm:py-16 text-center space-y-6">
-        <div className="w-16 h-16 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent mx-auto">
-          <Lock className="w-8 h-8" />
-        </div>
-
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold tracking-tight text-text-primary">
-            Masuk untuk Konsultasi AI
-          </h1>
-          <p className="text-xs sm:text-sm text-text-secondary leading-relaxed">
-            Asisten AI bertenaga model <span className="font-mono text-accent font-semibold">step-5-preview</span> siap membaca dan merekomendasikan skill dari seluruh database.
-          </p>
-        </div>
-
-        <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <Link
-            href="/login?redirect=/ai/"
-            className="w-full sm:w-auto h-10 px-5 rounded-[4px] bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
-          >
-            <span>Masuk / Google</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-
-          <button
-            type="button"
-            onClick={() => {
-              loginDemo("USER");
-            }}
-            className="w-full sm:w-auto h-10 px-4 rounded-[4px] border border-border text-xs font-medium text-text-primary hover:bg-surface-raised flex items-center justify-center gap-1.5 transition-colors"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-accent" />
-            <span>Coba Cepat (Mode Tamu)</span>
-          </button>
-        </div>
-      </div>
-    );
-  }
+  }, [queryParam]);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -176,8 +167,17 @@ function AiAssistantContent() {
         </div>
 
         <div className="flex items-center gap-2 text-xs font-mono text-text-muted">
+          {isAuthenticated && user ? (
+            <span className="text-text-primary font-semibold truncate max-w-[140px]">{user.name}</span>
+          ) : (
+            <Link href="/login/?redirect=/ai/" className="text-accent hover:underline flex items-center gap-1">
+              <span>Masuk Akun</span>
+              <ArrowRight className="w-3 h-3" />
+            </Link>
+          )}
+          <span className="text-border">|</span>
           <Zap className="w-3.5 h-3.5 text-emerald-500" />
-          <span>byNara Router Connected</span>
+          <span>Registry Connected</span>
         </div>
       </div>
 
@@ -203,7 +203,9 @@ function AiAssistantContent() {
                       : "bg-surface-raised border border-border text-text-primary whitespace-pre-wrap font-sans"
                   }`}
                 >
-                  <div>{m.content}</div>
+                  <div>
+                    {isUser ? m.content : <FormattedContent text={m.content} />}
+                  </div>
 
                   {!isUser && (
                     <button
