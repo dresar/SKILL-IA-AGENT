@@ -10,27 +10,31 @@ import {
   FileCode,
   Sparkles,
   ArrowLeft,
-  LogOut,
-  ShieldCheck
+  LogOut
 } from "lucide-react";
-import { Logo } from "@/components/brand/logo";
 import { useAuth } from "@/components/providers/auth-provider";
 import { cn } from "@/lib/utils";
 
 const adminNav = [
-  { label: "Dashboard", href: "/admin", icon: Activity },
-  { label: "Registry Skills", href: "/admin/skills", icon: Layers },
-  { label: "Import GitHub", href: "/admin/imports", icon: UploadCloud },
-  { label: "Dokumentasi MCP", href: "/dokumentasi", icon: FileCode },
-  { label: "AI Assistant", href: "/ai", icon: Sparkles }
+  { label: "Dashboard", href: "/admin/", icon: Activity },
+  { label: "Registry Skills", href: "/admin/skills/", icon: Layers },
+  { label: "Import GitHub", href: "/admin/imports/", icon: UploadCloud },
+  { label: "Dokumentasi MCP", href: "/dokumentasi/", icon: FileCode },
+  { label: "AI Assistant", href: "/ai/", icon: Sparkles }
 ];
 
 export function AdminSidebar() {
   const pathname = usePathname();
   const { user, logout } = useAuth();
 
+  const isItemActive = (href: string) => {
+    const normPath = (pathname || "").replace(/\/$/, "");
+    const normHref = href.replace(/\/$/, "");
+    return normPath === normHref;
+  };
+
   return (
-    <aside className="w-64 shrink-0 border-r border-border bg-surface/70 flex flex-col justify-between p-4 min-h-[calc(100vh-4rem)]">
+    <aside className="w-full md:w-64 shrink-0 border-b md:border-b-0 md:border-r border-border bg-surface/70 flex flex-col justify-between p-4 min-h-auto md:min-h-[calc(100vh-4rem)]">
       <div className="space-y-6">
         <div className="px-2 space-y-1">
           <div className="flex items-center gap-2">
@@ -47,19 +51,19 @@ export function AdminSidebar() {
         <nav className="space-y-1">
           {adminNav.map((item) => {
             const Icon = item.icon;
-            const isActive = pathname === item.href;
+            const active = isItemActive(item.href);
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
                   "flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium transition-colors",
-                  isActive
+                  active
                     ? "bg-surface-raised text-accent font-bold border border-border"
                     : "text-text-secondary hover:bg-surface-raised/60 hover:text-text-primary"
                 )}
               >
-                <Icon className={cn("h-4 w-4 shrink-0", isActive ? "text-accent" : "text-text-muted")} />
+                <Icon className={cn("h-4 w-4 shrink-0", active ? "text-accent" : "text-text-muted")} />
                 <span>{item.label}</span>
               </Link>
             );
@@ -67,7 +71,7 @@ export function AdminSidebar() {
         </nav>
       </div>
 
-      <div className="space-y-3 pt-4 border-t border-border">
+      <div className="space-y-3 pt-4 border-t border-border mt-4 md:mt-0">
         <Link
           href="/"
           className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-text-secondary hover:bg-surface-raised/60 hover:text-text-primary transition-colors"

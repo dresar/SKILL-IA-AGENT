@@ -9,7 +9,7 @@ import {
   showcases,
   assets
 } from "@/lib/db/schema";
-import { eq, and, ilike, or, desc } from "drizzle-orm";
+import { eq, and, ilike, or, desc, asc, sql } from "drizzle-orm";
 
 export interface SkillFilters {
   query?: string;
@@ -74,108 +74,6 @@ const FALLBACK_SKILLS = [
         target: "claude",
         displayLabel: "Claude",
         command: "claude skill add anthropics/skills/skills/frontend-design",
-        sourceUrl: "https://github.com/anthropics/skills",
-        verificationStatus: "verified"
-      }
-    ],
-    showcases: [],
-    assets: []
-  },
-  {
-    id: "sk-1b",
-    slug: "canvas-design",
-    name: "Canvas Design",
-    summary: "Design visual art in PNG and PDF formats using sophisticated design philosophies.",
-    description: "Design visual art in PNG and PDF formats using sophisticated design philosophies, restrained spatial balances, and precise vector compositions.",
-    status: "published",
-    skillType: "frontend",
-    authorDisplay: "Anthropic",
-    licenseSpdx: "MIT",
-    licenseUrl: "https://opensource.org/licenses/MIT",
-    sourceKind: "github",
-    sourceUrl: "https://github.com/anthropics/skills/tree/main/skills/canvas-design",
-    sourceOwner: "anthropics",
-    sourceRepo: "skills",
-    sourcePath: "skills/canvas-design",
-    verificationStatus: "verified",
-    featuredRank: 2,
-    rank: "A-RANK",
-    publishedAt: new Date("2026-10-12"),
-    updatedAt: new Date("2026-10-12"),
-    categories: [{ id: "cat-1", slug: "design-ui-ux", name: "Design & UI/UX" }],
-    tags: [{ id: "tag-1", slug: "canvas", name: "Canvas" }],
-    primaryRecipe: {
-      id: "rec-cd-1",
-      target: "claude",
-      displayLabel: "Claude Code",
-      command: "claude skill add anthropics/skills/skills/canvas-design",
-      verificationStatus: "verified"
-    },
-    recipes: [
-      {
-        id: "rec-cd-1",
-        target: "claude",
-        displayLabel: "Claude",
-        command: "claude skill add anthropics/skills/skills/canvas-design",
-        sourceUrl: "https://github.com/anthropics/skills",
-        verificationStatus: "verified"
-      },
-      {
-        id: "rec-cd-2",
-        target: "claude",
-        displayLabel: "Claude",
-        command: "claude skill add anthropics/skills/skills/canvas-design",
-        sourceUrl: "https://github.com/anthropics/skills",
-        verificationStatus: "verified"
-      }
-    ],
-    showcases: [],
-    assets: []
-  },
-  {
-    id: "sk-1c",
-    slug: "algorithmic-art",
-    name: "Algorithmic Art",
-    summary: "Create generative art using p5.js with seeded randomness, flow fields, and particles.",
-    description: "Create generative art using p5.js with seeded randomness, flow fields, particle simulations, and deterministic seed anchors.",
-    status: "published",
-    skillType: "frontend",
-    authorDisplay: "Anthropic",
-    licenseSpdx: "MIT",
-    licenseUrl: "https://opensource.org/licenses/MIT",
-    sourceKind: "github",
-    sourceUrl: "https://github.com/anthropics/skills/tree/main/skills/algorithmic-art",
-    sourceOwner: "anthropics",
-    sourceRepo: "skills",
-    sourcePath: "skills/algorithmic-art",
-    verificationStatus: "verified",
-    featuredRank: 3,
-    rank: "A-RANK",
-    publishedAt: new Date("2026-10-12"),
-    updatedAt: new Date("2026-10-12"),
-    categories: [{ id: "cat-1", slug: "design-ui-ux", name: "Design & UI/UX" }],
-    tags: [{ id: "tag-1", slug: "generative", name: "Generative" }],
-    primaryRecipe: {
-      id: "rec-aa-1",
-      target: "claude",
-      displayLabel: "Claude Code",
-      command: "claude skill add anthropics/skills/skills/algorithmic-art",
-      verificationStatus: "verified"
-    },
-    recipes: [
-      {
-        id: "rec-aa-1",
-        target: "claude",
-        displayLabel: "Claude",
-        command: "claude skill add anthropics/skills/skills/algorithmic-art",
-        sourceUrl: "https://github.com/anthropics/skills",
-        verificationStatus: "verified"
-      },
-      {
-        id: "rec-aa-2",
-        target: "claude",
-        displayLabel: "Claude",
-        command: "claude skill add anthropics/skills/skills/algorithmic-art",
         sourceUrl: "https://github.com/anthropics/skills",
         verificationStatus: "verified"
       }
@@ -735,7 +633,7 @@ export async function getPublishedSkills(filters: SkillFilters = {}) {
       })
       .from(skills)
       .where(and(...conditions))
-      .orderBy(desc(skills.featuredRank), desc(skills.publishedAt))
+      .orderBy(sql`${skills.featuredRank} ASC NULLS LAST`, desc(skills.publishedAt))
       .limit(limit)
       .offset(offset);
 
@@ -782,30 +680,7 @@ export async function getPublishedSkills(filters: SkillFilters = {}) {
       })
     );
 
-    let merged = items;
-    if (!filters.query && !filters.category) {
-      const existingSlugs = new Set(items.map((i) => i.slug));
-      const missing = FALLBACK_SKILLS.filter((s) => !existingSlugs.has(s.slug)).map((s) => ({
-        ...s,
-        primaryRecipe: (s.primaryRecipe as any) || null
-      }));
-      if (missing.length > 0) {
-        merged = [...items, ...(missing as typeof items)];
-      }
-    } else if (filters.category) {
-      const existingSlugs = new Set(items.map((i) => i.slug));
-      const missing = FALLBACK_SKILLS.filter(
-        (s) => !existingSlugs.has(s.slug) && s.categories.some((c) => c.slug === filters.category)
-      ).map((s) => ({
-        ...s,
-        primaryRecipe: (s.primaryRecipe as any) || null
-      }));
-      if (missing.length > 0) {
-        merged = [...items, ...(missing as typeof items)];
-      }
-    }
-
-    return merged.slice(offset, offset + limit);
+    return items;
   } catch {
     return FALLBACK_SKILLS.filter((s) => {
       if (filters.category && !s.categories.some((c) => c.slug === filters.category)) return false;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Shield,
@@ -222,6 +222,17 @@ export default function AdminPage() {
   const [studioSkillId, setStudioSkillId] = useState<string>("sk-1");
   const [feedback, setFeedback] = useState<string | null>(null);
 
+  useEffect(() => {
+    fetch("/api/skills/")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.ok && Array.isArray(json.data) && json.data.length > 0) {
+          setSkillsList(json.data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const [formData, setFormData] = useState({
     name: "",
     slug: "",
@@ -273,7 +284,7 @@ export default function AdminPage() {
               ? "Sesi aktif tidak memiliki role Super Admin atau Curator."
               : "Panel ini memerlukan login admin terpisah."}
           </p>
-          <Link href="/admin/login" className="mt-5 inline-flex">
+          <Link href="/admin/login/" className="mt-5 inline-flex">
             <Button variant="primary" size="sm" className="min-h-10 text-xs">
               Login Admin
             </Button>

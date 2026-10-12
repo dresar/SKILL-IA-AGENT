@@ -10,9 +10,9 @@ import { useAuth } from "@/components/providers/auth-provider";
 
 const navLinks = [
   { href: "/", label: "Skills" },
-  { href: "/dokumentasi", label: "Dokumentasi" },
-  { href: "/ai", label: "AI Assistant" },
-  { href: "/submit", label: "Submit Skill" }
+  { href: "/dokumentasi/", label: "Dokumentasi" },
+  { href: "/ai/", label: "AI Assistant" },
+  { href: "/submit/", label: "Submit Skill" }
 ];
 
 export function TopBar() {
@@ -64,7 +64,7 @@ export function TopBar() {
               ))}
               {isAdmin && (
                 <Link
-                  href="/admin"
+                  href="/admin/"
                   className="text-text-secondary hover:text-text-primary transition-colors py-1 font-semibold text-accent"
                 >
                   Admin
@@ -90,7 +90,7 @@ export function TopBar() {
             </form>
 
             <Link
-              href="/submit"
+              href="/submit/"
               className="hidden sm:inline-flex items-center justify-center h-9 px-3.5 rounded-[4px] bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 hover:bg-neutral-800 dark:hover:bg-neutral-200 text-xs font-semibold tracking-wider uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 active:scale-[0.98]"
             >
               Submit a Skill
@@ -114,7 +114,7 @@ export function TopBar() {
               </div>
             ) : (
               <Link
-                href="/login"
+                href="/login/"
                 className="hidden sm:inline-flex items-center justify-center h-9 px-3 rounded-[4px] border border-border text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-surface-raised transition-colors"
               >
                 Sign In
@@ -162,7 +162,7 @@ export function TopBar() {
             ))}
             {isAdmin && (
               <Link
-                href="/admin"
+                href="/admin/"
                 onClick={() => setMobileOpen(false)}
                 className="rounded px-3 py-2 text-accent font-semibold hover:bg-surface-raised transition-colors"
               >
@@ -170,7 +170,7 @@ export function TopBar() {
               </Link>
             )}
             <Link
-              href="/submit"
+              href="/submit/"
               onClick={() => setMobileOpen(false)}
               className="mt-2 flex h-10 w-full items-center justify-center rounded-[4px] bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 font-semibold text-xs uppercase tracking-wider"
             >
@@ -189,7 +189,7 @@ export function TopBar() {
               </button>
             ) : (
               <Link
-                href="/login"
+                href="/login/"
                 onClick={() => setMobileOpen(false)}
                 className="mt-1 rounded px-3 py-2 text-text-primary hover:bg-surface-raised"
               >

@@ -66,8 +66,8 @@ export function OnePageDirectory({
         return (a.featuredRank || 99) - (b.featuredRank || 99);
       }
       if (sortBy === "rank") {
-        const rankA = a.rank === "S-RANK" ? 1 : 2;
-        const rankB = b.rank === "S-RANK" ? 1 : 2;
+        const rankA = a.featuredRank || 99;
+        const rankB = b.featuredRank || 99;
         return rankA - rankB;
       }
       if (sortBy === "name") {
@@ -79,42 +79,18 @@ export function OnePageDirectory({
 
   return (
     <div className="space-y-10">
-      <div className="space-y-6">
-        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-mono text-neutral-500">
-          <button
-            type="button"
-            onClick={() => setSelectedCategory("all")}
-            className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
-          >
-            Home
-          </button>
-          <span>&gt;</span>
-          <button
-            type="button"
-            onClick={() => setSelectedCategory("all")}
-            className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
-          >
-            Categories
-          </button>
-          <span>&gt;</span>
-          <span className="text-neutral-900 dark:text-neutral-100 font-medium">
-            {activeCategoryObj.name}
-          </span>
-        </nav>
-
-        <div className="space-y-2">
-          <p className="text-[11px] font-mono tracking-widest text-neutral-400 dark:text-neutral-500 uppercase font-semibold">
-            CATALOG
-          </p>
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
-            {activeCategoryObj.name}
-          </h1>
-          <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 max-w-2xl">
-            {activeCategoryObj.description || "Discover verified AI agent skills and production-ready tools."}
-          </p>
-          <p className="text-xs font-mono tracking-wider text-neutral-400 dark:text-neutral-500 uppercase pt-1">
-            {filteredSkills.length} SKILLS AVAILABLE
-          </p>
+      <div className="space-y-3 pb-2">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100">
+          {activeCategoryObj.slug === "all" ? "AI Agent Skills Directory" : activeCategoryObj.name}
+        </h1>
+        <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
+          {activeCategoryObj.slug === "all"
+            ? "Verified skills, prompt protocols, and MCP extensions for Google Antigravity, Claude Code, and autonomous agents."
+            : (activeCategoryObj.description || "Verified skills for autonomous coding agents.")}
+        </p>
+        <div className="flex items-center gap-2 pt-1 text-xs font-mono text-neutral-500 uppercase tracking-wider">
+          <span className="font-bold text-neutral-900 dark:text-neutral-100">{filteredSkills.length}</span>
+          <span>skills verified</span>
         </div>
       </div>
 
@@ -180,7 +156,7 @@ export function OnePageDirectory({
           >
             <span>
               {sortBy === "popular" && "POPULAR"}
-              {sortBy === "rank" && "S-RANK FIRST"}
+              {sortBy === "rank" && "FEATURED FIRST"}
               {sortBy === "name" && "NAME A-Z"}
               {sortBy === "newest" && "NEWEST"}
             </span>
@@ -207,7 +183,7 @@ export function OnePageDirectory({
                 }}
                 className="w-full text-left px-3 py-2 text-xs font-mono uppercase text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded"
               >
-                S-RANK FIRST
+                FEATURED FIRST
               </button>
               <button
                 type="button"

@@ -1,24 +1,27 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/brand/logo";
 import { useAuth } from "@/components/providers/auth-provider";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { loginUser } = useAuth();
   const [email, setEmail] = useState("developer@community.org");
   const [loading, setLoading] = useState(false);
+
+  const redirectTo = searchParams.get("redirect") || "/";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     loginUser(email.trim());
-    router.push("/");
+    router.push(redirectTo);
   };
 
   return (
@@ -35,7 +38,7 @@ export default function LoginPage() {
         <div className="mb-6 space-y-2">
           <h1 className="text-2xl font-semibold tracking-tight text-text-primary">Masuk Pengguna</h1>
           <p className="text-sm leading-relaxed text-text-secondary">
-            Akun ini untuk menyimpan sesi eksplorasi katalog. Akses admin memakai halaman terpisah.
+            Akun ini untuk menyimpan sesi eksplorasi katalog dan AI Assistant. Akses admin memakai halaman terpisah.
           </p>
         </div>
 
@@ -61,5 +64,13 @@ export default function LoginPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-[70vh] flex items-center justify-center text-xs text-text-muted">Loading...</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }

@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: SkillDetailPageProps): Promis
   }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://skills-smoky.vercel.app";
-  const previewImg = `/previews/${skill.slug}.svg`;
+  const previewImg = (skill as any).previewImageUrl || `/previews/${skill.slug}.svg`;
   const installCommand = (skill.recipes && skill.recipes.length > 0 ? skill.recipes[0].command : "") || `npx skills add dresar/SKILL-IA-AGENT -s ${skill.slug}`;
 
   return {
@@ -100,7 +100,7 @@ export default async function SkillDetailPage({ params }: SkillDetailPageProps) 
   const otherSkills = related.filter((s) => s.slug !== skill.slug).slice(0, 3);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://skills-smoky.vercel.app";
   const installCommand = (skill.recipes && skill.recipes.length > 0 ? skill.recipes[0].command : "") || `npx skills add dresar/SKILL-IA-AGENT -s ${skill.slug}`;
-  const previewImg = `/previews/${skill.slug}.svg`;
+  const previewImg = (skill as any).previewImageUrl || `/previews/${skill.slug}.svg`;
 
   const skillJsonLd = {
     "@context": "https://schema.org",

@@ -73,7 +73,7 @@ export default function AdminImportsPage() {
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
         <Link
-          href="/admin"
+          href="/admin/"
           className="inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-text-primary transition-colors mb-2"
         >
           <ArrowLeft className="w-3.5 h-3.5" />

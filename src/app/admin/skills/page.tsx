@@ -13,7 +13,7 @@ export default async function AdminSkillsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <Link
-            href="/admin"
+            href="/admin/"
             className="inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-text-primary transition-colors mb-2"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
@@ -24,7 +24,7 @@ export default async function AdminSkillsPage() {
           </h1>
         </div>
 
-        <Link href="/admin/imports">
+        <Link href="/admin/imports/">
           <Button variant="primary" size="sm">
             Import New Skill
           </Button>
@@ -68,7 +68,7 @@ export default async function AdminSkillsPage() {
                   </td>
                   <td className="px-4 py-3.5 text-right space-x-2">
                     <Link
-                      href={`/skills/${s.slug}`}
+                      href={`/skills/${s.slug}/`}
                       className="text-accent hover:underline inline-flex items-center gap-1"
                     >
                       View

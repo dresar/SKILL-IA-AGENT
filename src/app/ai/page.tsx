@@ -120,7 +120,7 @@ export default function AiAssistantPage() {
 
         <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
-            href="/login"
+            href="/login?redirect=/ai/"
             className="w-full sm:w-auto h-10 px-6 rounded-[4px] bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
           >
             <span>Masuk Sekarang</span>

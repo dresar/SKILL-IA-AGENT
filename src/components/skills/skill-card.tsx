@@ -28,8 +28,6 @@ export interface SkillCardData {
 
 interface SkillCardProps {
   skill: SkillCardData;
-  onSelect?: (skill: SkillCardData) => void;
-  onDemo?: (skill: SkillCardData) => void;
 }
 
 export function SkillCard({ skill }: SkillCardProps) {
@@ -45,8 +43,7 @@ export function SkillCard({ skill }: SkillCardProps) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const rank = skill.rank || (skill.featuredRank && skill.featuredRank <= 3 ? "S-RANK" : "A-RANK");
-  const isSRank = rank === "S-RANK";
+  const isFeatured = Boolean(skill.featuredRank && skill.featuredRank <= 3);
 
   const platforms = skill.platforms && skill.platforms.length > 0
     ? skill.platforms
@@ -83,18 +80,13 @@ export function SkillCard({ skill }: SkillCardProps) {
           </div>
         )}
 
-        <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5">
-          <span
-            className={cn(
-              "font-mono text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-[3px] shadow-sm backdrop-blur-sm",
-              isSRank
-                ? "bg-neutral-950 text-white dark:bg-neutral-100 dark:text-neutral-950"
-                : "border border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 bg-white/90 dark:bg-neutral-900/90"
-            )}
-          >
-            {rank}
-          </span>
-        </div>
+        {isFeatured && (
+          <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5">
+            <span className="font-mono text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-[3px] shadow-sm backdrop-blur-sm bg-neutral-950 text-white dark:bg-neutral-100 dark:text-neutral-950">
+              FEATURED
+            </span>
+          </div>
+        )}
       </Link>
 
       <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
@@ -117,7 +109,7 @@ export function SkillCard({ skill }: SkillCardProps) {
           </div>
 
           <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
-            by {skill.authorDisplay.replace("Anthropic & Community", "Anthropic")}
+            by {skill.authorDisplay}
           </p>
 
           <p className="text-xs sm:text-[13px] leading-relaxed text-neutral-600 dark:text-neutral-300 mt-3 mb-5 line-clamp-3">
