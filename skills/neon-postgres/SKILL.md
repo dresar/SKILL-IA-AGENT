@@ -1,11 +1,11 @@
 # Neon Postgres
 
-> Serverless PostgreSQL migrations, connection pooling, and branch-aware ops.
+> Migrasi PostgreSQL serverless, connection pooling, dan branching schema.
 
-## Category
+## Kategori
 Database
 
-## Installation
+## Instalasi
 ```bash
 npx skills add dresar/SKILL-IA-AGENT -s neon-postgres
 ```

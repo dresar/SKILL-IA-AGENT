@@ -1,0 +1,6 @@
+{
+  "slug": "taste-filter",
+  "name": "Taste Filter",
+  "prompt": "Detect and replace generic bootstrap gradient cards with bespoke styling.",
+  "output": "// Banned: generic rounded-lg border shadow-md gradient-to-r\\n// Replaced with: bespoke hairline bezel + OLED surface"
+}

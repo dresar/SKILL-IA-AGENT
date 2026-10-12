@@ -1,11 +1,11 @@
 # Antigravity Guide
 
-> Comprehensive guide for Google Antigravity CLI, subagents, and slash commands.
+> Panduan arsitektur Google Antigravity CLI, subagents, dan slash commands.
 
-## Category
+## Kategori
 Workflows
 
-## Installation
+## Instalasi
 ```bash
 npx skills add dresar/SKILL-IA-AGENT -s antigravity-guide
 ```

@@ -1,41 +1,32 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Shield,
   Layers,
-  Terminal,
   Activity,
   Plus,
   UploadCloud,
   Check,
-  AlertCircle,
-  Copy,
   Play,
   Trash2,
-  Edit3,
   ExternalLink,
   Search,
-  Filter,
-  CheckCircle2,
   Clock,
-  Eye,
-  GitBranch,
   Github,
   Lock,
-  ArrowRight,
   LogOut,
-  Sparkles,
-  FileCode,
-  FolderGit2
+  FolderGit2,
+  Wand2,
+  Image as ImageIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/components/providers/auth-provider";
-import { DEMO_ACCOUNTS } from "@/lib/auth/types";
 import { SkillDemoModal } from "@/components/skills/skill-demo-modal";
+import { AiPromptStudio, PreviewMode } from "@/components/admin/ai-prompt-studio";
 
 interface AdminSkill {
   id: string;
@@ -50,6 +41,7 @@ interface AdminSkill {
   categories: Array<{ id: string; slug: string; name: string }>;
   primaryRecipe?: { command: string; target: string } | null;
   previewImageUrl?: string;
+  previewMode?: PreviewMode;
 }
 
 interface AuditLog {
@@ -138,25 +130,96 @@ const INITIAL_SKILLS: AdminSkill[] = [
     verificationStatus: "verified",
     categories: [{ id: "cat-1", slug: "frontend", name: "Frontend" }],
     primaryRecipe: { command: "npx skills add dresar/SKILL-IA-AGENT -s minimalist-ui", target: "antigravity" }
+  },
+  {
+    id: "sk-7",
+    slug: "superpowers-tdd",
+    name: "Superpowers TDD",
+    summary: "Framework rekayasa software agentik dengan siklus test-driven development ketat.",
+    description: "Metodologi pembangunan software agentik yang mewajibkan penulisan test suite sebelum kode implementasi.",
+    skillType: "code-quality",
+    authorDisplay: "Jesse Vincent (obra)",
+    status: "published",
+    verificationStatus: "verified",
+    categories: [{ id: "cat-3", slug: "code-quality", name: "Code Quality" }],
+    primaryRecipe: { command: "npx skills add obra/superpowers -s superpowers-tdd", target: "antigravity" }
+  },
+  {
+    id: "sk-8",
+    slug: "caveman-compress",
+    name: "Caveman Compress",
+    summary: "Protokol kompresi token agent yang memangkas 65% verbositas tanpa degradasi logika.",
+    description: "Optimasi efisiensi konteks LLM dengan memotong formalitas basa-basi dan menyampaikan argumen secara ultra-ringkas.",
+    skillType: "workflows",
+    authorDisplay: "Julius Brussee",
+    status: "published",
+    verificationStatus: "verified",
+    categories: [{ id: "cat-5", slug: "workflows", name: "Workflows" }],
+    primaryRecipe: { command: "/caveman-compress", target: "antigravity" }
+  },
+  {
+    id: "sk-9",
+    slug: "taste-filter",
+    name: "Taste Filter",
+    summary: "Filter estetika tingkat lanjut untuk memblokir pola AI template generik.",
+    description: "Aturan desain anti-slop yang melarang font standar, bayangan kasar, border abu-abu tebal, dan kartu klise.",
+    skillType: "design-systems",
+    authorDisplay: "Leonxlnx",
+    status: "published",
+    verificationStatus: "verified",
+    categories: [{ id: "cat-2", slug: "design-systems", name: "Design Systems" }],
+    primaryRecipe: { command: "/taste-filter", target: "antigravity" }
+  },
+  {
+    id: "sk-10",
+    slug: "security-audit",
+    name: "Security Audit",
+    summary: "Pemindaian kerentanan AST otomatis, deteksi bocoran rahasia, dan audit input.",
+    description: "Protokol keamanan proaktif yang mendeteksi secret key, token git, injection payload, dan celah otentikasi.",
+    skillType: "code-quality",
+    authorDisplay: "Anthropic Security",
+    status: "published",
+    verificationStatus: "verified",
+    categories: [{ id: "cat-3", slug: "code-quality", name: "Code Quality" }],
+    primaryRecipe: { command: "/security-audit", target: "antigravity" }
+  },
+  {
+    id: "sk-11",
+    slug: "git-workflow",
+    name: "Git Workflow",
+    summary: "Manajemen commit konvensional, percabangan atomik, dan otomatisasi changelog.",
+    description: "Standar git modern untuk agent yang memvalidasi format commit, mengisolasi feature branch, dan membuat rilis.",
+    skillType: "workflows",
+    authorDisplay: "Eka Syarif Maulana",
+    status: "published",
+    verificationStatus: "verified",
+    categories: [{ id: "cat-5", slug: "workflows", name: "Workflows" }],
+    primaryRecipe: { command: "/git-workflow", target: "antigravity" }
+  },
+  {
+    id: "sk-12",
+    slug: "docker-devops",
+    name: "Docker DevOps",
+    summary: "Eksekusi container sandbox efemeral untuk evaluasi kode agent mandiri.",
+    description: "Isolasi eksekusi lingkungan kode pada kontainer Docker non-root dengan batasan memori dan timeout otomatis.",
+    skillType: "workflows",
+    authorDisplay: "DevOps Working Group",
+    status: "published",
+    verificationStatus: "verified",
+    categories: [{ id: "cat-5", slug: "workflows", name: "Workflows" }],
+    primaryRecipe: { command: "npx skills add dresar/SKILL-IA-AGENT -s docker-devops", target: "antigravity" }
   }
-];
-
-const PRESET_THEMES = [
-  { id: "purple", label: "Obsidian Purple", bg: "#1A102F", accent: "#8B5CF6" },
-  { id: "emerald", label: "Emerald Clean", bg: "#052E16", accent: "#22C55E" },
-  { id: "sky", label: "Sky Blue", bg: "#0F172A", accent: "#38BDF8" },
-  { id: "amber", label: "Warm Editorial", bg: "#1C1917", accent: "#D97706" },
-  { id: "indigo", label: "Agent Indigo", bg: "#1E1B4B", accent: "#6366F1" }
 ];
 
 export default function AdminPage() {
   const router = useRouter();
   const { user, isAuthenticated, isAdmin, switchRole, logout } = useAuth();
-  const [activeTab, setActiveTab] = useState<"dashboard" | "skills" | "create" | "sync" | "audit">("dashboard");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "skills" | "create" | "ai_studio" | "sync" | "audit">("dashboard");
   const [skillsList, setSkillsList] = useState<AdminSkill[]>(INITIAL_SKILLS);
   const [searchFilter, setSearchFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [demoSkill, setDemoSkill] = useState<any | null>(null);
+  const [aiStudioSkill, setAiStudioSkill] = useState<AdminSkill | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
@@ -168,7 +231,7 @@ export default function AdminPage() {
     description: "",
     authorDisplay: "Eka Syarif Maulana",
     command: "",
-    theme: "purple",
+    previewImageUrl: "",
     demoPrompt: "Generate tailored solution for target task.",
     demoOutput: "// Generated output component\nexport function Solution() { return <div>Ready</div>; }"
   });
@@ -191,7 +254,7 @@ export default function AdminPage() {
     {
       id: "aud-3",
       action: "publish_skill",
-      targetType: "skill:minimalist-ui",
+      targetType: "skill:superpowers-tdd",
       actorSubject: "curator@agent.io",
       createdAt: new Date(Date.now() - 86400000).toISOString()
     }
@@ -200,7 +263,7 @@ export default function AdminPage() {
   if (!isAdmin) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center p-4">
-        <div className="w-full max-w-md rounded-2xl bg-surface border border-border p-8 text-center space-y-6 shadow-2xl">
+        <div className="w-full max-w-md rounded-2xl bg-surface border border-border p-6 sm:p-8 text-center space-y-6 shadow-2xl">
           <div className="w-14 h-14 mx-auto rounded-2xl bg-status-danger/10 border border-status-danger/20 flex items-center justify-center text-status-danger">
             <Lock className="w-6 h-6" />
           </div>
@@ -220,7 +283,7 @@ export default function AdminPage() {
               <button
                 type="button"
                 onClick={() => switchRole("SUPER_ADMIN")}
-                className="w-full p-3 rounded-xl bg-surface-raised border border-border hover:border-accent text-left flex items-center justify-between transition-colors"
+                className="w-full p-3 rounded-xl bg-surface-raised border border-border hover:border-accent text-left flex items-center justify-between transition-colors min-h-[44px]"
               >
                 <div>
                   <p className="text-xs font-bold text-text-primary">Eka Syarif Maulana</p>
@@ -232,7 +295,7 @@ export default function AdminPage() {
               <button
                 type="button"
                 onClick={() => switchRole("CURATOR")}
-                className="w-full p-3 rounded-xl bg-surface-raised border border-border hover:border-accent text-left flex items-center justify-between transition-colors"
+                className="w-full p-3 rounded-xl bg-surface-raised border border-border hover:border-accent text-left flex items-center justify-between transition-colors min-h-[44px]"
               >
                 <div>
                   <p className="text-xs font-bold text-text-primary">Registry Curator</p>
@@ -245,7 +308,7 @@ export default function AdminPage() {
 
           <div className="pt-2 border-t border-border">
             <Link href="/login">
-              <Button variant="ghost" size="sm" className="text-xs">
+              <Button variant="ghost" size="sm" className="text-xs min-h-[40px]">
                 Ke Halaman Login
               </Button>
             </Link>
@@ -269,6 +332,7 @@ export default function AdminPage() {
       authorDisplay: formData.authorDisplay,
       status: "published",
       verificationStatus: "verified",
+      previewImageUrl: formData.previewImageUrl.trim() || undefined,
       categories: [{ id: "cat-" + formData.category, slug: formData.category, name: formData.category.toUpperCase() }],
       primaryRecipe: {
         command: formData.command || `npx skills add dresar/SKILL-IA-AGENT -s ${formData.slug}`,
@@ -334,8 +398,27 @@ export default function AdminPage() {
     );
   };
 
+  const handleSavePreviewOption = (mode: PreviewMode, urlOrContent?: string) => {
+    if (!aiStudioSkill) return;
+    setSkillsList(
+      skillsList.map((s) => {
+        if (s.id === aiStudioSkill.id) {
+          return {
+            ...s,
+            previewMode: mode,
+            previewImageUrl: mode === "ai_image" ? urlOrContent : s.previewImageUrl
+          };
+        }
+        return s;
+      })
+    );
+    setFeedback(`Pratinjau untuk ${aiStudioSkill.name} diperbarui ke mode ${mode}.`);
+    setTimeout(() => setFeedback(null), 3000);
+    setAiStudioSkill(null);
+  };
+
   const handleSyncAll = async () => {
-    setFeedback("Menyinkronkan semua skill ke folder skills/ di repositori...");
+    setFeedback("Menyinkronkan seluruh 12 skill ke folder skills/ di repositori...");
     try {
       await fetch("/api/admin/sync-github");
       setTimeout(() => {
@@ -358,11 +441,11 @@ export default function AdminPage() {
   });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold tracking-tight text-text-primary">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary">
               Curator Studio
             </h1>
             <Badge variant="accent" className="text-[10px]">
@@ -370,38 +453,38 @@ export default function AdminPage() {
             </Badge>
           </div>
           <p className="text-xs text-text-muted mt-0.5">
-            Manajemen registry, pembuatan skill baru, dan sinkronisasi GitHub.
+            Manajemen registry, pembuatan skill baru, generator prompt AI, dan sinkronisasi GitHub.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Button
             variant="primary"
             size="sm"
             onClick={() => setActiveTab("create")}
-            className="text-xs font-semibold gap-1.5 h-8"
+            className="text-xs font-semibold gap-1.5 h-9 min-h-[40px] px-3"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Tambah Skill</span>
+            <span>Tambah</span>
           </Button>
 
           <Button
             variant="outline"
             size="sm"
             onClick={handleSyncAll}
-            className="text-xs font-semibold gap-1.5 h-8 border-accent/30 text-accent"
+            className="text-xs font-semibold gap-1.5 h-9 min-h-[40px] px-3 border-accent/30 text-accent"
           >
             <FolderGit2 className="w-3.5 h-3.5" />
-            <span>Sync GitHub</span>
+            <span>Sync Git</span>
           </Button>
 
           <Button
             variant="ghost"
             size="sm"
             onClick={logout}
-            className="text-xs h-8 text-text-muted hover:text-text-primary"
+            className="text-xs h-9 min-h-[40px] px-2 text-text-muted hover:text-text-primary"
           >
-            <LogOut className="w-3.5 h-3.5" />
+            <LogOut className="w-4 h-4" />
           </Button>
         </div>
       </div>
@@ -409,15 +492,16 @@ export default function AdminPage() {
       {feedback && (
         <div className="p-3 rounded-xl bg-accent/15 border border-accent/30 text-accent text-xs flex items-center justify-between animate-in fade-in">
           <span>{feedback}</span>
-          <button onClick={() => setFeedback(null)} className="text-xs font-bold">×</button>
+          <button onClick={() => setFeedback(null)} className="text-xs font-bold p-1">×</button>
         </div>
       )}
 
-      <div className="flex items-center gap-2 border-b border-border overflow-x-auto pb-1 scrollbar-none">
+      <div className="flex items-center gap-1 sm:gap-2 border-b border-border overflow-x-auto pb-1 scrollbar-none">
         {[
           { key: "dashboard", label: "Dashboard", icon: Activity },
           { key: "skills", label: "Daftar Skill", icon: Layers },
           { key: "create", label: "Tambah Skill", icon: Plus },
+          { key: "ai_studio", label: "Prompt AI Studio", icon: Wand2 },
           { key: "sync", label: "GitHub Folder", icon: Github },
           { key: "audit", label: "Audit Logs", icon: Clock }
         ].map((tab) => {
@@ -428,7 +512,7 @@ export default function AdminPage() {
               key={tab.key}
               type="button"
               onClick={() => setActiveTab(tab.key as any)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors min-h-[40px] ${
                 isActive
                   ? "bg-surface-raised text-accent font-bold border border-border"
                   : "text-text-muted hover:text-text-primary hover:bg-surface-raised/40"
@@ -443,66 +527,66 @@ export default function AdminPage() {
 
       {activeTab === "dashboard" && (
         <div className="space-y-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="rounded-2xl bg-surface border border-border p-5 space-y-1">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="rounded-2xl bg-surface border border-border p-4 sm:p-5 space-y-1">
               <p className="text-xs font-medium text-text-muted">Total Skill</p>
-              <p className="text-3xl font-extrabold text-text-primary">{skillsList.length}</p>
-              <span className="text-[10px] text-status-success font-medium">Semua Terverifikasi</span>
+              <p className="text-2xl sm:text-3xl font-extrabold text-text-primary">{skillsList.length}</p>
+              <span className="text-[10px] text-status-success font-medium">12 Terverifikasi</span>
             </div>
 
-            <div className="rounded-2xl bg-surface border border-border p-5 space-y-1">
+            <div className="rounded-2xl bg-surface border border-border p-4 sm:p-5 space-y-1">
               <p className="text-xs font-medium text-text-muted">Kategori</p>
-              <p className="text-3xl font-extrabold text-text-primary">5</p>
+              <p className="text-2xl sm:text-3xl font-extrabold text-text-primary">5</p>
               <span className="text-[10px] text-accent font-medium">Taksonomi Aktif</span>
             </div>
 
-            <div className="rounded-2xl bg-surface border border-border p-5 space-y-1">
+            <div className="rounded-2xl bg-surface border border-border p-4 sm:p-5 space-y-1">
               <p className="text-xs font-medium text-text-muted">MCP Tools</p>
               <div className="flex items-center gap-2 pt-1">
                 <span className="w-2.5 h-2.5 rounded-full bg-status-success animate-pulse" />
-                <span className="text-xl font-bold text-text-primary">6 Endpoints</span>
+                <span className="text-lg sm:text-xl font-bold text-text-primary">6 Endpoints</span>
               </div>
               <span className="text-[10px] text-text-muted font-mono">/api/mcp</span>
             </div>
 
-            <div className="rounded-2xl bg-surface border border-border p-5 space-y-1">
+            <div className="rounded-2xl bg-surface border border-border p-4 sm:p-5 space-y-1">
               <p className="text-xs font-medium text-text-muted">Neon DB</p>
               <div className="flex items-center gap-2 pt-1">
                 <span className="w-2.5 h-2.5 rounded-full bg-status-success" />
-                <span className="text-xl font-bold text-text-primary">Connected</span>
+                <span className="text-lg sm:text-xl font-bold text-text-primary">Connected</span>
               </div>
               <span className="text-[10px] text-text-muted font-mono">ep-raspy-salad</span>
             </div>
           </div>
 
-          <div className="rounded-2xl bg-surface border border-border p-6 space-y-4">
+          <div className="rounded-2xl bg-surface border border-border p-5 sm:p-6 space-y-4">
             <div className="flex items-center justify-between border-b border-border pb-3">
               <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
                 <FolderGit2 className="w-4 h-4 text-accent" />
-                Struktur Repositori GitHub
+                Struktur Repositori & CDN
               </h3>
               <Badge variant="outline" className="text-[10px] font-mono">dresar/SKILL-IA-AGENT</Badge>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div className="p-3.5 rounded-xl bg-surface-raised border border-border space-y-1">
-                <p className="text-xs font-semibold text-text-primary">Folder skills/</p>
+                <p className="text-xs font-semibold text-text-primary">Direktori skills/</p>
                 <p className="text-[11px] text-text-muted">
-                  Menyimpan berkas SKILL.md, preview.svg, dan demo.json tiap skill.
+                  Menyimpan berkas SKILL.md, preview.svg, dan demo.json tiap skill di GitHub.
                 </p>
               </div>
 
               <div className="p-3.5 rounded-xl bg-surface-raised border border-border space-y-1">
-                <p className="text-xs font-semibold text-text-primary">Folder docs/</p>
+                <p className="text-xs font-semibold text-text-primary">Jaringan CDN jsDelivr</p>
                 <p className="text-[11px] text-text-muted">
-                  Seluruh 10 berkas dokumentasi spesifikasi platform terorganisir.
+                  Aset preview grafis dialirkan langsung melalui jsDelivr CDN berkecepatan tinggi.
                 </p>
               </div>
 
               <div className="p-3.5 rounded-xl bg-surface-raised border border-border space-y-1">
-                <p className="text-xs font-semibold text-text-primary">GitHub Pages</p>
+                <p className="text-xs font-semibold text-text-primary">GitHub Pages Static</p>
                 <p className="text-[11px] text-text-muted">
-                  Build statis otomatis melalui GitHub Actions deploy.yml.
+                  Build statis otomatis melalui GitHub Actions deploy.yml terverifikasi sukses.
                 </p>
               </div>
             </div>
@@ -520,7 +604,7 @@ export default function AdminPage() {
                 value={searchFilter}
                 onChange={(e) => setSearchFilter(e.target.value)}
                 placeholder="Cari dalam tabel..."
-                className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl border border-border bg-surface text-text-primary focus:outline-none focus:ring-1 focus:ring-accent"
+                className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-border bg-surface text-text-primary focus:outline-none focus:ring-1 focus:ring-accent"
               />
             </div>
 
@@ -528,7 +612,7 @@ export default function AdminPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-1.5 rounded-xl border border-border bg-surface text-xs text-text-primary focus:outline-none"
+                className="px-3 py-2 rounded-xl border border-border bg-surface text-xs text-text-primary focus:outline-none"
               >
                 <option value="all">Semua Status</option>
                 <option value="published">Published</option>
@@ -539,7 +623,7 @@ export default function AdminPage() {
                 variant="primary"
                 size="sm"
                 onClick={() => setActiveTab("create")}
-                className="text-xs h-8"
+                className="text-xs h-9 min-h-[40px]"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Baru</span>
@@ -549,7 +633,7 @@ export default function AdminPage() {
 
           <div className="rounded-2xl bg-surface border border-border overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-xs min-w-[640px]">
                 <thead className="bg-surface-raised border-b border-border text-text-muted">
                   <tr>
                     <th className="py-3 px-4 font-semibold">Preview</th>
@@ -564,9 +648,13 @@ export default function AdminPage() {
                   {filteredSkills.map((s) => (
                     <tr key={s.id} className="hover:bg-surface-raised/40 transition-colors">
                       <td className="py-3 px-4">
-                        <div className="w-12 h-8 rounded-lg overflow-hidden bg-surface-raised border border-border">
+                        <div
+                          onClick={() => setAiStudioSkill(s)}
+                          className="w-12 h-8 rounded-lg overflow-hidden bg-surface-raised border border-border cursor-pointer hover:border-accent transition-colors"
+                          title="Klik untuk ubah preview di AI Studio"
+                        >
                           <img
-                            src={`/previews/${s.slug}.svg`}
+                            src={s.previewImageUrl || `/previews/${s.slug}.svg`}
                             alt={s.name}
                             className="w-full h-full object-cover"
                             onError={(e) => {
@@ -606,18 +694,29 @@ export default function AdminPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => setDemoSkill(s)}
-                          className="text-xs h-7 px-2 text-accent"
+                          onClick={() => setAiStudioSkill(s)}
+                          title="AI Image Prompt Studio"
+                          className="text-xs h-8 px-2 text-accent min-h-[36px]"
                         >
-                          <Play className="w-3 h-3" />
+                          <Wand2 className="w-3.5 h-3.5" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setDemoSkill(s)}
+                          title="Uji Demo"
+                          className="text-xs h-8 px-2 text-accent min-h-[36px]"
+                        >
+                          <Play className="w-3.5 h-3.5" />
                         </Button>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleDeleteSkill(s.id, s.name)}
-                          className="text-xs h-7 px-2 text-status-danger"
+                          title="Hapus"
+                          className="text-xs h-8 px-2 text-status-danger min-h-[36px]"
                         >
-                          <Trash2 className="w-3 h-3" />
+                          <Trash2 className="w-3.5 h-3.5" />
                         </Button>
                       </td>
                     </tr>
@@ -630,11 +729,11 @@ export default function AdminPage() {
       )}
 
       {activeTab === "create" && (
-        <form onSubmit={handleCreateSkill} className="rounded-2xl bg-surface border border-border p-6 md:p-8 space-y-6">
+        <form onSubmit={handleCreateSkill} className="rounded-2xl bg-surface border border-border p-5 sm:p-8 space-y-6">
           <div className="border-b border-border pb-3">
             <h2 className="text-lg font-bold text-text-primary">Tambah Skill Baru</h2>
             <p className="text-xs text-text-muted mt-0.5">
-              Definisikan skill baru dan buat paket repositori otomatis.
+              Definisikan skill baru, generator preview, dan sinkronisasi ke repositori otomatis.
             </p>
           </div>
 
@@ -692,17 +791,15 @@ export default function AdminPage() {
 
             <div>
               <label className="block text-xs font-semibold text-text-secondary mb-1">
-                Tema Preview Gambar
+                Tautan Gambar AI (Opsional)
               </label>
-              <select
-                value={formData.theme}
-                onChange={(e) => setFormData({ ...formData, theme: e.target.value })}
-                className="w-full px-3 py-2 text-xs rounded-xl border border-border bg-surface-raised text-text-primary focus:outline-none focus:ring-1 focus:ring-accent"
-              >
-                {PRESET_THEMES.map((th) => (
-                  <option key={th.id} value={th.id}>{th.label}</option>
-                ))}
-              </select>
+              <input
+                type="url"
+                value={formData.previewImageUrl}
+                onChange={(e) => setFormData({ ...formData, previewImageUrl: e.target.value })}
+                placeholder="https://images.unsplash.com/... atau URL ChatGPT"
+                className="w-full px-3 py-2 text-xs rounded-xl border border-border bg-surface-raised text-text-primary font-mono focus:outline-none focus:ring-1 focus:ring-accent"
+              />
             </div>
           </div>
 
@@ -765,7 +862,7 @@ export default function AdminPage() {
               variant="outline"
               size="sm"
               onClick={() => setActiveTab("skills")}
-              className="text-xs h-9"
+              className="text-xs h-9 min-h-[40px]"
             >
               Batal
             </Button>
@@ -773,7 +870,7 @@ export default function AdminPage() {
               type="submit"
               variant="primary"
               size="sm"
-              className="text-xs h-9 font-semibold gap-1.5"
+              className="text-xs h-9 min-h-[40px] font-semibold gap-1.5"
             >
               <Check className="w-3.5 h-3.5" />
               <span>Simpan & Buat Bundle</span>
@@ -782,12 +879,25 @@ export default function AdminPage() {
         </form>
       )}
 
+      {activeTab === "ai_studio" && (
+        <AiPromptStudio
+          skillName={skillsList[0]?.name || "Frontend Design"}
+          skillSlug={skillsList[0]?.slug || "frontend-design"}
+          skillSummary={skillsList[0]?.summary || "Agency UI components"}
+          category={skillsList[0]?.categories[0]?.name || "Frontend"}
+          onSavePreview={(mode, url) => {
+            setFeedback(`Mode preview disimpan: ${mode}`);
+            setTimeout(() => setFeedback(null), 3000);
+          }}
+        />
+      )}
+
       {activeTab === "sync" && (
-        <div className="rounded-2xl bg-surface border border-border p-6 space-y-6">
-          <div className="flex items-center justify-between border-b border-border pb-3">
+        <div className="rounded-2xl bg-surface border border-border p-5 sm:p-6 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3">
             <div>
               <h3 className="text-base font-bold text-text-primary">
-                Penyimpanan Bundle Repositori
+                Penyimpanan Bundle Repositori (12 Skills)
               </h3>
               <p className="text-xs text-text-muted mt-0.5">
                 Struktur direktori skills/ yang siap di-commit ke branch main.
@@ -797,7 +907,7 @@ export default function AdminPage() {
               variant="primary"
               size="sm"
               onClick={handleSyncAll}
-              className="text-xs h-8 gap-1.5"
+              className="text-xs h-9 min-h-[40px] gap-1.5"
             >
               <UploadCloud className="w-3.5 h-3.5" />
               <span>Sinkronkan Sekarang</span>
@@ -825,7 +935,7 @@ export default function AdminPage() {
       )}
 
       {activeTab === "audit" && (
-        <div className="rounded-2xl bg-surface border border-border p-6 space-y-4">
+        <div className="rounded-2xl bg-surface border border-border p-5 sm:p-6 space-y-4">
           <div className="flex items-center justify-between border-b border-border pb-3">
             <h3 className="text-base font-bold text-text-primary flex items-center gap-2">
               <Clock className="w-4 h-4 text-accent" />
@@ -851,6 +961,22 @@ export default function AdminPage() {
                 </span>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {aiStudioSkill && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
+          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <AiPromptStudio
+              skillName={aiStudioSkill.name}
+              skillSlug={aiStudioSkill.slug}
+              skillSummary={aiStudioSkill.summary}
+              category={aiStudioSkill.categories[0]?.name || "Umum"}
+              currentImageUrl={aiStudioSkill.previewImageUrl}
+              onSavePreview={handleSavePreviewOption}
+              onClose={() => setAiStudioSkill(null)}
+            />
           </div>
         </div>
       )}

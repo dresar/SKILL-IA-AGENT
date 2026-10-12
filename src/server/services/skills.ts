@@ -342,6 +342,258 @@ const FALLBACK_SKILLS = [
       }
     ],
     assets: []
+  },
+  {
+    id: "sk-7",
+    slug: "superpowers-tdd",
+    name: "Superpowers TDD",
+    summary: "Framework rekayasa software agentik dengan siklus test-driven development ketat.",
+    description: "Metodologi pembangunan software agentik yang mewajibkan penulisan test suite sebelum kode implementasi untuk mencegah halusinasi kode.",
+    status: "published",
+    skillType: "coding",
+    authorDisplay: "Jesse Vincent (obra)",
+    licenseSpdx: "MIT",
+    licenseUrl: "https://opensource.org/licenses/MIT",
+    sourceKind: "github",
+    sourceUrl: "https://github.com/obra/superpowers",
+    sourceOwner: "obra",
+    sourceRepo: "superpowers",
+    sourcePath: "skills/superpowers-tdd",
+    verificationStatus: "verified",
+    featuredRank: 7,
+    publishedAt: new Date("2026-10-12"),
+    updatedAt: new Date("2026-10-12"),
+    categories: [{ id: "cat-3", slug: "code-quality", name: "Code Quality" }],
+    tags: [{ id: "tag-3", slug: "tdd", name: "TDD" }],
+    primaryRecipe: {
+      id: "rec-7",
+      target: "antigravity",
+      displayLabel: "Google Antigravity",
+      command: "npx skills add obra/superpowers -s superpowers-tdd",
+      verificationStatus: "verified"
+    },
+    recipes: [
+      {
+        id: "rec-7",
+        target: "antigravity",
+        displayLabel: "Google Antigravity",
+        command: "npx skills add obra/superpowers -s superpowers-tdd",
+        sourceUrl: "https://github.com/obra/superpowers",
+        verificationStatus: "verified"
+      }
+    ],
+    showcases: [],
+    assets: []
+  },
+  {
+    id: "sk-8",
+    slug: "caveman-compress",
+    name: "Caveman Compress",
+    summary: "Protokol kompresi token agent yang memangkas 65% verbositas tanpa kehilangan presisi.",
+    description: "Optimasi efisiensi konteks LLM dengan memotong formalitas basa-basi dan menyampaikan argumen logis secara ultra-ringkas.",
+    status: "published",
+    skillType: "workflows",
+    authorDisplay: "Julius Brussee",
+    licenseSpdx: "MIT",
+    licenseUrl: "https://opensource.org/licenses/MIT",
+    sourceKind: "github",
+    sourceUrl: "https://github.com/JuliusBrussee/caveman",
+    sourceOwner: "JuliusBrussee",
+    sourceRepo: "caveman",
+    sourcePath: "skills/caveman-compress",
+    verificationStatus: "verified",
+    featuredRank: 8,
+    publishedAt: new Date("2026-10-12"),
+    updatedAt: new Date("2026-10-12"),
+    categories: [{ id: "cat-5", slug: "workflows", name: "Workflows" }],
+    tags: [{ id: "tag-5", slug: "token-saver", name: "Token Saver" }],
+    primaryRecipe: {
+      id: "rec-8",
+      target: "antigravity",
+      displayLabel: "Google Antigravity",
+      command: "/caveman-compress",
+      verificationStatus: "verified"
+    },
+    recipes: [
+      {
+        id: "rec-8",
+        target: "antigravity",
+        displayLabel: "Google Antigravity",
+        command: "/caveman-compress",
+        sourceUrl: "https://github.com/JuliusBrussee/caveman",
+        verificationStatus: "verified"
+      }
+    ],
+    showcases: [],
+    assets: []
+  },
+  {
+    id: "sk-9",
+    slug: "taste-filter",
+    name: "Taste Filter",
+    summary: "Filter estetika tingkat lanjut untuk memblokir pola AI template generik.",
+    description: "Aturan desain anti-slop yang melarang font standar, bayangan kasar, border abu-abu tebal, dan kartu bootstrap klise.",
+    status: "published",
+    skillType: "frontend",
+    authorDisplay: "Leonxlnx",
+    licenseSpdx: "MIT",
+    licenseUrl: "https://opensource.org/licenses/MIT",
+    sourceKind: "github",
+    sourceUrl: "https://github.com/Leonxlnx/taste-skill",
+    sourceOwner: "Leonxlnx",
+    sourceRepo: "taste-skill",
+    sourcePath: "skills/taste-filter",
+    verificationStatus: "verified",
+    featuredRank: 9,
+    publishedAt: new Date("2026-10-12"),
+    updatedAt: new Date("2026-10-12"),
+    categories: [{ id: "cat-2", slug: "design-systems", name: "Design Systems" }],
+    tags: [{ id: "tag-2", slug: "anti-slop", name: "Anti-Slop" }],
+    primaryRecipe: {
+      id: "rec-9",
+      target: "antigravity",
+      displayLabel: "Google Antigravity",
+      command: "/taste-filter",
+      verificationStatus: "verified"
+    },
+    recipes: [
+      {
+        id: "rec-9",
+        target: "antigravity",
+        displayLabel: "Google Antigravity",
+        command: "/taste-filter",
+        sourceUrl: "https://github.com/Leonxlnx/taste-skill",
+        verificationStatus: "verified"
+      }
+    ],
+    showcases: [],
+    assets: []
+  },
+  {
+    id: "sk-10",
+    slug: "security-audit",
+    name: "Security Audit",
+    summary: "Pemindaian kerentanan AST otomatis, deteksi bocoran rahasia, dan audit input sanitization.",
+    description: "Protokol keamanan proaktif yang mendeteksi secret key, token git, injection payload, dan celah otentikasi sebelum commit.",
+    status: "published",
+    skillType: "code-quality",
+    authorDisplay: "Anthropic Security",
+    licenseSpdx: "MIT",
+    licenseUrl: "https://opensource.org/licenses/MIT",
+    sourceKind: "github",
+    sourceUrl: "https://github.com/anthropics/skills",
+    sourceOwner: "anthropics",
+    sourceRepo: "skills",
+    sourcePath: "skills/security-audit",
+    verificationStatus: "verified",
+    featuredRank: 10,
+    publishedAt: new Date("2026-10-12"),
+    updatedAt: new Date("2026-10-12"),
+    categories: [{ id: "cat-3", slug: "code-quality", name: "Code Quality" }],
+    tags: [{ id: "tag-3", slug: "security", name: "Security" }],
+    primaryRecipe: {
+      id: "rec-10",
+      target: "antigravity",
+      displayLabel: "Google Antigravity",
+      command: "/security-audit",
+      verificationStatus: "verified"
+    },
+    recipes: [
+      {
+        id: "rec-10",
+        target: "antigravity",
+        displayLabel: "Google Antigravity",
+        command: "/security-audit",
+        sourceUrl: "https://github.com/anthropics/skills",
+        verificationStatus: "verified"
+      }
+    ],
+    showcases: [],
+    assets: []
+  },
+  {
+    id: "sk-11",
+    slug: "git-workflow",
+    name: "Git Workflow",
+    summary: "Manajemen commit konvensional, percabangan atomik, dan otomatisasi changelog.",
+    description: "Standar git modern untuk agent yang memvalidasi commit message format, mengisolasi feature branch, dan membuat tag rilis.",
+    status: "published",
+    skillType: "workflows",
+    authorDisplay: "Eka Syarif Maulana",
+    licenseSpdx: "MIT",
+    licenseUrl: "https://opensource.org/licenses/MIT",
+    sourceKind: "github",
+    sourceUrl: "https://github.com/dresar/SKILL-IA-AGENT",
+    sourceOwner: "dresar",
+    sourceRepo: "SKILL-IA-AGENT",
+    sourcePath: "skills/git-workflow",
+    verificationStatus: "verified",
+    featuredRank: 11,
+    publishedAt: new Date("2026-10-12"),
+    updatedAt: new Date("2026-10-12"),
+    categories: [{ id: "cat-5", slug: "workflows", name: "Workflows" }],
+    tags: [{ id: "tag-5", slug: "git", name: "Git" }],
+    primaryRecipe: {
+      id: "rec-11",
+      target: "antigravity",
+      displayLabel: "Google Antigravity",
+      command: "/git-workflow",
+      verificationStatus: "verified"
+    },
+    recipes: [
+      {
+        id: "rec-11",
+        target: "antigravity",
+        displayLabel: "Google Antigravity",
+        command: "/git-workflow",
+        sourceUrl: "https://github.com/dresar/SKILL-IA-AGENT",
+        verificationStatus: "verified"
+      }
+    ],
+    showcases: [],
+    assets: []
+  },
+  {
+    id: "sk-12",
+    slug: "docker-devops",
+    name: "Docker DevOps",
+    summary: "Eksekusi container sandbox efemeral untuk evaluasi kode agent mandiri.",
+    description: "Isolasi eksekusi lingkungan kode pada kontainer Docker non-root dengan batasan memori dan timeout otomatis.",
+    status: "published",
+    skillType: "workflows",
+    authorDisplay: "DevOps Working Group",
+    licenseSpdx: "Apache-2.0",
+    licenseUrl: "https://www.apache.org/licenses/LICENSE-2.0",
+    sourceKind: "github",
+    sourceUrl: "https://github.com/dresar/SKILL-IA-AGENT",
+    sourceOwner: "dresar",
+    sourceRepo: "SKILL-IA-AGENT",
+    sourcePath: "skills/docker-devops",
+    verificationStatus: "verified",
+    featuredRank: 12,
+    publishedAt: new Date("2026-10-12"),
+    updatedAt: new Date("2026-10-12"),
+    categories: [{ id: "cat-5", slug: "workflows", name: "Workflows" }],
+    tags: [{ id: "tag-5", slug: "docker", name: "Docker" }],
+    primaryRecipe: {
+      id: "rec-12",
+      target: "antigravity",
+      displayLabel: "Google Antigravity",
+      command: "npx skills add dresar/SKILL-IA-AGENT -s docker-devops",
+      verificationStatus: "verified"
+    },
+    recipes: [
+      {
+        id: "rec-12",
+        target: "antigravity",
+        displayLabel: "Google Antigravity",
+        command: "npx skills add dresar/SKILL-IA-AGENT -s docker-devops",
+        sourceUrl: "https://github.com/dresar/SKILL-IA-AGENT",
+        verificationStatus: "verified"
+      }
+    ],
+    showcases: [],
+    assets: []
   }
 ];
 

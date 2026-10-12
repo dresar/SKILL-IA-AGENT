@@ -1,11 +1,11 @@
 # UI/UX Text
 
-> Ultra-minimalist microcopy standards with maximum 1 sentence descriptions.
+> Standar microcopy ultra-minimalis dengan batas maksimal 1 kalimat.
 
-## Category
+## Kategori
 Design Systems
 
-## Installation
+## Instalasi
 ```bash
 npx skills add dresar/SKILL-IA-AGENT -s ui-ux-text
 ```

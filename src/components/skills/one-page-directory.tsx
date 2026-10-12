@@ -56,8 +56,8 @@ export function OnePageDirectory({
   }, [initialSkills, searchQuery, selectedCategory]);
 
   return (
-    <div className="space-y-12">
-      <section className="relative rounded-3xl bg-surface border border-border p-8 md:p-12 overflow-hidden shadow-2xl">
+    <div className="space-y-8 sm:space-y-12">
+      <section className="relative rounded-2xl sm:rounded-3xl bg-surface border border-border p-5 sm:p-8 md:p-12 overflow-hidden shadow-2xl">
         <div className="absolute -top-32 -right-32 w-80 h-80 bg-accent/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -67,11 +67,11 @@ export function OnePageDirectory({
             Registry & MCP Live
           </div>
 
-          <h1 className="text-3xl md:text-5xl font-black tracking-tight text-text-primary">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-black tracking-tight text-text-primary">
             SKILL <span className="text-accent">UIAI</span>
           </h1>
 
-          <p className="text-sm md:text-base text-text-secondary leading-relaxed max-w-xl">
+          <p className="text-xs sm:text-sm md:text-base text-text-secondary leading-relaxed max-w-xl">
             Katalog skill open-source untuk agent coding dengan preview visual, sandbox interaktif, dan protokol MCP.
           </p>
 

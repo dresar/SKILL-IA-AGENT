@@ -1,0 +1,6 @@
+{
+  "slug": "security-audit",
+  "name": "Security Audit",
+  "prompt": "Scan codebase for hardcoded connection strings and AST injection risks.",
+  "output": "export function sanitizeInput(input: string): string {\\n  return input.replace(/[<>\\"'&]/g, (char) => `&#${char.charCodeAt(0)};`);\\n}"
+}

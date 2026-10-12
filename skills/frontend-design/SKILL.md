@@ -1,18 +1,18 @@
 # Frontend Design
 
-> High-end agency grade UI components and tactile dark aesthetics.
+> Komponen UI berkualitas agency tinggi dan estetika gelap taktil.
 
-## Category
+## Kategori
 Frontend
 
-## Installation
+## Instalasi
 ```bash
 npx skills add dresar/SKILL-IA-AGENT -s frontend-design
 ```
 
 ## Demo Prompt
 ```text
-Design a responsive landing page hero with double-bezel cards and kinetic hover.
+Design responsive landing page hero with double-bezel cards and kinetic hover.
 ```
 
 ## Demo Output

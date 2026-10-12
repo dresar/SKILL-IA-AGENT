@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Play, Copy, Check, Terminal, Sparkles, RefreshCw } from "lucide-react";
+import { X, Play, Copy, Check, Sparkles, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SkillCardData } from "./skill-card";
@@ -23,7 +23,7 @@ const DEFAULT_DEMOS: Record<string, { prompt: string; code: string; logs: string
   },
   "ui-ux-text": {
     prompt: "Perbaiki teks modal konfirmasi penghapusan agar patuh aturan ultra-minimalis.",
-    code: `// Heading: 1-3 kata\n<h2>Hapus Akun</h2>\n\n// Deskripsi: Maksimal 1 kalimat\n<p className="text-xs text-text-muted">\nTindakan ini menghapus data secara permanen.\n</p>\n\n// Tombol: 1-2 kata\n<Button variant="danger">Hapus</Button>\n<Button variant="ghost">Batal</Button>`,
+    code: `<h2>Hapus Akun</h2>\n<p className="text-xs text-text-muted">\nTindakan ini menghapus data secara permanen.\n</p>\n<Button variant="danger">Hapus</Button>\n<Button variant="ghost">Batal</Button>`,
     logs: [
       "[1/3] Scanning modal for generic fluff...",
       "[2/3] Truncating verbose sentences to single declarative clause...",
@@ -65,6 +65,60 @@ const DEFAULT_DEMOS: Record<string, { prompt: string; code: string; logs: string
       "[2/3] Removing heavy drop shadows and gradient overlays...",
       "[3/3] Emitted flat bento layout."
     ]
+  },
+  "superpowers-tdd": {
+    prompt: "Jalankan siklus pengujian test-driven development sebelum menulis implementasi.",
+    code: `describe("AuthService", () => {\n  it("rejects unauthorized token signature", async () => {\n    const res = await verifyAuthToken("invalid-token");\n    expect(res.isValid).toBe(false);\n  });\n});`,
+    logs: [
+      "[1/3] Synthesizing unit tests based on acceptance criteria...",
+      "[2/3] Running test suite in ephemeral runner...",
+      "[3/3] Tests executed: 4 passed, 0 failed."
+    ]
+  },
+  "caveman-compress": {
+    prompt: "Kompresi penjelasan agent agar memangkas 65% penggunaan token.",
+    code: `Action: migrate db schema\nTarget: Neon PostgreSQL\nTables: 19 schema objects\nResult: 0 errors`,
+    logs: [
+      "[1/3] Activating token economy protocol...",
+      "[2/3] Stripping conversational fluff and boilerplate...",
+      "[3/3] Tokens reduced by 66.4%."
+    ]
+  },
+  "taste-filter": {
+    prompt: "Deteksi dan ganti komponen UI generik dengan estetika modern.",
+    code: `<div className="p-1 rounded-2xl bg-white/[0.03] ring-1 ring-white/10">\n  <div className="p-4 rounded-xl bg-surface">\n    <span className="text-xs font-bold text-accent">Bespoke Design</span>\n  </div>\n</div>`,
+    logs: [
+      "[1/3] Scanning AST for generic gradients and drop shadows...",
+      "[2/3] Banned 4 anti-patterns...",
+      "[3/3] Injected tactile double-bezel styling."
+    ]
+  },
+  "security-audit": {
+    prompt: "Pindai codebase untuk deteksi kebocoran kredensial dan celah keamanan.",
+    code: `export function sanitizeInput(input: string): string {\n  return input.replace(/[<>"'&]/g, (char) => \`&#\${char.charCodeAt(0)};\`);\n}`,
+    logs: [
+      "[1/3] Scanning AST for secret patterns and injection risks...",
+      "[2/3] Verifying environment variable isolation...",
+      "[3/3] Audit passed: 0 vulnerabilities found."
+    ]
+  },
+  "git-workflow": {
+    prompt: "Otomasi pembuatan commit konvensional dan branch terisolasi.",
+    code: `git checkout -b feat/mcp-integration\ngit add src/mcp/\ngit commit -m "feat(mcp): implement native tools server"\ngit push origin feat/mcp-integration`,
+    logs: [
+      "[1/3] Validating conventional commit format...",
+      "[2/3] Staging atomic changeset...",
+      "[3/3] Remote branch created."
+    ]
+  },
+  "docker-devops": {
+    prompt: "Jalankan kontainer sandbox efemeral untuk evaluasi kode agent.",
+    code: `FROM node:20-alpine\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci --only=production\nUSER node\nCMD ["npm", "start"]`,
+    logs: [
+      "[1/3] Building unprivileged Alpine sandbox container...",
+      "[2/3] Allocating CPU/memory limits...",
+      "[3/3] Container operational."
+    ]
   }
 };
 
@@ -73,7 +127,7 @@ export function SkillDemoModal({ skill, onClose }: SkillDemoModalProps) {
 
   const demoData = DEFAULT_DEMOS[skill.slug] || {
     prompt: `Demonstrasi eksekusi skill ${skill.name}.`,
-    code: `// Eksekusi skill: ${skill.slug}\nconsole.log("${skill.name} siap digunakan.");`,
+    code: `export const ${skill.slug.replace(/-/g, "_")} = { active: true };`,
     logs: [
       "[1/2] Memuat runtime agent...",
       "[2/2] Skill berhasil diinisialisasi."
@@ -89,7 +143,7 @@ export function SkillDemoModal({ skill, onClose }: SkillDemoModalProps) {
     setIsRunning(true);
     setTimeout(() => {
       setIsRunning(false);
-    }, 600);
+    }, 500);
   };
 
   const handleCopy = () => {
@@ -99,46 +153,47 @@ export function SkillDemoModal({ skill, onClose }: SkillDemoModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-3xl rounded-2xl bg-surface border border-border shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-surface-raised/40">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center text-accent">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="relative w-full max-w-3xl rounded-2xl bg-surface border border-border shadow-2xl overflow-hidden flex flex-col max-h-[92dvh]">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-border bg-surface-raised/40 shrink-0">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0">
               <Sparkles className="w-4 h-4" />
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <h3 className="font-bold text-base text-text-primary">
+                <h3 className="font-bold text-sm sm:text-base text-text-primary truncate">
                   Demo: {skill.name}
                 </h3>
                 <Badge variant="accent" className="text-[10px]">
                   Interaktif
                 </Badge>
               </div>
-              <p className="text-xs text-text-muted mt-0.5">
+              <p className="text-[11px] sm:text-xs text-text-muted mt-0.5 truncate">
                 Simulasi hasil instruksi skill pada coding agent.
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-raised transition-colors"
+            className="p-2 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-raised transition-colors shrink-0"
+            aria-label="Tutup"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="p-6 space-y-5 overflow-y-auto flex-1">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto flex-1">
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs font-semibold text-text-secondary">
               <span>Instruksi Agent (Prompt)</span>
               <button
                 type="button"
                 onClick={() => setPrompt(demoData.prompt)}
-                className="text-[11px] text-accent hover:underline flex items-center gap-1"
+                className="text-[11px] text-accent hover:underline flex items-center gap-1 min-h-[28px]"
               >
                 <RefreshCw className="w-3 h-3" />
-                Reset
+                <span>Reset</span>
               </button>
             </div>
             <div className="relative">
@@ -155,7 +210,7 @@ export function SkillDemoModal({ skill, onClose }: SkillDemoModalProps) {
                 size="sm"
                 onClick={handleRun}
                 disabled={isRunning}
-                className="text-xs gap-1.5 h-8 font-semibold"
+                className="text-xs gap-1.5 h-9 min-h-[38px] font-semibold px-4"
               >
                 <Play className={`w-3.5 h-3.5 fill-current ${isRunning ? "animate-spin" : ""}`} />
                 <span>{isRunning ? "Menjalankan..." : "Jalankan Simulasi"}</span>
@@ -165,11 +220,11 @@ export function SkillDemoModal({ skill, onClose }: SkillDemoModalProps) {
 
           <div className="space-y-2">
             <div className="flex items-center justify-between border-b border-border pb-2">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <button
                   type="button"
                   onClick={() => setActiveTab("code")}
-                  className={`text-xs font-semibold px-3 py-1 rounded-md transition-colors ${
+                  className={`text-xs font-semibold px-3 py-1.5 rounded-md min-h-[32px] transition-colors ${
                     activeTab === "code"
                       ? "bg-accent/15 text-accent border border-accent/30"
                       : "text-text-muted hover:text-text-secondary"
@@ -180,7 +235,7 @@ export function SkillDemoModal({ skill, onClose }: SkillDemoModalProps) {
                 <button
                   type="button"
                   onClick={() => setActiveTab("logs")}
-                  className={`text-xs font-semibold px-3 py-1 rounded-md transition-colors ${
+                  className={`text-xs font-semibold px-3 py-1.5 rounded-md min-h-[32px] transition-colors ${
                     activeTab === "logs"
                       ? "bg-accent/15 text-accent border border-accent/30"
                       : "text-text-muted hover:text-text-secondary"
@@ -195,7 +250,7 @@ export function SkillDemoModal({ skill, onClose }: SkillDemoModalProps) {
                   variant="ghost"
                   size="sm"
                   onClick={handleCopy}
-                  className="text-xs h-7 gap-1 text-text-muted hover:text-text-primary px-2"
+                  className="text-xs h-8 min-h-[32px] gap-1 text-text-muted hover:text-text-primary px-2.5"
                 >
                   {copied ? <Check className="w-3.5 h-3.5 text-status-success" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copied ? "Tersalin" : "Salin"}</span>
@@ -204,27 +259,27 @@ export function SkillDemoModal({ skill, onClose }: SkillDemoModalProps) {
             </div>
 
             {activeTab === "code" ? (
-              <div className="relative rounded-xl bg-[#08090C] border border-border/80 p-4 font-mono text-xs text-emerald-300 overflow-x-auto max-h-64 shadow-inner">
+              <div className="relative rounded-xl bg-[#08090C] border border-border/80 p-3.5 sm:p-4 font-mono text-xs text-emerald-300 overflow-x-auto max-h-60 shadow-inner">
                 <pre>{demoData.code}</pre>
               </div>
             ) : (
-              <div className="rounded-xl bg-[#08090C] border border-border/80 p-4 font-mono text-xs space-y-1.5 max-h-64 overflow-y-auto shadow-inner">
+              <div className="rounded-xl bg-[#08090C] border border-border/80 p-3.5 sm:p-4 font-mono text-xs space-y-1.5 max-h-60 overflow-y-auto shadow-inner">
                 {demoData.logs.map((log, idx) => (
                   <p key={idx} className="text-text-secondary">
                     <span className="text-accent">{">"}</span> {log}
                   </p>
                 ))}
                 <p className="text-status-success pt-1">
-                  ✓ Eksekusi berhasil dalam 42ms.
+                  ✓ Eksekusi berhasil dalam 38ms.
                 </p>
               </div>
             )}
           </div>
         </div>
 
-        <div className="px-6 py-3 border-t border-border bg-surface-raised/30 flex items-center justify-between text-xs text-text-muted">
-          <span>Target Runtime: Google Antigravity & Claude Code</span>
-          <Button variant="ghost" size="sm" onClick={onClose} className="text-xs h-8">
+        <div className="px-4 sm:px-6 py-3 border-t border-border bg-surface-raised/30 flex items-center justify-between text-xs text-text-muted shrink-0">
+          <span className="truncate mr-2">Target: Antigravity & Claude Code</span>
+          <Button variant="ghost" size="sm" onClick={onClose} className="text-xs h-9 min-h-[38px] px-3">
             Tutup
           </Button>
         </div>

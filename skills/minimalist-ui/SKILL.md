@@ -1,11 +1,11 @@
 # Minimalist UI
 
-> Clean editorial web layouts, warm monochrome palettes, and gapless bento grids.
+> Layout web editorial bersih, palet monokrom hangat, dan grid bento rapat.
 
-## Category
+## Kategori
 Frontend
 
-## Installation
+## Instalasi
 ```bash
 npx skills add dresar/SKILL-IA-AGENT -s minimalist-ui
 ```

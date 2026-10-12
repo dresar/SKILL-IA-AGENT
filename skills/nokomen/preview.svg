@@ -10,15 +10,15 @@
     </linearGradient>
   </defs>
   <rect width="800" height="450" rx="24" fill="url(#bg-nokomen)" />
-  <circle cx="700" cy="100" r="220" fill="#22C55E" opacity="0.12" />
-  <circle cx="120" cy="380" r="180" fill="#86EFAC" opacity="0.08" />
+  <circle cx="700" cy="100" r="220" fill="#22C55E" opacity="0.14" />
+  <circle cx="120" cy="380" r="180" fill="#86EFAC" opacity="0.09" />
   <rect x="50" y="50" width="700" height="350" rx="16" fill="none" stroke="url(#glow-nokomen)" stroke-width="1.5" />
   
   <rect x="70" y="75" width="130" height="28" rx="14" fill="#22C55E" fill-opacity="0.15" stroke="#22C55E" stroke-width="1" />
-  <text x="135" y="94" fill="#86EFAC" font-family="system-ui, sans-serif" font-size="12" font-weight="700" text-anchor="middle">Clean Architecture</text>
+  <text x="135" y="94" fill="#86EFAC" font-family="system-ui, sans-serif" font-size="12" font-weight="700" text-anchor="middle">Clean Code</text>
   
   <text x="70" y="160" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="36" font-weight="800" letter-spacing="-0.5">Nokomen</text>
-  <text x="70" y="195" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="16" font-weight="400">Strict zero-comment standard enforcing self-documenting architectures.</text>
+  <text x="70" y="195" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="16" font-weight="400">Standar zero-comment mutlak yang melarang segala komentar dan docstring.</text>
   
   <rect x="70" y="230" width="660" height="140" rx="12" fill="#000000" fill-opacity="0.5" stroke="#334155" stroke-width="1" />
   <circle cx="95" cy="252" r="5" fill="#EF4444" />

@@ -1,11 +1,11 @@
 # Nokomen
 
-> Strict zero-comment standard enforcing self-documenting architectures.
+> Standar zero-comment mutlak yang melarang segala komentar dan docstring.
 
-## Category
+## Kategori
 Code Quality
 
-## Installation
+## Instalasi
 ```bash
 npx skills add dresar/SKILL-IA-AGENT -s nokomen
 ```

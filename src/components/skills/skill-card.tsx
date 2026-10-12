@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { Terminal, Copy, Check, Sparkles, Play, ArrowUpRight } from "lucide-react";
+import { Terminal, Copy, Check, Play, ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -31,7 +30,16 @@ interface SkillCardProps {
 
 export function SkillCard({ skill, onSelect, onDemo }: SkillCardProps) {
   const [copied, setCopied] = useState(false);
-  const previewSrc = skill.previewImageUrl || `/previews/${skill.slug}.svg`;
+  const [imgErrorCount, setImgErrorCount] = useState(0);
+
+  const getPreviewSource = () => {
+    if (skill.previewImageUrl) return skill.previewImageUrl;
+    if (imgErrorCount === 0) return `/previews/${skill.slug}.svg`;
+    if (imgErrorCount === 1) {
+      return `https://cdn.jsdelivr.net/gh/dresar/SKILL-IA-AGENT@main/public/previews/${skill.slug}.svg`;
+    }
+    return "/brand/logo.svg";
+  };
 
   const handleCopy = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -64,18 +72,16 @@ export function SkillCard({ skill, onSelect, onDemo }: SkillCardProps) {
       onClick={handleCardClick}
       className="group relative flex flex-col justify-between rounded-2xl p-1 bg-white/[0.02] ring-1 ring-white/10 hover:ring-accent/50 hover:bg-white/[0.04] transition-all duration-300 cursor-pointer shadow-lg hover:shadow-accent/5"
     >
-      <div className="rounded-xl bg-surface p-4 flex flex-col justify-between h-full space-y-4">
+      <div className="rounded-xl bg-surface p-3.5 sm:p-4 flex flex-col justify-between h-full space-y-4">
         <div className="space-y-3">
           <div className="relative aspect-[16/9] w-full rounded-lg overflow-hidden bg-surface-raised border border-border/80 group-hover:border-accent/30 transition-colors">
             <img
-              src={previewSrc}
+              src={getPreviewSource()}
               alt={skill.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = "/brand/logo.svg";
-                target.className = "w-full h-full object-contain p-8 opacity-30";
-              }}
+              className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${
+                imgErrorCount >= 2 ? "p-8 opacity-30 object-contain" : ""
+              }`}
+              onError={() => setImgErrorCount((prev) => prev + 1)}
             />
             <div className="absolute top-2.5 right-2.5">
               <Badge
@@ -135,7 +141,7 @@ export function SkillCard({ skill, onSelect, onDemo }: SkillCardProps) {
               </span>
               <button
                 onClick={handleCopy}
-                className="text-text-muted hover:text-text-primary p-1 rounded transition-colors shrink-0"
+                className="text-text-muted hover:text-text-primary p-1.5 rounded transition-colors shrink-0 min-w-[28px] min-h-[28px] flex items-center justify-center"
                 aria-label="Salin perintah"
               >
                 {copied ? <Check className="w-3.5 h-3.5 text-status-success" /> : <Copy className="w-3.5 h-3.5" />}
@@ -149,7 +155,7 @@ export function SkillCard({ skill, onSelect, onDemo }: SkillCardProps) {
               variant="outline"
               size="sm"
               onClick={handleDemoClick}
-              className="flex-1 text-xs h-8 gap-1.5 font-medium border-accent/30 hover:border-accent hover:bg-accent/10 text-accent"
+              className="flex-1 text-xs h-9 min-h-[38px] gap-1.5 font-medium border-accent/30 hover:border-accent hover:bg-accent/10 text-accent"
             >
               <Play className="w-3 h-3 fill-current" />
               <span>Demo</span>
@@ -159,7 +165,7 @@ export function SkillCard({ skill, onSelect, onDemo }: SkillCardProps) {
               variant="ghost"
               size="sm"
               onClick={handleCardClick}
-              className="flex-1 text-xs h-8 text-text-secondary hover:text-text-primary"
+              className="flex-1 text-xs h-9 min-h-[38px] text-text-secondary hover:text-text-primary"
             >
               <span>Detail</span>
             </Button>
