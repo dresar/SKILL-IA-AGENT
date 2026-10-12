@@ -1,0 +1,6 @@
+{
+  "slug": "caveman-compress",
+  "name": "Caveman Compress",
+  "prompt": "Compress chatty agent explanation into ultra-dense bullet points.",
+  "output": "// Caveman protocol activated: 65% tokens saved.\\n// Action: migrate db schema -> verify 19 tables -> pass"
+}

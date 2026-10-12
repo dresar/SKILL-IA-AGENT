@@ -1,0 +1,6 @@
+{
+  "slug": "antigravity-guide",
+  "name": "Antigravity Guide",
+  "prompt": "Spawn specialized subagent for concurrent background task execution.",
+  "output": "await invoke_subagent({\\n  Subagents: [{\\n    TypeName: \\"research\\",\\n    Role: \\"Codebase Researcher\\",\\n    Prompt: \\"Audit database schema relationships and verify foreign keys.\\"\\n  }]\\n});"
+}

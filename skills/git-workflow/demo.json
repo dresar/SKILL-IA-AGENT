@@ -1,0 +1,6 @@
+{
+  "slug": "git-workflow",
+  "name": "Git Workflow",
+  "prompt": "Generate semantic commit message matching conventional standard.",
+  "output": "feat(skills): add automated git workflow skill bundle and verification tests"
+}

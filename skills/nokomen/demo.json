@@ -1,0 +1,6 @@
+{
+  "slug": "nokomen",
+  "name": "Nokomen",
+  "prompt": "Enforce zero comments policy across TypeScript codebase.",
+  "output": "export interface SkillPayload {\\n  id: string;\\n  slug: string;\\n  name: string;\\n}\\n\\nexport function validateSkillPayload(payload: SkillPayload): boolean {\\n  return Boolean(payload.id && payload.slug && payload.name.trim().length > 0);\\n}"
+}

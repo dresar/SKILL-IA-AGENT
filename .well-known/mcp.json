@@ -1,0 +1,19 @@
+{
+  "name": "skill-uiai",
+  "version": "1.0.0",
+  "description": "Model Context Protocol registry server for AI agent skills",
+  "transport": {
+    "type": "stdio",
+    "command": "npx",
+    "args": ["tsx", "scripts/mcp-stdio.ts"]
+  },
+  "endpoint": "/api/mcp",
+  "tools": [
+    "search_skills",
+    "get_skill",
+    "get_skill_content",
+    "get_install_command",
+    "list_categories",
+    "get_skill_preview"
+  ]
+}

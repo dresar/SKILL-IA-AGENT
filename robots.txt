@@ -4,6 +4,31 @@ Disallow: /admin
 Disallow: /admin/
 Disallow: /login
 Disallow: /login/
-Disallow: /api/
+Disallow: /api/admin/
+
+User-Agent: GPTBot
+User-Agent: ChatGPT-User
+User-Agent: ClaudeBot
+User-Agent: Claude-Web
+User-Agent: PerplexityBot
+User-Agent: Google-Extended
+User-Agent: Applebot-Extended
+User-Agent: cohere-ai
+User-Agent: Amazonbot
+User-Agent: Bytespider
+User-Agent: Diffbot
+Allow: /
+Allow: /skills/
+Allow: /categories/
+Allow: /library/
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /api/skills
+Allow: /api/mcp
+Disallow: /admin
+Disallow: /admin/
+Disallow: /login
+Disallow: /login/
+Disallow: /api/admin/
 
 Sitemap: https://dresar.github.io/sitemap.xml
