@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Terminal, Copy, Check, Play, ArrowUpRight } from "lucide-react";
+import { Terminal, Copy, Check, ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -25,10 +25,9 @@ export interface SkillCardData {
 interface SkillCardProps {
   skill: SkillCardData;
   onSelect?: (skill: SkillCardData) => void;
-  onDemo?: (skill: SkillCardData) => void;
 }
 
-export function SkillCard({ skill, onSelect, onDemo }: SkillCardProps) {
+export function SkillCard({ skill, onSelect }: SkillCardProps) {
   const [copied, setCopied] = useState(false);
   const [imgErrorCount, setImgErrorCount] = useState(0);
 
@@ -53,16 +52,6 @@ export function SkillCard({ skill, onSelect, onDemo }: SkillCardProps) {
 
   const handleCardClick = () => {
     if (onSelect) {
-      onSelect(skill);
-    }
-  };
-
-  const handleDemoClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (onDemo) {
-      onDemo(skill);
-    } else if (onSelect) {
       onSelect(skill);
     }
   };
@@ -149,27 +138,15 @@ export function SkillCard({ skill, onSelect, onDemo }: SkillCardProps) {
             </div>
           )}
 
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleDemoClick}
-              className="flex-1 text-[11px] sm:text-xs h-7 sm:h-8 gap-1 font-medium border-accent/30 hover:border-accent hover:bg-accent/10 text-accent"
-            >
-              <Play className="w-2.5 h-2.5 fill-current" />
-              <span>Demo</span>
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={handleCardClick}
-              className="flex-1 text-[11px] sm:text-xs h-7 sm:h-8 text-text-secondary hover:text-text-primary"
-            >
-              <span>Detail</span>
-            </Button>
-          </div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={handleCardClick}
+            className="w-full text-[11px] sm:text-xs h-7 sm:h-8 font-medium text-text-secondary hover:text-accent hover:bg-accent/10 transition-colors"
+          >
+            <span>Detail</span>
+          </Button>
         </div>
       </div>
     </div>

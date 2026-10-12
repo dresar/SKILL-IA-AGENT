@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 import { SkillCard, SkillCardData } from "./skill-card";
 import { SkillDetailDrawer } from "./skill-detail-drawer";
-import { SkillDemoModal } from "./skill-demo-modal";
 import { McpPlayground } from "@/components/mcp/mcp-playground";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -36,7 +35,6 @@ export function OnePageDirectory({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedSkill, setSelectedSkill] = useState<SkillCardData | null>(null);
-  const [demoSkill, setDemoSkill] = useState<SkillCardData | null>(null);
 
   const filteredSkills = useMemo(() => {
     return initialSkills.filter((s) => {
@@ -187,7 +185,6 @@ export function OnePageDirectory({
                 key={skill.id}
                 skill={skill}
                 onSelect={(s) => setSelectedSkill(s)}
-                onDemo={(s) => setDemoSkill(s)}
               />
             ))}
           </div>
@@ -216,15 +213,6 @@ export function OnePageDirectory({
       <SkillDetailDrawer
         skill={selectedSkill}
         onClose={() => setSelectedSkill(null)}
-        onOpenDemo={(s) => {
-          setSelectedSkill(null);
-          setDemoSkill(s);
-        }}
-      />
-
-      <SkillDemoModal
-        skill={demoSkill}
-        onClose={() => setDemoSkill(null)}
       />
     </div>
   );

@@ -26,7 +26,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/components/providers/auth-provider";
-import { SkillDemoModal } from "@/components/skills/skill-demo-modal";
 import { AiPromptStudio, PreviewMode } from "@/components/admin/ai-prompt-studio";
 import { ImageUploadZone } from "@/components/admin/image-upload-zone";
 import { AiSkillAnalyzer, SkillAnalysisResult } from "@/components/admin/ai-skill-analyzer";
@@ -221,7 +220,6 @@ export default function AdminPage() {
   const [skillsList, setSkillsList] = useState<AdminSkill[]>(INITIAL_SKILLS);
   const [searchFilter, setSearchFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [demoSkill, setDemoSkill] = useState<any | null>(null);
   const [aiStudioSkill, setAiStudioSkill] = useState<AdminSkill | null>(null);
   const [studioSkillId, setStudioSkillId] = useState<string>("sk-1");
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -719,19 +717,10 @@ export default function AdminPage() {
                           variant="ghost"
                           size="sm"
                           onClick={() => setAiStudioSkill(s)}
-                          title="AI Image Prompt Studio"
+                          title="Prompt AI"
                           className="text-xs h-8 px-2 text-accent min-h-[36px]"
                         >
                           <Wand2 className="w-3.5 h-3.5" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setDemoSkill(s)}
-                          title="Uji Demo"
-                          className="text-xs h-8 px-2 text-accent min-h-[36px]"
-                        >
-                          <Play className="w-3.5 h-3.5" />
                         </Button>
                         <Button
                           variant="ghost"
@@ -1044,11 +1033,6 @@ export default function AdminPage() {
           </div>
         </div>
       )}
-
-      <SkillDemoModal
-        skill={demoSkill}
-        onClose={() => setDemoSkill(null)}
-      />
     </div>
   );
 }
