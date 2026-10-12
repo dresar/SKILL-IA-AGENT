@@ -81,7 +81,13 @@ async function seed() {
     { slug: "neon", name: "Neon" },
     { slug: "postgres", name: "PostgreSQL" },
     { slug: "antigravity", name: "Antigravity" },
-    { slug: "mcp", name: "MCP" }
+    { slug: "mcp", name: "MCP" },
+    { slug: "tdd", name: "TDD" },
+    { slug: "token-saver", name: "Token Saver" },
+    { slug: "anti-slop", name: "Anti-Slop" },
+    { slug: "security", name: "Security" },
+    { slug: "git", name: "Git" },
+    { slug: "docker", name: "Docker" }
   ];
 
   const insertedTags: Record<string, string> = {};
@@ -367,6 +373,186 @@ async function seed() {
           sortOrder: 1
         }
       ]
+    },
+    {
+      slug: "superpowers-tdd",
+      name: "Superpowers TDD",
+      summary: "Agentic software engineering framework with strict test-driven development cycles.",
+      description: "Agentic software development methodology requiring test suite completion before implementation to prevent code hallucination.",
+      status: "published",
+      skillType: "coding",
+      authorDisplay: "Jesse Vincent (obra)",
+      licenseSpdx: "MIT",
+      licenseUrl: "https://opensource.org/licenses/MIT",
+      sourceKind: "github",
+      sourceUrl: "https://github.com/obra/superpowers",
+      sourceOwner: "obra",
+      sourceRepo: "superpowers",
+      sourcePath: "skills/superpowers-tdd",
+      verificationStatus: "verified",
+      featuredRank: 7,
+      categorySlugs: ["code-quality"],
+      tagSlugs: ["tdd", "clean-code"],
+      recipes: [
+        {
+          target: "antigravity",
+          displayLabel: "Google Antigravity",
+          command: "npx skills add obra/superpowers -s superpowers-tdd",
+          sourceUrl: "https://github.com/obra/superpowers",
+          verificationStatus: "verified"
+        }
+      ],
+      showcases: []
+    },
+    {
+      slug: "caveman-compress",
+      name: "Caveman Compress",
+      summary: "Agent token compression protocol trimming 65% verbosity without loss of precision.",
+      description: "LLM context efficiency optimization cutting conversational filler and delivering logical arguments ultra-concisely.",
+      status: "published",
+      skillType: "workflows",
+      authorDisplay: "Julius Brussee",
+      licenseSpdx: "MIT",
+      licenseUrl: "https://opensource.org/licenses/MIT",
+      sourceKind: "github",
+      sourceUrl: "https://github.com/JuliusBrussee/caveman",
+      sourceOwner: "JuliusBrussee",
+      sourceRepo: "caveman",
+      sourcePath: "skills/caveman-compress",
+      verificationStatus: "verified",
+      featuredRank: 8,
+      categorySlugs: ["workflows"],
+      tagSlugs: ["token-saver"],
+      recipes: [
+        {
+          target: "antigravity",
+          displayLabel: "Google Antigravity",
+          command: "/caveman-compress",
+          sourceUrl: "https://github.com/JuliusBrussee/caveman",
+          verificationStatus: "verified"
+        }
+      ],
+      showcases: []
+    },
+    {
+      slug: "taste-filter",
+      name: "Taste Filter",
+      summary: "Advanced aesthetic filter blocking generic AI template patterns.",
+      description: "Anti-slop design rules barring default fonts, harsh drop shadows, heavy borders, and cliché card layouts.",
+      status: "published",
+      skillType: "frontend",
+      authorDisplay: "Leonxlnx",
+      licenseSpdx: "MIT",
+      licenseUrl: "https://opensource.org/licenses/MIT",
+      sourceKind: "github",
+      sourceUrl: "https://github.com/Leonxlnx/taste-skill",
+      sourceOwner: "Leonxlnx",
+      sourceRepo: "taste-skill",
+      sourcePath: "skills/taste-filter",
+      verificationStatus: "verified",
+      featuredRank: 9,
+      categorySlugs: ["design-systems"],
+      tagSlugs: ["anti-slop", "design"],
+      recipes: [
+        {
+          target: "antigravity",
+          displayLabel: "Google Antigravity",
+          command: "/taste-filter",
+          sourceUrl: "https://github.com/Leonxlnx/taste-skill",
+          verificationStatus: "verified"
+        }
+      ],
+      showcases: []
+    },
+    {
+      slug: "security-audit",
+      name: "Security Audit",
+      summary: "Automated AST vulnerability scanning, secret leak detection, and input sanitization audit.",
+      description: "Proactive security protocol detecting secret keys, tokens, injection payloads, and auth gaps before commit.",
+      status: "published",
+      skillType: "code-quality",
+      authorDisplay: "Anthropic Security",
+      licenseSpdx: "MIT",
+      licenseUrl: "https://opensource.org/licenses/MIT",
+      sourceKind: "github",
+      sourceUrl: "https://github.com/anthropics/skills",
+      sourceOwner: "anthropics",
+      sourceRepo: "skills",
+      sourcePath: "skills/security-audit",
+      verificationStatus: "verified",
+      featuredRank: 10,
+      categorySlugs: ["code-quality"],
+      tagSlugs: ["security", "clean-code"],
+      recipes: [
+        {
+          target: "antigravity",
+          displayLabel: "Google Antigravity",
+          command: "/security-audit",
+          sourceUrl: "https://github.com/anthropics/skills",
+          verificationStatus: "verified"
+        }
+      ],
+      showcases: []
+    },
+    {
+      slug: "git-workflow",
+      name: "Git Workflow",
+      summary: "Conventional commit management, atomic branching, and changelog automation.",
+      description: "Modern agent git standards validating commit format, isolating feature branches, and creating release tags.",
+      status: "published",
+      skillType: "workflows",
+      authorDisplay: "Eka Syarif Maulana",
+      licenseSpdx: "MIT",
+      licenseUrl: "https://opensource.org/licenses/MIT",
+      sourceKind: "github",
+      sourceUrl: "https://github.com/dresar/SKILL-IA-AGENT",
+      sourceOwner: "dresar",
+      sourceRepo: "SKILL-IA-AGENT",
+      sourcePath: "skills/git-workflow",
+      verificationStatus: "verified",
+      featuredRank: 11,
+      categorySlugs: ["workflows"],
+      tagSlugs: ["git"],
+      recipes: [
+        {
+          target: "antigravity",
+          displayLabel: "Google Antigravity",
+          command: "/git-workflow",
+          sourceUrl: "https://github.com/dresar/SKILL-IA-AGENT",
+          verificationStatus: "verified"
+        }
+      ],
+      showcases: []
+    },
+    {
+      slug: "docker-devops",
+      name: "Docker DevOps",
+      summary: "Ephemeral sandbox container execution for isolated agent evaluation.",
+      description: "Isolated code environment execution in non-root Docker containers with strict memory limits and timeouts.",
+      status: "published",
+      skillType: "workflows",
+      authorDisplay: "DevOps Working Group",
+      licenseSpdx: "Apache-2.0",
+      licenseUrl: "https://www.apache.org/licenses/LICENSE-2.0",
+      sourceKind: "github",
+      sourceUrl: "https://github.com/dresar/SKILL-IA-AGENT",
+      sourceOwner: "dresar",
+      sourceRepo: "SKILL-IA-AGENT",
+      sourcePath: "skills/docker-devops",
+      verificationStatus: "verified",
+      featuredRank: 12,
+      categorySlugs: ["workflows"],
+      tagSlugs: ["docker"],
+      recipes: [
+        {
+          target: "antigravity",
+          displayLabel: "Google Antigravity",
+          command: "npx skills add dresar/SKILL-IA-AGENT -s docker-devops",
+          sourceUrl: "https://github.com/dresar/SKILL-IA-AGENT",
+          verificationStatus: "verified"
+        }
+      ],
+      showcases: []
     }
   ];
 

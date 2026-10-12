@@ -689,7 +689,30 @@ export async function getPublishedSkills(filters: SkillFilters = {}) {
       })
     );
 
-    return items;
+    let merged = items;
+    if (!filters.query && !filters.category) {
+      const existingSlugs = new Set(items.map((i) => i.slug));
+      const missing = FALLBACK_SKILLS.filter((s) => !existingSlugs.has(s.slug)).map((s) => ({
+        ...s,
+        primaryRecipe: (s.primaryRecipe as any) || null
+      }));
+      if (missing.length > 0) {
+        merged = [...items, ...(missing as typeof items)];
+      }
+    } else if (filters.category) {
+      const existingSlugs = new Set(items.map((i) => i.slug));
+      const missing = FALLBACK_SKILLS.filter(
+        (s) => !existingSlugs.has(s.slug) && s.categories.some((c) => c.slug === filters.category)
+      ).map((s) => ({
+        ...s,
+        primaryRecipe: (s.primaryRecipe as any) || null
+      }));
+      if (missing.length > 0) {
+        merged = [...items, ...(missing as typeof items)];
+      }
+    }
+
+    return merged.slice(offset, offset + limit);
   } catch {
     return FALLBACK_SKILLS.filter((s) => {
       if (filters.category && !s.categories.some((c) => c.slug === filters.category)) return false;

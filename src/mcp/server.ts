@@ -130,7 +130,7 @@ export function createMcpServer() {
                 license: i.licenseSpdx,
                 sourceUrl: i.sourceUrl,
                 verificationStatus: i.verificationStatus,
-                categories: i.categories.map((c) => c.name),
+                categories: i.categories.map((c: { name: string }) => c.name),
                 primaryInstallCommand: i.primaryRecipe?.command
               })),
               null,

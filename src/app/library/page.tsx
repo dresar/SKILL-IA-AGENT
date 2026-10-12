@@ -6,12 +6,58 @@ import { getPublishedSkills } from "@/server/services/skills";
 import { SkillCard } from "@/components/skills/skill-card";
 import { Button } from "@/components/ui/button";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dresar.github.io";
+
 export const metadata: Metadata = {
   title: "Library",
   description: "Personal favorites and curated collections.",
   alternates: {
     canonical: "/library/"
+  },
+  openGraph: {
+    title: "Library — SKILL UIAI",
+    description: "Personal favorites and curated collections.",
+    url: `${siteUrl}/library/`,
+    type: "website",
+    images: ["/brand/logo.svg"]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Library — SKILL UIAI",
+    description: "Personal favorites and curated collections.",
+    images: ["/brand/logo.svg"]
   }
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": `${siteUrl}/library/#webpage`,
+      "url": `${siteUrl}/library/`,
+      "name": "Library",
+      "description": "Personal favorites and curated collections."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${siteUrl}/library/#breadcrumb`,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": `${siteUrl}/`
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Library",
+          "item": `${siteUrl}/library/`
+        }
+      ]
+    }
+  ]
 };
 
 export default async function LibraryPage() {
@@ -19,6 +65,10 @@ export default async function LibraryPage() {
 
   return (
     <div className="space-y-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-text-primary">Library</h1>

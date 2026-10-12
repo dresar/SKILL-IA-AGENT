@@ -84,23 +84,56 @@ export default async function SkillDetailPage({ params }: SkillDetailPageProps) 
 
   const related = await getPublishedSkills({ limit: 3 });
   const otherSkills = related.filter((s) => s.slug !== skill.slug).slice(0, 3);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dresar.github.io";
 
   const skillJsonLd = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: skill.name,
-    description: skill.summary,
-    applicationCategory: "DeveloperApplication",
-    operatingSystem: "Any",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD"
-    },
-    author: {
-      "@type": "Person",
-      name: skill.authorDisplay
-    }
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "@id": `${siteUrl}/skills/${skill.slug}/#software`,
+        url: `${siteUrl}/skills/${skill.slug}/`,
+        name: skill.name,
+        description: skill.summary,
+        applicationCategory: "DeveloperApplication",
+        operatingSystem: "Any",
+        image: `${siteUrl}/previews/${skill.slug}.svg`,
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: "USD"
+        },
+        author: {
+          "@type": "Person",
+          name: skill.authorDisplay
+        },
+        ...(skill.licenseUrl ? { license: skill.licenseUrl } : {})
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${siteUrl}/skills/${skill.slug}/#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": `${siteUrl}/`
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Skills",
+            "item": `${siteUrl}/skills/`
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": skill.name,
+            "item": `${siteUrl}/skills/${skill.slug}/`
+          }
+        ]
+      }
+    ]
   };
 
   return (

@@ -30,11 +30,26 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
     };
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dresar.github.io";
+
   return {
     title: `${currentCategory.name} Skills`,
     description: currentCategory.description || `Verified agent skills in ${currentCategory.name}.`,
     alternates: {
       canonical: `/categories/${slug}/`
+    },
+    openGraph: {
+      title: `${currentCategory.name} Skills — SKILL UIAI`,
+      description: currentCategory.description || `Verified agent skills in ${currentCategory.name}.`,
+      url: `${siteUrl}/categories/${slug}/`,
+      type: "website",
+      images: ["/brand/logo.svg"]
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${currentCategory.name} Skills — SKILL UIAI`,
+      description: currentCategory.description || `Verified agent skills in ${currentCategory.name}.`,
+      images: ["/brand/logo.svg"]
     }
   };
 }
@@ -53,8 +68,51 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     limit: 24
   });
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dresar.github.io";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": `${siteUrl}/categories/${slug}/#webpage`,
+        "url": `${siteUrl}/categories/${slug}/`,
+        "name": `${currentCategory.name} Skills`,
+        "description": currentCategory.description || `Verified agent skills in ${currentCategory.name}.`
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${siteUrl}/categories/${slug}/#breadcrumb`,
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": `${siteUrl}/`
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Categories",
+            "item": `${siteUrl}/categories/${slug}/`
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": currentCategory.name,
+            "item": `${siteUrl}/categories/${slug}/`
+          }
+        ]
+      }
+    ]
+  };
+
   return (
     <div className="space-y-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div>
         <Link
           href="/skills"
