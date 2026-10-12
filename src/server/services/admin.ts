@@ -83,9 +83,13 @@ export async function setSkillStatus(id: string, status: "draft" | "published" |
 }
 
 export async function getAuditHistory(limit: number = 20) {
-  return db
-    .select()
-    .from(auditEvents)
-    .orderBy(desc(auditEvents.createdAt))
-    .limit(limit);
+  try {
+    return await db
+      .select()
+      .from(auditEvents)
+      .orderBy(desc(auditEvents.createdAt))
+      .limit(limit);
+  } catch {
+    return [];
+  }
 }
