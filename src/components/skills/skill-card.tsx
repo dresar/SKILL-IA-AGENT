@@ -1,154 +1,150 @@
 "use client";
 
 import React, { useState } from "react";
-import { Terminal, Copy, Check, ArrowUpRight } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Check, CheckCircle2, Copy } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export interface SkillCardData {
   id: string;
   slug: string;
   name: string;
   summary: string;
-  description?: string;
+  description?: string | null;
   skillType: string;
   authorDisplay: string;
   licenseSpdx?: string | null;
   sourceUrl: string;
   verificationStatus: string;
+  featuredRank?: number | null;
   categories: Array<{ id: string; slug: string; name: string }>;
-  primaryRecipe?: { command: string; target: string; displayLabel?: string } | null;
-  recipes?: Array<{ id: string; command: string; target: string; displayLabel?: string }>;
-  previewImageUrl?: string;
+  tags?: Array<{ id: string; slug: string; name: string }>;
+  primaryRecipe?: { command: string; target: string; displayLabel?: string | null } | null;
+  recipes?: Array<{ id: string; command: string; target: string; displayLabel?: string | null }>;
+  previewImageUrl?: string | null;
+  rank?: string | null;
+  platforms?: string[] | null;
 }
 
 interface SkillCardProps {
   skill: SkillCardData;
   onSelect?: (skill: SkillCardData) => void;
+  onDemo?: (skill: SkillCardData) => void;
 }
 
-export function SkillCard({ skill, onSelect }: SkillCardProps) {
+export function SkillCard({ skill, onSelect, onDemo }: SkillCardProps) {
   const [copied, setCopied] = useState(false);
-  const [imgErrorCount, setImgErrorCount] = useState(0);
-
-  const getPreviewSource = () => {
-    if (skill.previewImageUrl) return skill.previewImageUrl;
-    if (imgErrorCount === 0) return `/previews/${skill.slug}.svg`;
-    if (imgErrorCount === 1) {
-      return `https://cdn.jsdelivr.net/gh/dresar/SKILL-IA-AGENT@main/public/previews/${skill.slug}.svg`;
-    }
-    return "/brand/logo.svg";
-  };
 
   const handleCopy = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (skill.primaryRecipe?.command) {
-      navigator.clipboard.writeText(skill.primaryRecipe.command);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
+    const commandToCopy = skill.primaryRecipe?.command || `npx skills add ${skill.slug}`;
+    navigator.clipboard.writeText(commandToCopy);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleCardClick = () => {
-    if (onSelect) {
-      onSelect(skill);
-    }
-  };
+  const rank = skill.rank || (skill.featuredRank && skill.featuredRank <= 3 ? "S-RANK" : "A-RANK");
+  const isSRank = rank === "S-RANK";
+
+  const platforms = skill.platforms && skill.platforms.length > 0
+    ? skill.platforms
+    : skill.recipes && skill.recipes.length > 0
+    ? Array.from(new Set(skill.recipes.map((r) => r.target.replace("-code", "").toUpperCase())))
+    : ["CLAUDE", "ANTIGRAVITY"];
+
+  const primaryCategoryName = skill.categories[0]?.name?.toUpperCase() || "DESIGN & UI/UX";
+  const licenseTag = (skill.licenseSpdx || "OPEN SOURCE").toUpperCase();
 
   return (
-    <div
-      onClick={handleCardClick}
-      className="group relative flex flex-col justify-between rounded-xl sm:rounded-2xl p-0.5 sm:p-1 bg-white/[0.02] ring-1 ring-white/10 hover:ring-accent/50 hover:bg-white/[0.04] transition-all duration-300 cursor-pointer shadow-md hover:shadow-accent/5"
+    <article
+      onClick={() => onSelect?.(skill)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onSelect?.(skill);
+        }
+      }}
+      tabIndex={0}
+      role="button"
+      className="group relative flex flex-col justify-between rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 p-5 sm:p-6 transition-all hover:border-neutral-400 dark:hover:border-neutral-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-neutral-100 text-left select-none"
     >
-      <div className="rounded-[10px] sm:rounded-xl bg-surface p-2.5 sm:p-4 flex flex-col justify-between h-full space-y-2.5 sm:space-y-4">
-        <div className="space-y-2 sm:space-y-3">
-          <div className="relative aspect-[21/9] sm:aspect-[16/9] w-full rounded-md sm:rounded-lg overflow-hidden bg-surface-raised border border-border/80 group-hover:border-accent/30 transition-colors">
-            <img
-              src={getPreviewSource()}
-              alt={skill.name}
-              className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${
-                imgErrorCount >= 2 ? "p-4 opacity-30 object-contain" : ""
-              }`}
-              onError={() => setImgErrorCount((prev) => prev + 1)}
-            />
-            <div className="absolute top-1.5 right-1.5 sm:top-2.5 sm:right-2.5">
-              <Badge
-                variant={
-                  skill.verificationStatus === "verified"
-                    ? "success"
-                    : skill.verificationStatus === "source_checked"
-                    ? "accent"
-                    : "outline"
-                }
-                className="text-[9px] sm:text-[10px] px-1.5 py-0 backdrop-blur-md bg-background/80"
+      <div>
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <h3 className="font-semibold text-base sm:text-[17px] tracking-tight text-neutral-900 dark:text-neutral-100 truncate group-hover:text-neutral-950 dark:group-hover:text-white">
+              {skill.name}
+            </h3>
+            <span
+              className="inline-flex items-center justify-center shrink-0 text-neutral-800 dark:text-neutral-200"
+              title="Verified Skill"
+            >
+              <CheckCircle2 className="h-4 w-4" />
+            </span>
+          </div>
+
+          <span
+            className={cn(
+              "shrink-0 font-mono text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-[3px]",
+              isSRank
+                ? "bg-neutral-950 text-white dark:bg-neutral-100 dark:text-neutral-950"
+                : "border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 bg-transparent"
+            )}
+          >
+            {rank}
+          </span>
+        </div>
+
+        <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+          by {skill.authorDisplay.replace("Anthropic & Community", "Anthropic")}
+        </p>
+
+        <p className="text-xs sm:text-[13px] leading-relaxed text-neutral-600 dark:text-neutral-300 mt-3 mb-5 line-clamp-3">
+          {skill.summary || skill.description}
+        </p>
+      </div>
+
+      <div className="space-y-2.5 pt-2 border-t border-neutral-100 dark:border-neutral-800/80">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="font-mono text-[10px] tracking-wider uppercase px-2 py-0.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded-[3px] border border-neutral-200/70 dark:border-neutral-700/70 font-medium">
+            {primaryCategoryName}
+          </span>
+          <span className="font-mono text-[10px] tracking-wider uppercase px-2 py-0.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded-[3px] border border-neutral-200/70 dark:border-neutral-700/70 font-medium">
+            {licenseTag}
+          </span>
+        </div>
+
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-1.5">
+            {platforms.slice(0, 3).map((platform, idx) => (
+              <span
+                key={`${platform}-${idx}`}
+                className="font-mono text-[10px] tracking-wider uppercase px-2 py-0.5 bg-neutral-50 dark:bg-neutral-800/50 text-neutral-500 dark:text-neutral-400 rounded-[3px]"
               >
-                {skill.verificationStatus === "verified"
-                  ? "Verifikasi"
-                  : skill.verificationStatus === "source_checked"
-                  ? "Dicek"
-                  : "Draft"}
-              </Badge>
-            </div>
-          </div>
-
-          <div className="space-y-0.5 sm:space-y-1">
-            <div className="flex items-center justify-between gap-1.5">
-              <h3 className="font-bold text-sm sm:text-base text-text-primary group-hover:text-accent transition-colors flex items-center gap-1">
-                <span>{skill.name}</span>
-                <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-accent shrink-0" />
-              </h3>
-              {skill.licenseSpdx && (
-                <span className="text-[9px] sm:text-[10px] text-text-muted font-mono shrink-0">
-                  {skill.licenseSpdx}
-                </span>
-              )}
-            </div>
-            <p className="text-[10px] sm:text-xs text-text-muted">
-              oleh <span className="text-text-secondary font-medium">{skill.authorDisplay}</span>
-            </p>
-          </div>
-
-          <p className="text-[11px] sm:text-xs text-text-secondary line-clamp-2 leading-relaxed">
-            {skill.summary}
-          </p>
-
-          <div className="flex flex-wrap gap-1">
-            {skill.categories.map((c) => (
-              <Badge key={c.id} variant="outline" className="text-[9px] sm:text-[10px] py-0 px-1.5 font-mono">
-                {c.name}
-              </Badge>
+                {platform}
+              </span>
             ))}
           </div>
-        </div>
 
-        <div className="pt-2 sm:pt-3 border-t border-border/60 space-y-1.5 sm:space-y-2">
-          {skill.primaryRecipe?.command && (
-            <div className="flex items-center justify-between bg-surface-raised rounded-lg border border-border px-2 py-1 overflow-hidden">
-              <span className="font-mono text-[10px] sm:text-[11px] text-text-muted truncate mr-1.5">
-                {skill.primaryRecipe.command}
-              </span>
-              <button
-                onClick={handleCopy}
-                className="text-text-muted hover:text-text-primary p-1 rounded transition-colors shrink-0 min-w-[22px] min-h-[22px] flex items-center justify-center"
-                aria-label="Salin"
-              >
-                {copied ? <Check className="w-3 h-3 text-status-success" /> : <Copy className="w-3 h-3" />}
-              </button>
-            </div>
-          )}
-
-          <Button
+          <button
             type="button"
-            variant="ghost"
-            size="sm"
-            onClick={handleCardClick}
-            className="w-full text-[11px] sm:text-xs h-7 sm:h-8 font-medium text-text-secondary hover:text-accent hover:bg-accent/10 transition-colors"
+            onClick={handleCopy}
+            className="h-7 px-2 flex items-center gap-1 rounded-[3px] border border-neutral-200 dark:border-neutral-800 text-[11px] font-mono text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors"
+            title="Copy install command"
           >
-            <span>Detail</span>
-          </Button>
+            {copied ? (
+              <>
+                <Check className="h-3 w-3 text-emerald-600" />
+                <span>copied</span>
+              </>
+            ) : (
+              <>
+                <Copy className="h-3 w-3" />
+                <span>copy</span>
+              </>
+            )}
+          </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

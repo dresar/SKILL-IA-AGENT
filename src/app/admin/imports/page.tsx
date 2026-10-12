@@ -2,16 +2,34 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ArrowLeft, UploadCloud, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/components/providers/auth-provider";
 
 export default function AdminImportsPage() {
-  const router = useRouter();
+  const { user, isAdmin } = useAuth();
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ ok: boolean; message: string; slug?: string } | null>(null);
+
+  if (!isAdmin) {
+    return (
+      <div className="mx-auto max-w-md rounded-2xl border border-border bg-surface p-6 text-center">
+        <h1 className="text-lg font-semibold text-text-primary">Akses Admin Ditolak</h1>
+        <p className="mt-2 text-sm text-text-secondary">Halaman import memerlukan role Super Admin atau Curator.</p>
+        <Link href="/admin/login" className="mt-4 inline-flex">
+          <Button variant="primary" size="sm">Login Admin</Button>
+        </Link>
+      </div>
+    );
+  }
+
+  const adminHeaders = {
+    "Content-Type": "application/json",
+    "x-skill-uiai-role": user?.role || "",
+    "x-skill-uiai-email": user?.email || ""
+  };
 
   const handleImport = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +41,7 @@ export default function AdminImportsPage() {
     try {
       const res = await fetch("/api/admin/import", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: adminHeaders,
         body: JSON.stringify({ url: url.trim() })
       });
 

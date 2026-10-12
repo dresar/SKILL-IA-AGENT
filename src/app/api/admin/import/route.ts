@@ -1,13 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdminRequest } from "@/server/auth/admin-guard";
 import { processImportJob } from "@/server/services/imports";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const denied = requireAdminRequest(req);
+  if (denied) return denied;
+
   return NextResponse.json({ status: "active" });
 }
 
 export async function POST(req: NextRequest) {
+  const denied = requireAdminRequest(req);
+  if (denied) return denied;
+
   try {
     const body = await req.json();
     const { url } = body;

@@ -1,158 +1,224 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, User, Shield, LogOut, Github, Terminal } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { LogOut, Menu, Search, X } from "lucide-react";
 import { Logo } from "@/components/brand/logo";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useAuth } from "@/components/providers/auth-provider";
+import { SubmitSkillModal } from "@/components/skills/submit-skill-modal";
 
-export function TopBar() {
+interface TopBarProps {
+  onSubmitSkillClick?: () => void;
+}
+
+const navLinks = [
+  { href: "/", label: "Skills" },
+  { href: "/#mcp-tools", label: "MCP Servers" },
+  { href: "/?category=workflows", label: "Workflows" },
+  { href: "/#tools", label: "Tools" },
+  { href: "/library", label: "Learn" }
+];
+
+export function TopBar({ onSubmitSkillClick }: TopBarProps) {
+  const router = useRouter();
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [isSubmitOpen, setIsSubmitOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        const searchInput = document.querySelector<HTMLInputElement>("input[data-search-input='true']");
+        if (searchInput) {
+          searchInput.focus();
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = query.trim();
+    router.push(trimmed ? `/?q=${encodeURIComponent(trimmed)}` : "/");
+    setMobileOpen(false);
+  };
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-4 md:px-8 border-b border-border bg-background/80 backdrop-blur-md">
-      <div className="flex items-center gap-6">
-        <Logo size="sm" />
+    <header className="sticky top-0 z-30 border-b border-border bg-surface/95 backdrop-blur-md">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between gap-4">
+          <div className="flex items-center gap-8">
+            <Logo size="md" />
 
-        <nav className="hidden md:flex items-center gap-1">
-          <Link href="/">
-            <Button variant="ghost" size="sm" className="text-xs">
-              Katalog
-            </Button>
-          </Link>
-          <a href="/#mcp">
-            <Button variant="ghost" size="sm" className="text-xs gap-1.5 text-text-secondary hover:text-text-primary">
-              <Terminal className="w-3.5 h-3.5 text-accent" />
-              <span>MCP Tools</span>
-            </Button>
-          </a>
-          <Link href="/admin">
-            <Button variant="ghost" size="sm" className="text-xs gap-1.5 text-text-secondary hover:text-text-primary">
-              <Shield className="w-3.5 h-3.5 text-accent" />
-              <span>Admin Panel</span>
-            </Button>
-          </Link>
-          <a
-            href="https://github.com/dresar/SKILL-IA-AGENT"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-text-secondary hover:text-text-primary px-3 py-1.5 text-xs font-medium inline-flex items-center gap-1.5 transition-colors"
-          >
-            <Github className="w-3.5 h-3.5" />
-            <span>GitHub</span>
-          </a>
-        </nav>
-      </div>
-
-      <div className="flex items-center gap-3">
-        {isAuthenticated && user ? (
-          <div className="flex items-center gap-2">
-            <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-full bg-surface-raised border border-border">
-              <img
-                src={user.avatar || `https://api.dicebear.com/7.x/identicon/svg?seed=${user.email}`}
-                alt={user.name}
-                className="w-4 h-4 rounded-full"
-              />
-              <span className="text-xs font-medium text-text-primary max-w-[120px] truncate">
-                {user.name}
-              </span>
-              <Badge variant={isAdmin ? "accent" : "outline"} className="text-[9px]">
-                {user.role}
-              </Badge>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={logout}
-              title="Keluar"
-              className="text-text-muted hover:text-text-primary px-2"
-            >
-              <LogOut className="w-4 h-4" />
-            </Button>
+            <nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className="text-text-secondary hover:text-text-primary transition-colors py-1"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  className="text-text-secondary hover:text-text-primary transition-colors py-1"
+                >
+                  Admin
+                </Link>
+              )}
+            </nav>
           </div>
-        ) : (
-          <Link href="/login">
-            <Button variant="primary" size="sm" className="text-xs gap-1.5 font-semibold">
-              <User className="w-3.5 h-3.5" />
-              <span>Masuk</span>
-            </Button>
-          </Link>
-        )}
 
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="p-2 md:hidden text-text-secondary hover:text-text-primary rounded-lg border border-border min-w-[36px] min-h-[36px] flex items-center justify-center"
-          aria-label="Menu"
-        >
-          {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-        </button>
+          <div className="flex items-center gap-3">
+            <form onSubmit={handleSearch} className="relative hidden md:block w-64 lg:w-72">
+              <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-muted" />
+              <input
+                data-search-input="true"
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search 193 skills..."
+                className="h-9 w-full rounded-[4px] border border-border bg-background pl-8 pr-9 text-xs text-text-primary placeholder:text-text-muted outline-none transition focus:border-neutral-900 dark:focus:border-neutral-200 focus:ring-1 focus:ring-neutral-900 dark:focus:ring-neutral-200"
+              />
+              <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 rounded border border-border bg-surface px-1.5 py-0.5 text-[10px] font-mono text-text-muted">
+                ⌘K
+              </span>
+            </form>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (onSubmitSkillClick) {
+                  onSubmitSkillClick();
+                } else {
+                  setIsSubmitOpen(true);
+                }
+              }}
+              className="hidden sm:inline-flex items-center justify-center h-9 px-4 rounded-[4px] bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 hover:bg-neutral-800 dark:hover:bg-neutral-200 text-xs font-semibold tracking-wider uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 active:scale-[0.98]"
+            >
+              Submit a Skill
+            </button>
+
+            <ThemeToggle />
+
+            {isAuthenticated && user ? (
+              <div className="flex items-center gap-2">
+                <span className="hidden max-w-[120px] truncate text-xs font-mono text-text-secondary lg:inline">
+                  {user.name}
+                </span>
+                <button
+                  type="button"
+                  onClick={logout}
+                  title="Logout"
+                  className="h-9 w-9 flex items-center justify-center rounded-[4px] border border-border text-text-muted hover:text-text-primary hover:bg-surface-raised transition-colors"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="hidden sm:inline-flex items-center justify-center h-9 px-3 rounded-[4px] border border-border text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-surface-raised transition-colors"
+              >
+                Sign In
+              </Link>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="flex h-9 w-9 items-center justify-center rounded-[4px] border border-border text-text-secondary hover:bg-surface-raised hover:text-text-primary lg:hidden"
+              aria-label="Toggle navigation menu"
+            >
+              {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </button>
+          </div>
+        </div>
       </div>
 
       {mobileOpen && (
-        <div className="absolute top-16 left-0 right-0 bg-surface border-b border-border p-4 md:hidden space-y-3 shadow-xl">
-          <nav className="flex flex-col gap-1 text-xs">
-            <Link
-              href="/"
-              onClick={() => setMobileOpen(false)}
-              className="px-3 py-2 text-text-secondary hover:text-text-primary rounded-lg hover:bg-surface-raised font-medium"
+        <div className="border-t border-border bg-surface px-4 py-4 lg:hidden space-y-3">
+          <form onSubmit={handleSearch} className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search 193 skills..."
+              className="h-10 w-full rounded-[4px] border border-border bg-background pl-9 pr-3 text-sm text-text-primary placeholder:text-text-muted outline-none focus:border-neutral-900 dark:focus:border-neutral-200"
+            />
+          </form>
+
+          <nav className="flex flex-col gap-1 text-sm">
+            {navLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+                className="rounded px-3 py-2 text-text-secondary hover:bg-surface-raised hover:text-text-primary transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                onClick={() => setMobileOpen(false)}
+                className="rounded px-3 py-2 text-text-secondary hover:bg-surface-raised hover:text-text-primary transition-colors"
+              >
+                Admin Panel
+              </Link>
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                setMobileOpen(false);
+                if (onSubmitSkillClick) {
+                  onSubmitSkillClick();
+                } else {
+                  setIsSubmitOpen(true);
+                }
+              }}
+              className="mt-2 flex h-10 w-full items-center justify-center rounded-[4px] bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 font-semibold text-xs uppercase tracking-wider"
             >
-              Katalog
-            </Link>
-            <a
-              href="/#mcp"
-              onClick={() => setMobileOpen(false)}
-              className="px-3 py-2 text-text-secondary hover:text-text-primary rounded-lg hover:bg-surface-raised font-medium flex items-center gap-2"
-            >
-              <Terminal className="w-3.5 h-3.5 text-accent" />
-              <span>MCP Tools</span>
-            </a>
-            <Link
-              href="/admin"
-              onClick={() => setMobileOpen(false)}
-              className="px-3 py-2 text-accent hover:text-accent-strong rounded-lg hover:bg-surface-raised flex items-center justify-between font-medium"
-            >
-              <span className="flex items-center gap-2">
-                <Shield className="w-3.5 h-3.5" />
-                <span>Admin Panel</span>
-              </span>
-              <Badge variant="accent" className="text-[9px]">Admin</Badge>
-            </Link>
-            <a
-              href="https://github.com/dresar/SKILL-IA-AGENT"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setMobileOpen(false)}
-              className="px-3 py-2 text-text-secondary hover:text-text-primary rounded-lg hover:bg-surface-raised flex items-center gap-2 font-medium"
-            >
-              <Github className="w-3.5 h-3.5" />
-              <span>GitHub</span>
-            </a>
+              Submit a Skill
+            </button>
             {isAuthenticated ? (
               <button
+                type="button"
                 onClick={() => {
                   logout();
                   setMobileOpen(false);
                 }}
-                className="text-left px-3 py-2 text-status-danger rounded-lg hover:bg-surface-raised flex items-center gap-2 font-medium"
+                className="mt-1 rounded px-3 py-2 text-left text-status-danger hover:bg-surface-raised"
               >
-                <LogOut className="w-3.5 h-3.5" />
-                <span>Keluar</span>
+                Logout
               </button>
             ) : (
               <Link
                 href="/login"
                 onClick={() => setMobileOpen(false)}
-                className="px-3 py-2 text-accent font-semibold rounded-lg hover:bg-surface-raised"
+                className="mt-1 rounded px-3 py-2 text-text-primary hover:bg-surface-raised"
               >
-                Masuk
+                Sign In
               </Link>
             )}
           </nav>
         </div>
       )}
+
+      <SubmitSkillModal
+        isOpen={isSubmitOpen}
+        onClose={() => setIsSubmitOpen(false)}
+      />
     </header>
   );
 }

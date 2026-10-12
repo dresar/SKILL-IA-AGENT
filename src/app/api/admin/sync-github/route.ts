@@ -1,10 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { requireAdminRequest } from "@/server/auth/admin-guard";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const denied = requireAdminRequest(req);
+  if (denied) return denied;
+
   const baseDir = path.join(process.cwd(), "skills");
   let list: string[] = [];
   try {
@@ -19,7 +23,10 @@ export async function GET() {
   });
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const denied = requireAdminRequest(req);
+  if (denied) return denied;
+
   try {
     const body = await req.json();
     const { slug, name, summary, category, demoPrompt, demoOutput, svgContent } = body;
@@ -63,10 +70,8 @@ export async function POST(req: Request) {
       success: true,
       message: `Skill ${slug} berhasil disinkronisasi ke folder skills.`
     });
-  } catch (err: any) {
-    return NextResponse.json(
-      { success: false, error: err?.message || "Gagal sinkronisasi ke folder GitHub." },
-      { status: 500 }
-    );
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Gagal sinkronisasi ke folder GitHub.";
+    return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
 }

@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   Shield,
   Layers,
@@ -214,8 +213,7 @@ const INITIAL_SKILLS: AdminSkill[] = [
 ];
 
 export default function AdminPage() {
-  const router = useRouter();
-  const { user, isAuthenticated, isAdmin, switchRole, logout } = useAuth();
+  const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const [activeTab, setActiveTab] = useState<"dashboard" | "skills" | "create" | "ai_analyzer" | "ai_studio" | "sync" | "audit">("dashboard");
   const [skillsList, setSkillsList] = useState<AdminSkill[]>(INITIAL_SKILLS);
   const [searchFilter, setSearchFilter] = useState("");
@@ -264,61 +262,32 @@ export default function AdminPage() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center p-4">
-        <div className="w-full max-w-md rounded-2xl bg-surface border border-border p-6 sm:p-8 text-center space-y-6 shadow-2xl">
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-status-danger/10 border border-status-danger/20 flex items-center justify-center text-status-danger">
-            <Lock className="w-6 h-6" />
+      <div className="flex min-h-[70vh] items-center justify-center p-4">
+        <div className="w-full max-w-md rounded-2xl border border-border bg-surface p-6 text-center sm:p-8">
+          <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-status-danger/20 bg-status-danger/10 text-status-danger">
+            <Lock className="h-5 w-5" />
           </div>
-
-          <div className="space-y-2">
-            <h1 className="text-xl font-bold text-text-primary">Akses Terbatas</h1>
-            <p className="text-xs text-text-muted leading-relaxed">
-              Curator Studio memerlukan hak akses Super Admin atau Kurator resmi.
-            </p>
-          </div>
-
-          <div className="space-y-2 pt-2">
-            <p className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider text-left">
-              Pilih Akses Cepat:
-            </p>
-            <div className="grid grid-cols-1 gap-2">
-              <button
-                type="button"
-                onClick={() => switchRole("SUPER_ADMIN")}
-                className="w-full p-3 rounded-xl bg-surface-raised border border-border hover:border-accent text-left flex items-center justify-between transition-colors min-h-[44px]"
-              >
-                <div>
-                  <p className="text-xs font-bold text-text-primary">Eka Syarif Maulana</p>
-                  <p className="text-[10px] text-text-muted">Super Admin (Akses Penuh)</p>
-                </div>
-                <Badge variant="accent" className="text-[9px]">Masuk</Badge>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => switchRole("CURATOR")}
-                className="w-full p-3 rounded-xl bg-surface-raised border border-border hover:border-accent text-left flex items-center justify-between transition-colors min-h-[44px]"
-              >
-                <div>
-                  <p className="text-xs font-bold text-text-primary">Registry Curator</p>
-                  <p className="text-[10px] text-text-muted">Kurator Skill</p>
-                </div>
-                <Badge variant="outline" className="text-[9px]">Masuk</Badge>
-              </button>
-            </div>
-          </div>
-
-          <div className="pt-2 border-t border-border">
-            <Link href="/login">
-              <Button variant="ghost" size="sm" className="text-xs min-h-[40px]">
-                Ke Halaman Login
-              </Button>
-            </Link>
-          </div>
+          <h1 className="text-xl font-semibold text-text-primary">Akses Admin Ditolak</h1>
+          <p className="mt-2 text-sm leading-relaxed text-text-secondary">
+            {isAuthenticated
+              ? "Sesi aktif tidak memiliki role Super Admin atau Curator."
+              : "Panel ini memerlukan login admin terpisah."}
+          </p>
+          <Link href="/admin/login" className="mt-5 inline-flex">
+            <Button variant="primary" size="sm" className="min-h-10 text-xs">
+              Login Admin
+            </Button>
+          </Link>
         </div>
       </div>
     );
   }
+
+  const adminHeaders = () => ({
+    "Content-Type": "application/json",
+    "x-skill-uiai-role": user?.role || "",
+    "x-skill-uiai-email": user?.email || ""
+  });
 
   const handleApplyAiAnalysis = (result: SkillAnalysisResult) => {
     setFormData({
@@ -375,7 +344,7 @@ export default function AdminPage() {
     try {
       await fetch("/api/admin/sync-github", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: adminHeaders(),
         body: JSON.stringify({
           slug: newSkill.slug,
           name: newSkill.name,
@@ -441,7 +410,7 @@ export default function AdminPage() {
   const handleSyncAll = async () => {
     setFeedback("Menyinkronkan seluruh 12 skill ke folder skills/ di repositori...");
     try {
-      await fetch("/api/admin/sync-github");
+      await fetch("/api/admin/sync-github", { headers: adminHeaders() });
       setTimeout(() => {
         setFeedback("Sinkronisasi repositori berhasil (folder skills & public/previews aktif).");
         setTimeout(() => setFeedback(null), 3000);

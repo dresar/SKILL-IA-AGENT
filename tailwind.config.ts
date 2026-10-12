@@ -1,5 +1,7 @@
 import type { Config } from "tailwindcss";
 
+const withOpacity = (name: string) => `rgb(var(${name}) / <alpha-value>)`;
+
 const config: Config = {
   darkMode: ["class"],
   content: [
@@ -10,27 +12,27 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#090A09",
+        background: withOpacity("--background"),
         surface: {
-          DEFAULT: "#141513",
-          raised: "#1B1C1A",
-          hover: "#222320"
+          DEFAULT: withOpacity("--surface"),
+          raised: withOpacity("--surface-raised"),
+          hover: withOpacity("--surface-hover")
         },
-        border: "#2A2B28",
+        border: withOpacity("--border"),
         text: {
-          primary: "#F1F1EE",
-          secondary: "#A5A79F",
-          muted: "#777A72"
+          primary: withOpacity("--text-primary"),
+          secondary: withOpacity("--text-secondary"),
+          muted: withOpacity("--text-muted")
         },
         accent: {
-          DEFAULT: "#CFCBFF",
-          strong: "#B7B1FF",
-          foreground: "#181724"
+          DEFAULT: withOpacity("--accent"),
+          strong: withOpacity("--accent-strong"),
+          foreground: withOpacity("--accent-foreground")
         },
         status: {
-          success: "#8DD8B1",
-          warning: "#E8C17D",
-          danger: "#F09A9A"
+          success: withOpacity("--success"),
+          warning: withOpacity("--warning"),
+          danger: withOpacity("--danger")
         }
       },
       fontFamily: {

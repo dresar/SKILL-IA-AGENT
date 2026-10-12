@@ -10,32 +10,54 @@ interface LogoProps {
 
 export function Logo({ className, showText = true, size = "md" }: LogoProps) {
   const iconDimensions = {
-    sm: "w-6 h-6",
-    md: "w-8 h-8",
-    lg: "w-10 h-10"
+    sm: "h-7 w-7",
+    md: "h-8 w-8",
+    lg: "h-9 w-9"
   }[size];
 
   const textStyles = {
-    sm: "text-sm",
-    md: "text-base",
+    sm: "text-base",
+    md: "text-lg",
     lg: "text-xl"
   }[size];
 
   return (
-    <Link href="/" className={cn("inline-flex items-center gap-2.5 group select-none", className)}>
-      <div className={cn("relative flex items-center justify-center rounded-lg bg-surface border border-border group-hover:border-accent/40 transition-colors", iconDimensions)}>
-        <svg viewBox="0 0 40 40" className="w-full h-full p-1" fill="none">
-          <path d="M12 28L20 12L28 28" stroke="#CFCBFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M15 23H25" stroke="#CFCBFF" strokeWidth="2" strokeLinecap="round"/>
-          <circle cx="20" cy="12" r="2.2" fill="#B7B1FF"/>
-          <circle cx="12" cy="28" r="2.2" fill="#B7B1FF"/>
-          <circle cx="28" cy="28" r="2.2" fill="#B7B1FF"/>
-          <path d="M28 8L29.5 11L32.5 11.5L30 13.5L31 16.5L28 15L25 16.5L26 13.5L23.5 11.5L26.5 11Z" fill="#CFCBFF"/>
+    <Link
+      href="/"
+      className={cn(
+        "inline-flex items-center gap-2.5 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-neutral-100 rounded-md",
+        className
+      )}
+    >
+      <span className={cn("relative flex items-center justify-center shrink-0 text-text-primary", iconDimensions)}>
+        <svg viewBox="0 0 32 32" className="h-full w-full" fill="none" aria-hidden="true">
+          <path
+            d="M16 3L27.25 9.5V22.5L16 29L4.75 22.5V9.5Z"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M16 16L16 3M16 16L4.75 22.5M16 16L27.25 22.5"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <circle cx="16" cy="3" r="1.6" fill="currentColor" />
+          <circle cx="27.25" cy="9.5" r="1.6" fill="currentColor" />
+          <circle cx="27.25" cy="22.5" r="1.6" fill="currentColor" />
+          <circle cx="16" cy="29" r="1.6" fill="currentColor" />
+          <circle cx="4.75" cy="22.5" r="1.6" fill="currentColor" />
+          <circle cx="4.75" cy="9.5" r="1.6" fill="currentColor" />
+          <circle cx="16" cy="16" r="1.8" fill="currentColor" />
         </svg>
-      </div>
+      </span>
       {showText && (
-        <span className={cn("font-bold tracking-tight text-text-primary group-hover:text-white transition-colors", textStyles)}>
-          SKILL <span className="text-accent">UIAI</span>
+        <span className={cn("font-bold tracking-tight text-text-primary flex items-baseline gap-0.5", textStyles)}>
+          <span>AgenticSkills</span>
+          <span className="text-[10px] font-normal text-text-muted leading-none">™</span>
         </span>
       )}
     </Link>

@@ -2,12 +2,16 @@ import type { Metadata, Viewport } from "next";
 import "@/styles/globals.css";
 import { AppShell } from "@/components/layout/app-shell";
 import { AuthProvider } from "@/components/providers/auth-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dresar.github.io";
 
 export const viewport: Viewport = {
-  themeColor: "#0A0B0E",
-  colorScheme: "dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FAFAFA" },
+    { media: "(prefers-color-scheme: dark)", color: "#0A0A0A" }
+  ],
+  colorScheme: "light dark",
   width: "device-width",
   initialScale: 1
 };
@@ -15,10 +19,10 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "SKILL UIAI — AI Agent Skills Directory",
-    template: "%s | SKILL UIAI"
+    default: "AgenticSkills — AI Agent Skills Directory",
+    template: "%s | AgenticSkills"
   },
-  description: "Open source AI agent skills directory with Model Context Protocol server.",
+  description: "Verified agent skills, microcopy standards, and MCP servers.",
   keywords: [
     "ai agent skills",
     "mcp server",
@@ -29,12 +33,11 @@ export const metadata: Metadata = {
     "claude code skills",
     "cursor rules",
     "agent skills directory",
-    "llms.txt",
-    "generative ai tools"
+    "llms.txt"
   ],
   authors: [{ name: "Eka Syarif Maulana", url: "https://github.com/dresar" }],
   creator: "Eka Syarif Maulana",
-  publisher: "SKILL UIAI",
+  publisher: "AgenticSkills",
   alternates: {
     canonical: "/"
   },
@@ -42,22 +45,22 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: siteUrl,
-    siteName: "SKILL UIAI",
-    title: "SKILL UIAI — AI Agent Skills Directory",
-    description: "Open source AI agent skills directory with Model Context Protocol server.",
+    siteName: "AgenticSkills",
+    title: "AgenticSkills — AI Agent Skills Directory",
+    description: "Verified agent skills, microcopy standards, and MCP servers.",
     images: [
       {
         url: "/brand/logo.svg",
         width: 800,
         height: 600,
-        alt: "SKILL UIAI Logo"
+        alt: "AgenticSkills Logo"
       }
     ]
   },
   twitter: {
     card: "summary_large_image",
-    title: "SKILL UIAI — AI Agent Skills Directory",
-    description: "Open source AI agent skills directory with Model Context Protocol server.",
+    title: "AgenticSkills — AI Agent Skills Directory",
+    description: "Verified agent skills, microcopy standards, and MCP servers.",
     images: ["/brand/logo.svg"],
     creator: "@dresar"
   },
@@ -82,6 +85,16 @@ export const metadata: Metadata = {
   }
 };
 
+const themeScript = `
+  try {
+    const stored = localStorage.getItem("skill_uiai_theme");
+    const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+    const theme = stored === "light" || stored === "dark" ? stored : prefersLight ? "light" : "dark";
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    document.documentElement.style.colorScheme = theme;
+  } catch {}
+`;
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
@@ -89,8 +102,8 @@ const jsonLd = {
       "@type": "WebSite",
       "@id": `${siteUrl}/#website`,
       "url": siteUrl,
-      "name": "SKILL UIAI",
-      "description": "Open source AI agent skills directory with Model Context Protocol server.",
+      "name": "AgenticSkills",
+      "description": "Verified agent skills, microcopy standards, and MCP servers.",
       "publisher": {
         "@type": "Person",
         "name": "Eka Syarif Maulana"
@@ -104,7 +117,7 @@ const jsonLd = {
     {
       "@type": "SoftwareApplication",
       "@id": `${siteUrl}/#software`,
-      "name": "SKILL UIAI",
+      "name": "AgenticSkills",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Any",
       "offers": {
@@ -112,7 +125,7 @@ const jsonLd = {
         "price": "0",
         "priceCurrency": "USD"
       },
-      "description": "Open source AI agent skills directory with Model Context Protocol server."
+      "description": "Verified agent skills, microcopy standards, and MCP servers."
     }
   ]
 };
@@ -123,8 +136,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <link rel="help" href="/llms.txt" title="LLM Context Specification" type="text/plain" />
         <link rel="alternate" type="application/json" href="/api/skills" title="Skills JSON API" />
         <link rel="alternate" type="text/plain" href="/llms.txt" title="LLMs Index" />
@@ -135,9 +149,11 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-background text-text-primary antialiased min-h-screen">
-        <AuthProvider>
-          <AppShell>{children}</AppShell>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <AppShell>{children}</AppShell>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

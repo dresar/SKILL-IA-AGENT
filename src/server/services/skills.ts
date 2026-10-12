@@ -22,11 +22,11 @@ export interface SkillFilters {
 }
 
 const FALLBACK_CATEGORIES = [
-  { id: "cat-1", slug: "frontend", name: "Frontend", description: "UI components, layout patterns, and modern client engineering.", sortOrder: 1 },
-  { id: "cat-2", slug: "design-systems", name: "Design Systems", description: "Minimalist aesthetics, microcopy standards, and token architectures.", sortOrder: 2 },
-  { id: "cat-3", slug: "code-quality", name: "Code Quality", description: "Zero comments, strict typing, linting, and refactoring standards.", sortOrder: 3 },
-  { id: "cat-4", slug: "database", name: "Database", description: "Neon PostgreSQL, serverless migrations, and query toolkits.", sortOrder: 4 },
-  { id: "cat-5", slug: "workflows", name: "Workflows", description: "Multi-agent coordination, subagents, and orchestration pipelines.", sortOrder: 5 }
+  { id: "cat-1", slug: "design-ui-ux", name: "Design & UI/UX", description: "UI design systems, accessibility, and user experience patterns.", sortOrder: 1 },
+  { id: "cat-2", slug: "code-quality", name: "Code Quality", description: "Zero comments, strict typing, and test-driven development patterns.", sortOrder: 2 },
+  { id: "cat-3", slug: "database", name: "Database", description: "Neon PostgreSQL, connection pooling, and schema management.", sortOrder: 3 },
+  { id: "cat-4", slug: "workflows", name: "Workflows", description: "Multi-agent coordination, orchestration pipelines, and subagents.", sortOrder: 4 },
+  { id: "cat-5", slug: "security", name: "Security & Audit", description: "Vulnerability analysis, secret protection, and access control.", sortOrder: 5 }
 ];
 
 const FALLBACK_SKILLS = [
@@ -34,11 +34,11 @@ const FALLBACK_SKILLS = [
     id: "sk-1",
     slug: "frontend-design",
     name: "Frontend Design",
-    summary: "High-end agency grade UI components, responsive layout systems, and tactile dark aesthetics.",
+    summary: "Instructs agents to avoid generic AI aesthetics and make bold, intentional design decisions with React & Tailwind.",
     description: "Comprehensive frontend design skill teaching coding agents to create bespoke, production-ready web interfaces with restrained palettes, fluid typography, and zero generic AI slop.",
     status: "published",
     skillType: "frontend",
-    authorDisplay: "Anthropic & Community",
+    authorDisplay: "Anthropic",
     licenseSpdx: "MIT",
     licenseUrl: "https://opensource.org/licenses/MIT",
     sourceKind: "github",
@@ -46,11 +46,12 @@ const FALLBACK_SKILLS = [
     sourceOwner: "anthropics",
     sourceRepo: "skills",
     sourcePath: "skills/frontend-design",
-    verificationStatus: "source_checked",
+    verificationStatus: "verified",
     featuredRank: 1,
+    rank: "S-RANK",
     publishedAt: new Date("2026-10-12"),
     updatedAt: new Date("2026-10-12"),
-    categories: [{ id: "cat-1", slug: "frontend", name: "Frontend" }],
+    categories: [{ id: "cat-1", slug: "design-ui-ux", name: "Design & UI/UX" }],
     tags: [{ id: "tag-1", slug: "ui", name: "UI" }],
     primaryRecipe: {
       id: "rec-1",
@@ -62,32 +63,124 @@ const FALLBACK_SKILLS = [
     recipes: [
       {
         id: "rec-1",
-        target: "antigravity",
-        displayLabel: "Google Antigravity",
-        command: "npx skills add github.com/anthropics/skills/tree/main/skills/frontend-design --skill frontend-design",
+        target: "claude",
+        displayLabel: "Claude Code",
+        command: "claude skill add anthropics/skills/skills/frontend-design",
         sourceUrl: "https://github.com/anthropics/skills",
         verificationStatus: "verified"
       },
       {
         id: "rec-1b",
-        target: "claude-code",
-        displayLabel: "Claude Code",
+        target: "claude",
+        displayLabel: "Claude",
         command: "claude skill add anthropics/skills/skills/frontend-design",
         sourceUrl: "https://github.com/anthropics/skills",
         verificationStatus: "verified"
       }
     ],
-    showcases: [
+    showcases: [],
+    assets: []
+  },
+  {
+    id: "sk-1b",
+    slug: "canvas-design",
+    name: "Canvas Design",
+    summary: "Design visual art in PNG and PDF formats using sophisticated design philosophies.",
+    description: "Design visual art in PNG and PDF formats using sophisticated design philosophies, restrained spatial balances, and precise vector compositions.",
+    status: "published",
+    skillType: "frontend",
+    authorDisplay: "Anthropic",
+    licenseSpdx: "MIT",
+    licenseUrl: "https://opensource.org/licenses/MIT",
+    sourceKind: "github",
+    sourceUrl: "https://github.com/anthropics/skills/tree/main/skills/canvas-design",
+    sourceOwner: "anthropics",
+    sourceRepo: "skills",
+    sourcePath: "skills/canvas-design",
+    verificationStatus: "verified",
+    featuredRank: 2,
+    rank: "A-RANK",
+    publishedAt: new Date("2026-10-12"),
+    updatedAt: new Date("2026-10-12"),
+    categories: [{ id: "cat-1", slug: "design-ui-ux", name: "Design & UI/UX" }],
+    tags: [{ id: "tag-1", slug: "canvas", name: "Canvas" }],
+    primaryRecipe: {
+      id: "rec-cd-1",
+      target: "claude",
+      displayLabel: "Claude Code",
+      command: "claude skill add anthropics/skills/skills/canvas-design",
+      verificationStatus: "verified"
+    },
+    recipes: [
       {
-        id: "sc-1",
-        showcaseType: "live_demo",
-        title: "Component Canvas",
-        description: "Responsive dark canvas preview demonstrating subtle borders and accessible typography.",
-        status: "ready",
-        externalUrl: "https://example.com/demo/frontend-design",
-        sortOrder: 1
+        id: "rec-cd-1",
+        target: "claude",
+        displayLabel: "Claude",
+        command: "claude skill add anthropics/skills/skills/canvas-design",
+        sourceUrl: "https://github.com/anthropics/skills",
+        verificationStatus: "verified"
+      },
+      {
+        id: "rec-cd-2",
+        target: "claude",
+        displayLabel: "Claude",
+        command: "claude skill add anthropics/skills/skills/canvas-design",
+        sourceUrl: "https://github.com/anthropics/skills",
+        verificationStatus: "verified"
       }
     ],
+    showcases: [],
+    assets: []
+  },
+  {
+    id: "sk-1c",
+    slug: "algorithmic-art",
+    name: "Algorithmic Art",
+    summary: "Create generative art using p5.js with seeded randomness, flow fields, and particles.",
+    description: "Create generative art using p5.js with seeded randomness, flow fields, particle simulations, and deterministic seed anchors.",
+    status: "published",
+    skillType: "frontend",
+    authorDisplay: "Anthropic",
+    licenseSpdx: "MIT",
+    licenseUrl: "https://opensource.org/licenses/MIT",
+    sourceKind: "github",
+    sourceUrl: "https://github.com/anthropics/skills/tree/main/skills/algorithmic-art",
+    sourceOwner: "anthropics",
+    sourceRepo: "skills",
+    sourcePath: "skills/algorithmic-art",
+    verificationStatus: "verified",
+    featuredRank: 3,
+    rank: "A-RANK",
+    publishedAt: new Date("2026-10-12"),
+    updatedAt: new Date("2026-10-12"),
+    categories: [{ id: "cat-1", slug: "design-ui-ux", name: "Design & UI/UX" }],
+    tags: [{ id: "tag-1", slug: "generative", name: "Generative" }],
+    primaryRecipe: {
+      id: "rec-aa-1",
+      target: "claude",
+      displayLabel: "Claude Code",
+      command: "claude skill add anthropics/skills/skills/algorithmic-art",
+      verificationStatus: "verified"
+    },
+    recipes: [
+      {
+        id: "rec-aa-1",
+        target: "claude",
+        displayLabel: "Claude",
+        command: "claude skill add anthropics/skills/skills/algorithmic-art",
+        sourceUrl: "https://github.com/anthropics/skills",
+        verificationStatus: "verified"
+      },
+      {
+        id: "rec-aa-2",
+        target: "claude",
+        displayLabel: "Claude",
+        command: "claude skill add anthropics/skills/skills/algorithmic-art",
+        sourceUrl: "https://github.com/anthropics/skills",
+        verificationStatus: "verified"
+      }
+    ],
+    showcases: [],
     assets: []
   },
   {
@@ -110,7 +203,7 @@ const FALLBACK_SKILLS = [
     featuredRank: 2,
     publishedAt: new Date("2026-10-12"),
     updatedAt: new Date("2026-10-12"),
-    categories: [{ id: "cat-2", slug: "design-systems", name: "Design Systems" }],
+    categories: [{ id: "cat-1", slug: "design-ui-ux", name: "Design & UI/UX" }],
     tags: [{ id: "tag-2", slug: "microcopy", name: "Microcopy" }],
     primaryRecipe: {
       id: "rec-2",
@@ -447,7 +540,7 @@ const FALLBACK_SKILLS = [
     featuredRank: 9,
     publishedAt: new Date("2026-10-12"),
     updatedAt: new Date("2026-10-12"),
-    categories: [{ id: "cat-2", slug: "design-systems", name: "Design Systems" }],
+    categories: [{ id: "cat-1", slug: "design-ui-ux", name: "Design & UI/UX" }],
     tags: [{ id: "tag-2", slug: "anti-slop", name: "Anti-Slop" }],
     primaryRecipe: {
       id: "rec-9",

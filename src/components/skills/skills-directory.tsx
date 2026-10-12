@@ -3,7 +3,9 @@
 import React, { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { FilterBar } from "@/components/skills/filter-bar";
-import { SkillCard } from "@/components/skills/skill-card";
+import { SkillCard, SkillCardData } from "@/components/skills/skill-card";
+import { SkillDetailDrawer } from "@/components/skills/skill-detail-drawer";
+import { SkillDemoModal } from "@/components/skills/skill-demo-modal";
 
 interface Category {
   id: string;
@@ -11,22 +13,8 @@ interface Category {
   name: string;
 }
 
-interface Skill {
-  id: string;
-  slug: string;
-  name: string;
-  summary: string;
-  skillType: string;
-  authorDisplay: string;
-  licenseSpdx?: string | null;
-  sourceUrl: string;
-  verificationStatus: string;
-  categories: Array<{ id: string; slug: string; name: string }>;
-  primaryRecipe?: { command: string; target: string } | null;
-}
-
 interface SkillsDirectoryProps {
-  initialSkills: Skill[];
+  initialSkills: SkillCardData[];
   categories: Category[];
 }
 
@@ -35,6 +23,9 @@ export function SkillsDirectory({ initialSkills, categories }: SkillsDirectoryPr
   const query = (searchParams.get("q") || "").toLowerCase().trim();
   const category = searchParams.get("category") || "";
   const type = searchParams.get("type") || "";
+
+  const [selectedSkill, setSelectedSkill] = useState<SkillCardData | null>(null);
+  const [demoSkill, setDemoSkill] = useState<SkillCardData | null>(null);
 
   const filtered = useMemo(() => {
     return initialSkills.filter((skill) => {
@@ -63,17 +54,36 @@ export function SkillsDirectory({ initialSkills, categories }: SkillsDirectoryPr
       {filtered.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map((skill) => (
-            <SkillCard key={skill.id} skill={skill} />
+            <SkillCard
+              key={skill.id}
+              skill={skill}
+              onSelect={(s) => setSelectedSkill(s)}
+              onDemo={(s) => setDemoSkill(s)}
+            />
           ))}
         </div>
       ) : (
-        <div className="rounded-xl bg-surface border border-border p-12 text-center space-y-2">
+        <div className="rounded-lg bg-surface border border-border p-12 text-center space-y-2">
           <p className="font-semibold text-sm text-text-primary">No skills found.</p>
           <p className="text-xs text-text-muted">
             Try adjusting your query or category filters.
           </p>
         </div>
       )}
+
+      <SkillDetailDrawer
+        skill={selectedSkill}
+        onClose={() => setSelectedSkill(null)}
+        onOpenDemo={(s) => {
+          setSelectedSkill(null);
+          setDemoSkill(s);
+        }}
+      />
+
+      <SkillDemoModal
+        skill={demoSkill}
+        onClose={() => setDemoSkill(null)}
+      />
     </div>
   );
 }

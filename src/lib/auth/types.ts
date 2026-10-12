@@ -18,6 +18,8 @@ export interface DemoAccount {
   description: string;
 }
 
+export const ADMIN_ROLES: UserRole[] = ["SUPER_ADMIN", "CURATOR"];
+
 export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     role: "SUPER_ADMIN",
@@ -44,3 +46,25 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
     description: "Eksplorasi skill publik, copy instruksi agent, dan uji MCP."
   }
 ];
+
+export function isUserRole(role: unknown): role is UserRole {
+  return role === "SUPER_ADMIN" || role === "CURATOR" || role === "USER";
+}
+
+export function isAdminRole(role: unknown): role is "SUPER_ADMIN" | "CURATOR" {
+  return role === "SUPER_ADMIN" || role === "CURATOR";
+}
+
+export function getDemoAccountByEmail(email: string) {
+  return DEMO_ACCOUNTS.find((account) => account.email.toLowerCase() === email.toLowerCase());
+}
+
+export function getAdminAccountByEmail(email: string) {
+  const account = getDemoAccountByEmail(email);
+  return account && isAdminRole(account.role) ? account : null;
+}
+
+export function getUserAccountByEmail(email: string) {
+  const account = getDemoAccountByEmail(email);
+  return account && account.role === "USER" ? account : null;
+}

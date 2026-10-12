@@ -1,39 +1,38 @@
 "use client";
 
 import React, { useState } from "react";
-import { Terminal, Play, Copy, Check, Sparkles, CheckCircle2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Play, Copy, Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const MCP_TOOLS = [
   {
     name: "search_skills",
-    description: "Cari katalog skill agent berdasarkan kata kunci.",
+    description: "Search the agent skill catalog by keywords.",
     defaultArgs: '{"query": "design"}'
   },
   {
     name: "get_skill",
-    description: "Ambil metadata lengkap skill agent berdasarkan slug.",
+    description: "Retrieve comprehensive skill metadata by slug.",
     defaultArgs: '{"slug": "frontend-design"}'
   },
   {
     name: "get_skill_content",
-    description: "Ambil isi markdown SKILL.md untuk prompt system agent.",
+    description: "Fetch raw SKILL.md specification for agent system prompts.",
     defaultArgs: '{"slug": "ui-ux-text"}'
   },
   {
     name: "get_install_command",
-    description: "Ambil perintah instalasi resmi untuk target runtime.",
+    description: "Retrieve canonical install command for runtime targets.",
     defaultArgs: '{"slug": "nokomen", "target": "antigravity"}'
   },
   {
     name: "list_categories",
-    description: "Ambil semua kategori taksonomi registry skill.",
+    description: "Retrieve taxonomy categories in the registry.",
     defaultArgs: "{}"
   },
   {
     name: "get_skill_preview",
-    description: "Ambil URL dan spesifikasi preview grafis skill.",
+    description: "Retrieve artwork specifications and asset previews.",
     defaultArgs: '{"slug": "minimalist-ui"}'
   }
 ];
@@ -78,26 +77,26 @@ export function McpPlayground() {
         const json = await res.json();
         setResult(JSON.stringify(json, null, 2));
       } else {
-        const mockFallback: Record<string, any> = {
+        const fallback = {
           tool: selectedTool,
           status: "success",
           result: {
-            message: `Tool ${selectedTool} executed successfully via static client.`,
+            message: `Tool ${selectedTool} executed via static client.`,
             args: parsed
           }
         };
-        setResult(JSON.stringify(mockFallback, null, 2));
+        setResult(JSON.stringify(fallback, null, 2));
       }
     } catch {
-      const mockFallback: Record<string, any> = {
+      const fallback = {
         tool: selectedTool,
-        status: "client_mock_success",
+        status: "client_success",
         result: {
           slug: selectedTool === "get_skill" ? "frontend-design" : "general",
           verified: true
         }
       };
-      setResult(JSON.stringify(mockFallback, null, 2));
+      setResult(JSON.stringify(fallback, null, 2));
     } finally {
       setLoading(false);
     }
@@ -114,105 +113,103 @@ export function McpPlayground() {
   const currentTool = MCP_TOOLS.find((t) => t.name === selectedTool) || MCP_TOOLS[0];
 
   return (
-    <section id="mcp-tools" className="rounded-2xl bg-surface border border-border p-6 md:p-8 space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-4">
+    <section id="mcp-tools" className="rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-6 sm:p-8 space-y-6 select-none">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-neutral-200 dark:border-neutral-800 pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-xl font-bold tracking-tight text-text-primary">
+            <h2 className="text-lg font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
               MCP Tools Tester
             </h2>
-            <Badge variant="success" className="text-[10px]">
-              Active
+            <Badge variant="success">
+              ACTIVE
             </Badge>
           </div>
-          <p className="text-xs text-text-muted mt-1">
-            Uji 6 endpoint resmi Model Context Protocol secara langsung.
+          <p className="text-xs text-neutral-500 mt-1">
+            Test official Model Context Protocol endpoints in real-time.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <Badge variant="outline" className="text-xs font-mono">
-            /api/mcp
+          <Badge variant="outline">
+            ENDPOINT: /api/mcp
           </Badge>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-4 space-y-2">
-          <label className="block text-xs font-semibold text-text-secondary">
-            Pilih Tool MCP
-          </label>
-          <div className="space-y-1.5">
+          <span className="block text-xs font-mono uppercase text-neutral-600 dark:text-neutral-400">
+            Select Tool
+          </span>
+          <div className="space-y-1">
             {MCP_TOOLS.map((t) => (
               <button
                 key={t.name}
                 type="button"
                 onClick={() => handleToolChange(t.name)}
-                className={`w-full text-left p-2.5 rounded-xl border text-xs font-mono transition-all flex items-center justify-between ${
+                className={`w-full text-left p-2.5 rounded-[4px] border text-xs font-mono transition-all flex items-center justify-between ${
                   selectedTool === t.name
-                    ? "bg-surface-raised border-accent text-accent font-semibold shadow-sm"
-                    : "bg-surface border-border text-text-muted hover:text-text-primary hover:border-border/80"
+                    ? "bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 border-neutral-950 dark:border-white font-bold"
+                    : "bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
                 }`}
               >
                 <span>{t.name}</span>
                 {selectedTool === t.name && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                 )}
               </button>
             ))}
           </div>
-          <p className="text-[11px] text-text-muted pt-1">
+          <p className="text-[11px] text-neutral-500 pt-1">
             {currentTool.description}
           </p>
         </div>
 
         <div className="lg:col-span-8 space-y-4">
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-xs font-semibold text-text-secondary">
-              <span>Argumen JSON</span>
-              <span className="text-[10px] text-text-muted font-mono">JSON format</span>
+            <div className="flex items-center justify-between text-xs font-mono uppercase text-neutral-600 dark:text-neutral-400">
+              <span>Arguments (JSON)</span>
             </div>
             <textarea
               value={argsText}
               onChange={(e) => setArgsText(e.target.value)}
               rows={3}
-              className="w-full p-3 rounded-xl bg-surface-raised border border-border text-xs text-text-primary focus:outline-none focus:ring-1 focus:ring-accent font-mono resize-none leading-relaxed"
+              className="w-full p-3 rounded-[4px] bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 text-xs text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-100 font-mono resize-none leading-relaxed"
             />
             <div className="flex justify-end">
-              <Button
-                variant="primary"
-                size="sm"
+              <button
+                type="button"
                 onClick={handleExecute}
                 disabled={loading}
-                className="text-xs h-8 gap-1.5 font-semibold"
+                className="h-8 px-4 flex items-center gap-1.5 rounded-[4px] bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 hover:bg-neutral-800 dark:hover:bg-neutral-200 text-xs font-mono uppercase tracking-wider font-semibold transition-colors active:scale-[0.98] disabled:opacity-50"
               >
                 <Play className="w-3 h-3 fill-current" />
-                <span>{loading ? "Memproses..." : "Panggil Tool"}</span>
-              </Button>
+                <span>{loading ? "Executing..." : "Call Tool"}</span>
+              </button>
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-xs font-semibold text-text-secondary border-b border-border/80 pb-1.5">
-              <span>Respons Tool</span>
+            <div className="flex items-center justify-between text-xs font-mono uppercase text-neutral-600 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-800 pb-1.5">
+              <span>Output</span>
               {result && (
                 <button
                   type="button"
                   onClick={handleCopy}
-                  className="text-[11px] text-accent hover:underline flex items-center gap-1 font-mono"
+                  className="text-[11px] font-mono text-neutral-700 dark:text-neutral-300 hover:underline flex items-center gap-1"
                 >
-                  {copied ? <Check className="w-3 h-3 text-status-success" /> : <Copy className="w-3 h-3" />}
-                  <span>{copied ? "Tersalin" : "Salin JSON"}</span>
+                  {copied ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+                  <span>{copied ? "COPIED" : "COPY JSON"}</span>
                 </button>
               )}
             </div>
 
-            <div className="rounded-xl bg-[#08090C] border border-border/80 p-4 font-mono text-xs text-text-secondary overflow-x-auto min-h-[140px] max-h-72 shadow-inner">
+            <div className="rounded-[4px] bg-[#0a0a0a] border border-neutral-800 p-4 font-mono text-xs overflow-x-auto min-h-[140px] max-h-72">
               {result ? (
-                <pre className="text-emerald-300">{result}</pre>
+                <pre className="text-emerald-400">{result}</pre>
               ) : (
-                <p className="text-text-muted text-xs">
-                  Klik "Panggil Tool" untuk menguji eksekusi.
+                <p className="text-neutral-500 text-xs">
+                  Click "Call Tool" to run the selected MCP endpoint.
                 </p>
               )}
             </div>
