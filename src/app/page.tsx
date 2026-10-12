@@ -1,8 +1,17 @@
 import React from "react";
+import type { Metadata } from "next";
 import { getPublishedSkills, getAllCategories } from "@/server/services/skills";
 import { OnePageDirectory } from "@/components/skills/one-page-directory";
 
 export const revalidate = 60;
+
+export const metadata: Metadata = {
+  title: "SKILL UIAI — Agent Skills",
+  description: "Discover, inspect, and install verified AI agent skills.",
+  alternates: {
+    canonical: "/"
+  }
+};
 
 export default async function HomePage() {
   const [publishedSkills, categories] = await Promise.all([

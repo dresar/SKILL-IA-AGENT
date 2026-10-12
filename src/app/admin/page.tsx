@@ -233,7 +233,7 @@ export default function AdminPage() {
     command: "",
     previewImageUrl: "",
     demoPrompt: "Generate tailored solution for target task.",
-    demoOutput: "// Generated output component\nexport function Solution() { return <div>Ready</div>; }"
+    demoOutput: "export function Solution() { return <div>Ready</div>; }"
   });
 
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([

@@ -1,9 +1,18 @@
 import React from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Bookmark, FolderPlus, ArrowRight } from "lucide-react";
 import { getPublishedSkills } from "@/server/services/skills";
 import { SkillCard } from "@/components/skills/skill-card";
 import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+  title: "Library",
+  description: "Personal favorites and curated collections.",
+  alternates: {
+    canonical: "/library/"
+  }
+};
 
 export default async function LibraryPage() {
   const savedSkills = await getPublishedSkills({ limit: 3 });

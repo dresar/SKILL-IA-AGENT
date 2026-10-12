@@ -1,4 +1,5 @@
 import React from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
@@ -16,6 +17,26 @@ interface CategoryPageProps {
   params: Promise<{
     slug: string;
   }>;
+}
+
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const categories = await getAllCategories();
+  const currentCategory = categories.find((c) => c.slug === slug);
+
+  if (!currentCategory) {
+    return {
+      title: "Category Not Found"
+    };
+  }
+
+  return {
+    title: `${currentCategory.name} Skills`,
+    description: currentCategory.description || `Verified agent skills in ${currentCategory.name}.`,
+    alternates: {
+      canonical: `/categories/${slug}/`
+    }
+  };
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {

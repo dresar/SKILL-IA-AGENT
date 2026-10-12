@@ -16,6 +16,7 @@ import { ShowcaseViewer } from "@/components/skills/showcase-viewer";
 import { SkillCard } from "@/components/skills/skill-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import type { Metadata } from "next";
 import { formatDate } from "@/lib/utils";
 
 export async function generateStaticParams() {
@@ -31,6 +32,48 @@ interface SkillDetailPageProps {
   }>;
 }
 
+export async function generateMetadata({ params }: SkillDetailPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const skill = await getSkillDetailBySlug(slug);
+
+  if (!skill) {
+    return {
+      title: "Skill Not Found"
+    };
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dresar.github.io";
+  const previewImg = `/previews/${skill.slug}.svg`;
+
+  return {
+    title: skill.name,
+    description: skill.summary,
+    alternates: {
+      canonical: `/skills/${slug}/`
+    },
+    openGraph: {
+      type: "article",
+      title: `${skill.name} — SKILL UIAI`,
+      description: skill.summary,
+      url: `${siteUrl}/skills/${slug}/`,
+      images: [
+        {
+          url: previewImg,
+          width: 800,
+          height: 450,
+          alt: skill.name
+        }
+      ]
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${skill.name} — SKILL UIAI`,
+      description: skill.summary,
+      images: [previewImg]
+    }
+  };
+}
+
 export default async function SkillDetailPage({ params }: SkillDetailPageProps) {
   const { slug } = await params;
   const skill = await getSkillDetailBySlug(slug);
@@ -42,8 +85,30 @@ export default async function SkillDetailPage({ params }: SkillDetailPageProps) 
   const related = await getPublishedSkills({ limit: 3 });
   const otherSkills = related.filter((s) => s.slug !== skill.slug).slice(0, 3);
 
+  const skillJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: skill.name,
+    description: skill.summary,
+    applicationCategory: "DeveloperApplication",
+    operatingSystem: "Any",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD"
+    },
+    author: {
+      "@type": "Person",
+      name: skill.authorDisplay
+    }
+  };
+
   return (
     <div className="space-y-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(skillJsonLd) }}
+      />
       <div>
         <Link
           href="/skills"

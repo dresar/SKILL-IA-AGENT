@@ -1,6 +1,15 @@
 import React, { Suspense } from "react";
+import type { Metadata } from "next";
 import { getPublishedSkills, getAllCategories } from "@/server/services/skills";
 import { SkillsDirectory } from "@/components/skills/skills-directory";
+
+export const metadata: Metadata = {
+  title: "Skills",
+  description: "Explore and install verified agent skills.",
+  alternates: {
+    canonical: "/skills/"
+  }
+};
 
 export default async function SkillsPage() {
   const [categories, skillsList] = await Promise.all([

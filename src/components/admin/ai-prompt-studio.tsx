@@ -275,7 +275,7 @@ export function AiPromptStudio({
 
             {previewMode === "code" && (
               <div className="p-4 w-full h-full font-mono text-xs text-emerald-300 overflow-auto bg-[#07090E]">
-                <pre>{`// Sandbox Preview: ${skillName}\nexport const ${skillSlug.replace(/-/g, "_")} = {\n  status: "verified",\n  target: "antigravity"\n};`}</pre>
+                <pre>{`export const ${skillSlug.replace(/-/g, "_")} = {\n  status: "verified",\n  target: "antigravity"\n};`}</pre>
               </div>
             )}
 
