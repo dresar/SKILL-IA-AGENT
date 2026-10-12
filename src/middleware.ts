@@ -3,13 +3,20 @@ import { isAdminRole } from "@/lib/auth/types";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const isAdminLogin = pathname === "/admin/login" || pathname === "/admin/login/";
 
-  if (pathname.startsWith("/admin") && !isAdminLogin) {
+  if (pathname === "/admin/login" || pathname === "/admin/login/") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login/";
+    url.searchParams.set("redirect", "/admin/");
+    return NextResponse.redirect(url);
+  }
+
+  if (pathname.startsWith("/admin")) {
     const role = request.cookies.get("skill_uiai_role")?.value;
     if (!isAdminRole(role)) {
       const url = request.nextUrl.clone();
-      url.pathname = "/admin/login/";
+      url.pathname = "/login/";
+      url.searchParams.set("redirect", pathname);
       return NextResponse.redirect(url);
     }
   }

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Copy, Check, Terminal, ShieldCheck } from "lucide-react";
+import { Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -16,20 +16,65 @@ interface Recipe {
 }
 
 interface InstallBoxProps {
-  recipes: Recipe[];
+  slug?: string;
+  recipes?: Recipe[];
 }
 
-export function InstallBox({ recipes }: InstallBoxProps) {
-  const uniqueRecipes = React.useMemo(() => {
-    if (!recipes) return [];
-    return Array.from(new Map(recipes.map((r) => [r.target.toLowerCase(), r])).values());
-  }, [recipes]);
+export function InstallBox({ slug, recipes = [] }: InstallBoxProps) {
+  const mergedRecipes = React.useMemo(() => {
+    const list: Recipe[] = [...recipes];
+    const targetSlug = slug || "skill";
+    const defaults = [
+      {
+        id: "antigravity",
+        target: "antigravity",
+        displayLabel: "Google Antigravity",
+        command: `npx skills add dresar/SKILL-IA-AGENT -s ${targetSlug}`,
+        verificationStatus: "verified"
+      },
+      {
+        id: "claude",
+        target: "claude",
+        displayLabel: "Claude Code",
+        command: `claude skill add dresar/SKILL-IA-AGENT/${targetSlug}`,
+        verificationStatus: "verified"
+      },
+      {
+        id: "cursor",
+        target: "cursor",
+        displayLabel: "Cursor Rules",
+        command: `@skill dresar/SKILL-IA-AGENT/${targetSlug}/SKILL.md`,
+        verificationStatus: "verified"
+      },
+      {
+        id: "opencode",
+        target: "opencode",
+        displayLabel: "OpenCode",
+        command: `opencode skill install dresar/SKILL-IA-AGENT -s ${targetSlug}`,
+        verificationStatus: "verified"
+      },
+      {
+        id: "aider",
+        target: "aider",
+        displayLabel: "Aider",
+        command: `aider --read-file skills/${targetSlug}/SKILL.md`,
+        verificationStatus: "verified"
+      }
+    ];
 
-  const [activeTab, setActiveTab] = useState(uniqueRecipes[0]?.target || "antigravity");
+    for (const d of defaults) {
+      if (!list.some((r) => r.target.toLowerCase() === d.target.toLowerCase())) {
+        list.push(d);
+      }
+    }
+    return Array.from(new Map(list.map((r) => [r.target.toLowerCase(), r])).values());
+  }, [recipes, slug]);
+
+  const [activeTab, setActiveTab] = useState(mergedRecipes[0]?.target || "antigravity");
   const [copied, setCopied] = useState(false);
 
   const currentRecipe =
-    uniqueRecipes.find((r) => r.target.toLowerCase() === activeTab.toLowerCase()) || uniqueRecipes[0];
+    mergedRecipes.find((r) => r.target.toLowerCase() === activeTab.toLowerCase()) || mergedRecipes[0];
 
   const handleCopy = () => {
     if (currentRecipe?.command) {
@@ -39,19 +84,11 @@ export function InstallBox({ recipes }: InstallBoxProps) {
     }
   };
 
-  if (!uniqueRecipes || uniqueRecipes.length === 0) {
-    return (
-      <div className="rounded-xl bg-surface border border-border p-4 text-sm text-text-muted">
-        No installation recipe provided.
-      </div>
-    );
-  }
-
   return (
     <div className="rounded-xl bg-surface border border-border overflow-hidden">
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-surface-raised/40">
-        <div className="flex items-center gap-1.5 overflow-x-auto">
-          {uniqueRecipes.map((r) => (
+        <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none">
+          {mergedRecipes.map((r) => (
             <button
               key={r.target}
               onClick={() => setActiveTab(r.target)}
@@ -75,7 +112,7 @@ export function InstallBox({ recipes }: InstallBoxProps) {
                 : "default"
             }
           >
-            {currentRecipe.verificationStatus === "verified" ? "Verified" : "Unverified"}
+            {currentRecipe.verificationStatus === "verified" ? "Verified" : "Community"}
           </Badge>
         )}
       </div>

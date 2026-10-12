@@ -29,29 +29,15 @@ export function Logo({ className, showText = true, size = "md" }: LogoProps) {
         className
       )}
     >
-      <span className={cn("relative flex items-center justify-center shrink-0 text-text-primary", iconDimensions)}>
-        <svg viewBox="0 0 32 32" className="h-full w-full" fill="none" aria-hidden="true">
-          <path
-            d="M16 3L27.25 9.5V22.5L16 29L4.75 22.5V9.5Z"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M16 16L16 3M16 16L4.75 22.5M16 16L27.25 22.5"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <circle cx="16" cy="3" r="1.6" fill="currentColor" />
-          <circle cx="27.25" cy="9.5" r="1.6" fill="currentColor" />
-          <circle cx="27.25" cy="22.5" r="1.6" fill="currentColor" />
-          <circle cx="16" cy="29" r="1.6" fill="currentColor" />
-          <circle cx="4.75" cy="22.5" r="1.6" fill="currentColor" />
-          <circle cx="4.75" cy="9.5" r="1.6" fill="currentColor" />
-          <circle cx="16" cy="16" r="1.8" fill="currentColor" />
+      <span className={cn("relative flex items-center justify-center shrink-0", iconDimensions)}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" className="h-full w-full" fill="none">
+          <rect width="40" height="40" rx="10" fill="#141513" stroke="#2A2B28" strokeWidth="1.5"/>
+          <path d="M12 28L20 12L28 28" stroke="#CFCBFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M15 23H25" stroke="#CFCBFF" strokeWidth="2" strokeLinecap="round"/>
+          <circle cx="20" cy="12" r="2.5" fill="#B7B1FF"/>
+          <circle cx="12" cy="28" r="2.2" fill="#B7B1FF"/>
+          <circle cx="28" cy="28" r="2.2" fill="#B7B1FF"/>
+          <path d="M28 10L30 13L33 13.5L30.5 15.5L31.5 18.5L28.5 17L25.5 18.5L26.5 15.5L24 13.5L27 13Z" fill="#CFCBFF" opacity="0.9"/>
         </svg>
       </span>
       {showText && (

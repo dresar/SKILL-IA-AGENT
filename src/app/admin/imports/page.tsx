@@ -18,7 +18,7 @@ export default function AdminImportsPage() {
       <div className="mx-auto max-w-md rounded-2xl border border-slate-800 bg-slate-900/80 p-6 text-center">
         <h1 className="text-lg font-semibold text-slate-100">Akses Admin Ditolak</h1>
         <p className="mt-2 text-sm text-slate-400">Halaman import memerlukan role Super Admin atau Curator.</p>
-        <Link href="/admin/login/" className="mt-4 inline-flex">
+        <Link href="/login/?redirect=/admin/imports/" className="mt-4 inline-flex">
           <Button variant="primary" size="sm">Login Admin</Button>
         </Link>
       </div>

@@ -333,7 +333,7 @@ function AdminContent() {
               ? "Sesi aktif tidak memiliki role Super Admin atau Curator."
               : "Panel ini memerlukan login admin terpisah."}
           </p>
-          <Link href="/admin/login/" className="mt-5 inline-flex">
+          <Link href="/login/?redirect=/admin/" className="mt-5 inline-flex">
             <Button variant="primary" size="sm" className="min-h-10 text-xs">
               Login Admin
             </Button>

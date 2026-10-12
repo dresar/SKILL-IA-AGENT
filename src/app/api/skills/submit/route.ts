@@ -1,12 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db/client";
-import { importJobs, skills, installRecipes, skillCategories, categories } from "@/lib/db/schema";
+import { importJobs, skills, installRecipes, skillCategories, categories, assets } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { url, name, description, author, category, command } = body;
+    const {
+      url,
+      name,
+      description,
+      author,
+      category,
+      command,
+      previewImageUrl,
+      targets,
+      skillMdContent
+    } = body;
 
     if (!url || typeof url !== "string" || !url.trim()) {
       return NextResponse.json(
@@ -19,10 +29,11 @@ export async function POST(request: NextRequest) {
     const rawName = typeof name === "string" && name.trim() ? name.trim() : cleanUrl.split("/").filter(Boolean).pop() || "Agent Skill";
     const cleanName = rawName.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
     const baseSlug = rawName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "skill-" + Date.now();
-    const cleanDesc = typeof description === "string" && description.trim() ? description.trim() : `Aturan skill agen untuk ${cleanName}.`;
+    const fullDesc = typeof skillMdContent === "string" && skillMdContent.trim() ? skillMdContent.trim() : (typeof description === "string" && description.trim() ? description.trim() : `Aturan skill agen untuk ${cleanName}.`);
+    const cleanSummary = typeof description === "string" && description.trim() ? description.trim() : fullDesc.slice(0, 160);
     const cleanAuthor = typeof author === "string" && author.trim() ? author.trim() : "Community Contributor";
     const cleanCat = typeof category === "string" && category.trim() ? category.trim() : "frontend";
-    const cleanCommand = typeof command === "string" && command.trim() ? command.trim() : `npx skills add ${cleanUrl} -s ${baseSlug}`;
+    const cleanPreview = typeof previewImageUrl === "string" && previewImageUrl.trim() ? previewImageUrl.trim() : null;
 
     let finalSlug = baseSlug;
     try {
@@ -39,8 +50,8 @@ export async function POST(request: NextRequest) {
         .values({
           slug: finalSlug,
           name: cleanName,
-          summary: cleanDesc.length > 180 ? cleanDesc.slice(0, 177) + "..." : cleanDesc,
-          description: cleanDesc,
+          summary: cleanSummary.length > 200 ? cleanSummary.slice(0, 197) + "..." : cleanSummary,
+          description: fullDesc,
           status: "pending",
           skillType: cleanCat,
           authorDisplay: cleanAuthor,
@@ -53,15 +64,43 @@ export async function POST(request: NextRequest) {
       if (newSkill) {
         skillId = newSkill.id;
 
-        await db.insert(installRecipes).values({
-          skillId: newSkill.id,
-          target: "antigravity",
-          displayLabel: "Google Antigravity",
-          command: cleanCommand,
-          sourceUrl: cleanUrl,
-          verificationStatus: "pending",
-          isEnabled: false
-        });
+        const targetList = Array.isArray(targets) && targets.length > 0
+          ? targets
+          : ["antigravity", "claude"];
+
+        for (const t of targetList) {
+          let cmd = command || "";
+          if (!cmd) {
+            if (t === "antigravity") cmd = `npx skills add ${cleanUrl} -s ${finalSlug}`;
+            else if (t === "claude") cmd = `claude skill add ${cleanUrl}/${finalSlug}`;
+            else if (t === "cursor") cmd = `@skill ${cleanUrl}/${finalSlug}/SKILL.md`;
+            else if (t === "opencode") cmd = `opencode skill install ${cleanUrl} -s ${finalSlug}`;
+            else if (t === "aider") cmd = `aider --read-file skills/${finalSlug}/SKILL.md`;
+            else cmd = `npx skills add ${cleanUrl} -s ${finalSlug}`;
+          }
+
+          await db.insert(installRecipes).values({
+            skillId: newSkill.id,
+            target: t,
+            displayLabel: t === "antigravity" ? "Google Antigravity" : t === "claude" ? "Claude Code" : t === "cursor" ? "Cursor Rules" : t === "opencode" ? "OpenCode" : "Aider",
+            command: cmd,
+            sourceUrl: cleanUrl,
+            verificationStatus: "pending",
+            isEnabled: false
+          });
+        }
+
+        if (cleanPreview) {
+          await db.insert(assets).values({
+            skillId: newSkill.id,
+            objectKey: `preview-${finalSlug}`,
+            publicUrl: cleanPreview,
+            mimeType: "image/svg+xml",
+            altText: `${cleanName} Preview`,
+            storageProvider: "url",
+            visibility: "public"
+          });
+        }
 
         const catRows = await db.select().from(categories).where(eq(categories.slug, cleanCat)).limit(1);
         if (catRows.length > 0) {
@@ -83,10 +122,10 @@ export async function POST(request: NextRequest) {
           detectedMetadata: {
             name: cleanName,
             slug: finalSlug,
-            description: cleanDesc,
+            description: fullDesc,
             author: cleanAuthor,
             category: cleanCat,
-            command: cleanCommand,
+            previewImageUrl: cleanPreview,
             skillId
           }
         })
@@ -99,7 +138,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       ok: true,
       jobId,
-      message: "Skill berhasil diajukan dan masuk ke antrean verifikasi (acc) kurator.",
+      message: "Skill berhasil diajukan dan masuk ke antrean verifikasi (ACC) kurator di Admin Panel.",
       data: {
         url: cleanUrl,
         slug: finalSlug,

@@ -3,15 +3,16 @@
 import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, ArrowRight, Lock, Mail, User, AlertCircle, Sparkles, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Lock, Mail, User, AlertCircle, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/brand/logo";
 import { useAuth } from "@/components/providers/auth-provider";
+import { isAdminRole } from "@/lib/auth/types";
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, isAuthenticated, loginUser, registerUser, loginWithGoogle, loginDemo } = useAuth();
+  const { isAuthenticated, user, loginUser, registerUser, loginWithGoogle } = useAuth();
 
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [name, setName] = useState("");
@@ -33,10 +34,16 @@ function LoginForm() {
       }, 700);
       return () => clearTimeout(t);
     }
-    if (isAuthenticated) {
-      router.push(redirectTo);
+    if (isAuthenticated && user) {
+      if (redirectTo && redirectTo !== "/") {
+        router.push(redirectTo);
+      } else if (isAdminRole(user.role)) {
+        router.push("/admin/");
+      } else {
+        router.push("/");
+      }
     }
-  }, [isAuthenticated, authSuccess, redirectTo, router]);
+  }, [isAuthenticated, user, authSuccess, redirectTo, router]);
 
   useEffect(() => {
     if (errorParam) {
@@ -76,16 +83,15 @@ function LoginForm() {
     }
 
     setLoading(false);
-    router.push(redirectTo);
-  };
-
-  const handleDemoLogin = () => {
-    loginDemo("USER");
-    router.push(redirectTo);
+    if (redirectTo && redirectTo !== "/") {
+      router.push(redirectTo);
+    } else {
+      router.push("/");
+    }
   };
 
   return (
-    <div className="mx-auto flex min-h-[75vh] w-full max-w-md items-center justify-center py-8">
+    <div className="mx-auto flex min-h-[75vh] w-full max-w-md items-center justify-center py-8 px-4">
       <div className="w-full rounded-2xl border border-border bg-surface p-6 sm:p-8 space-y-6">
         <div className="flex items-center justify-between border-b border-border pb-4">
           <Link href="/" className="inline-flex items-center gap-1.5 text-xs text-text-muted transition-colors hover:text-text-primary">
@@ -100,7 +106,7 @@ function LoginForm() {
             {mode === "signin" ? "Masuk ke SkillAgent" : "Daftar Akun SkillAgent"}
           </h1>
           <p className="text-xs text-text-secondary leading-relaxed">
-            Gunakan akun Anda untuk mengakses katalog skill, MCP server, dan AI Assistant.
+            Gunakan akun Anda untuk mengakses katalog skill, submit skill baru, dan asisten AI.
           </p>
         </div>
 
@@ -137,22 +143,12 @@ function LoginForm() {
           </span>
         </div>
 
-        <div className="flex rounded-lg border border-border p-1 bg-background text-xs">
-          <button
-            type="button"
-            onClick={() => { setMode("signin"); setError(null); }}
-            className={`flex-1 py-1.5 font-medium rounded transition ${mode === "signin" ? "bg-surface text-text-primary shadow-sm" : "text-text-muted hover:text-text-secondary"}`}
-          >
-            Masuk
-          </button>
-          <button
-            type="button"
-            onClick={() => { setMode("signup"); setError(null); }}
-            className={`flex-1 py-1.5 font-medium rounded transition ${mode === "signup" ? "bg-surface text-text-primary shadow-sm" : "text-text-muted hover:text-text-secondary"}`}
-          >
-            Daftar Akun Baru
-          </button>
-        </div>
+        {error && (
+          <div className="flex items-center gap-2 p-3 rounded-lg border border-status-error/30 bg-status-error/10 text-status-error text-xs">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
 
         {successMsg && (
           <div className="flex items-center gap-2 p-3 rounded-lg border border-status-success/30 bg-status-success/10 text-status-success text-xs">
@@ -161,12 +157,30 @@ function LoginForm() {
           </div>
         )}
 
-        {error && (
-          <div className="flex items-center gap-2 p-3 rounded-lg border border-status-error/30 bg-status-error/10 text-status-error text-xs">
-            <AlertCircle className="w-4 h-4 shrink-0" />
-            <span>{error}</span>
-          </div>
-        )}
+        <div className="flex rounded-lg bg-background p-1 border border-border">
+          <button
+            type="button"
+            onClick={() => setMode("signin")}
+            className={`flex-1 py-1.5 text-xs font-medium rounded-md transition ${
+              mode === "signin"
+                ? "bg-surface text-text-primary shadow-sm"
+                : "text-text-muted hover:text-text-secondary"
+            }`}
+          >
+            Masuk
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode("signup")}
+            className={`flex-1 py-1.5 text-xs font-medium rounded-md transition ${
+              mode === "signup"
+                ? "bg-surface text-text-primary shadow-sm"
+                : "text-text-muted hover:text-text-secondary"
+            }`}
+          >
+            Daftar Baru
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-3.5">
           {mode === "signup" && (
@@ -179,7 +193,7 @@ function LoginForm() {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Nama pengembang"
+                  placeholder="Nama Pengguna"
                   className="h-10 w-full rounded-lg border border-border bg-background pl-9 pr-3 text-xs text-text-primary outline-none transition focus:border-accent focus:ring-1 focus:ring-accent"
                 />
               </div>
@@ -221,20 +235,6 @@ function LoginForm() {
             <ArrowRight className="h-3.5 w-3.5" />
           </Button>
         </form>
-
-        <div className="pt-2 border-t border-border flex items-center justify-between text-xs text-text-muted">
-          <button
-            type="button"
-            onClick={handleDemoLogin}
-            className="inline-flex items-center gap-1.5 text-accent hover:underline"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            Akses Cepat Mode Tamu
-          </button>
-          <Link href="/admin/login/" className="text-text-muted hover:text-text-secondary">
-            Panel Administrator &rarr;
-          </Link>
-        </div>
       </div>
     </div>
   );

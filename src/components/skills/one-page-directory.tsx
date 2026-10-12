@@ -27,14 +27,6 @@ interface OnePageDirectoryProps {
 
 type SortOption = "popular" | "rank" | "name" | "newest";
 
-const AI_SAMPLE_TAGS = [
-  "Desain UI/UX Minimalis",
-  "Zero Comments (Nokomen)",
-  "Neon Postgres Database",
-  "Superpowers TDD",
-  "Audit Keamanan AST",
-  "Kompresi Token"
-];
 
 export function OnePageDirectory({
   initialSkills,
@@ -149,22 +141,6 @@ export function OnePageDirectory({
             </button>
           </div>
 
-          <div className="flex flex-wrap items-center gap-1.5 pt-1">
-            <span className="text-[11px] font-mono text-text-muted mr-1">Rekomendasi Cepat:</span>
-            {AI_SAMPLE_TAGS.map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                onClick={() => {
-                  setAiPromptInput(tag);
-                  setSearchQuery(tag.split(" ")[0]);
-                }}
-                className="text-[11px] px-2.5 py-1 rounded-[4px] border border-border bg-background hover:bg-surface-raised hover:text-text-primary text-text-secondary transition-colors"
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -294,7 +270,7 @@ export function OnePageDirectory({
         </div>
 
         {filteredSkills.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {filteredSkills.map((skill) => (
               <SkillCard
                 key={skill.id}

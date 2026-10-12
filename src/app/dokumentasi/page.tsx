@@ -211,7 +211,7 @@ export default function DokumentasiPage() {
             </ul>
             <div className="pt-2">
               <Link
-                href="/admin/login/"
+                href="/login/?redirect=/admin/"
                 className="inline-flex items-center gap-1.5 text-xs text-accent font-medium hover:underline"
               >
                 Menuju Panel Administrator &rarr;

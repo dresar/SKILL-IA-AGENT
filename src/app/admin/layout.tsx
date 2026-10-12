@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { useAuth } from "@/components/providers/auth-provider";
+import { Logo } from "@/components/brand/logo";
 import { ExternalLink, LogOut, ShieldCheck } from "lucide-react";
 
 export default function AdminLayout({
@@ -43,6 +44,8 @@ export default function AdminLayout({
     <div className="min-h-screen bg-[#070b14] text-slate-100 flex flex-col font-sans">
       <header className="sticky top-0 z-40 border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md px-4 sm:px-6 h-14 flex items-center justify-between">
         <div className="flex items-center gap-3">
+          <Logo size="sm" />
+          <div className="h-4 w-px bg-slate-800" />
           <div className="flex items-center gap-2">
             <span className="flex h-2 w-2 relative">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />

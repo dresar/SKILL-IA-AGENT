@@ -7,11 +7,13 @@ import {
   User,
   FileText,
   Github,
-  ArrowLeft
+  ArrowLeft,
+  CheckCircle2
 } from "lucide-react";
 import { getSkillDetailBySlug, getPublishedSkills } from "@/server/services/skills";
 import { InstallBox } from "@/components/skills/install-box";
 import { ShowcaseViewer } from "@/components/skills/showcase-viewer";
+import { SkillSpecViewer } from "@/components/skills/skill-spec-viewer";
 import { SkillCard } from "@/components/skills/skill-card";
 import { Badge } from "@/components/ui/badge";
 import type { Metadata } from "next";
@@ -45,7 +47,7 @@ export async function generateMetadata({ params }: SkillDetailPageProps): Promis
   const installCommand = (skill.recipes && skill.recipes.length > 0 ? skill.recipes[0].command : "") || `npx skills add dresar/SKILL-IA-AGENT -s ${skill.slug}`;
 
   return {
-    title: skill.name,
+    title: `${skill.name} — SkillAgent`,
     description: skill.summary,
     keywords: [
       skill.name,
@@ -73,8 +75,8 @@ export async function generateMetadata({ params }: SkillDetailPageProps): Promis
       images: [
         {
           url: previewImg,
-          width: 800,
-          height: 450,
+          width: 600,
+          height: 600,
           alt: skill.name
         }
       ]
@@ -96,8 +98,8 @@ export default async function SkillDetailPage({ params }: SkillDetailPageProps) 
     notFound();
   }
 
-  const related = await getPublishedSkills({ limit: 4 });
-  const otherSkills = related.filter((s) => s.slug !== skill.slug).slice(0, 3);
+  const related = await getPublishedSkills({ limit: 5 });
+  const otherSkills = related.filter((s) => s.slug !== skill.slug).slice(0, 4);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://skills-smoky.vercel.app";
   const installCommand = (skill.recipes && skill.recipes.length > 0 ? skill.recipes[0].command : "") || `npx skills add dresar/SKILL-IA-AGENT -s ${skill.slug}`;
   const previewImg = (skill as any).previewImageUrl || `/previews/${skill.slug}.svg`;
@@ -146,7 +148,7 @@ export default async function SkillDetailPage({ params }: SkillDetailPageProps) 
             "@type": "ListItem",
             "position": 2,
             "name": "Skills",
-            "item": `${siteUrl}/skills/`
+            "item": `${siteUrl}/`
           },
           {
             "@type": "ListItem",
@@ -160,34 +162,38 @@ export default async function SkillDetailPage({ params }: SkillDetailPageProps) 
   };
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8 max-w-6xl mx-auto px-4 sm:px-6 py-4">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(skillJsonLd) }}
       />
-      <div>
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-text-primary transition-colors mb-4"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          Back to Skills Catalog
-        </Link>
 
-        <div className="rounded-xl overflow-hidden border border-border bg-neutral-950 mb-6 aspect-[21/9] max-h-72 w-full relative">
-          <img
-            src={previewImg}
-            alt={`${skill.name} Preview`}
-            className="w-full h-full object-cover"
-          />
+      <Link
+        href="/"
+        className="inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-text-primary transition-colors"
+      >
+        <ArrowLeft className="w-3.5 h-3.5" />
+        Back to Skills Catalog
+      </Link>
+
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+        <div className="md:col-span-4 flex justify-center">
+          <div className="aspect-square w-full max-w-[280px] sm:max-w-[320px] rounded-xl overflow-hidden border border-border/80 bg-neutral-950 p-2 shadow-sm">
+            <img
+              src={previewImg}
+              alt={`${skill.name} Preview`}
+              className="w-full h-full object-cover rounded-lg"
+            />
+          </div>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+        <div className="md:col-span-8 space-y-4">
           <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-text-primary">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary font-mono">
                 {skill.name}
               </h1>
+              <CheckCircle2 className="w-5 h-5 text-accent shrink-0" />
               <Badge
                 variant={
                   skill.verificationStatus === "verified"
@@ -201,65 +207,64 @@ export default async function SkillDetailPage({ params }: SkillDetailPageProps) 
               </Badge>
             </div>
 
-            <p className="text-sm text-text-secondary max-w-2xl leading-relaxed">
+            <p className="text-xs text-text-muted font-serif italic">
+              by {skill.authorDisplay}
+            </p>
+
+            <p className="text-sm text-text-secondary leading-relaxed pt-1">
               {skill.summary}
             </p>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex flex-wrap items-center gap-3 pt-3 text-xs text-text-muted border-t border-border/60">
+            {skill.licenseSpdx && (
+              <div className="flex items-center gap-1.5">
+                <FileText className="w-3.5 h-3.5" />
+                <span>License: {skill.licenseSpdx}</span>
+              </div>
+            )}
+
+            {skill.publishedAt && (
+              <div className="flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5" />
+                <span>{formatDate(skill.publishedAt)}</span>
+              </div>
+            )}
+
             {skill.sourceUrl && (
               <a
                 href={skill.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-text-primary bg-surface border border-border rounded-lg hover:bg-surface-raised transition-colors"
+                className="inline-flex items-center gap-1 text-accent hover:underline ml-auto"
               >
                 <Github className="w-3.5 h-3.5" />
-                Source
-                <ExternalLink className="w-3 h-3 text-text-muted" />
+                <span>Source</span>
+                <ExternalLink className="w-3 h-3" />
               </a>
             )}
           </div>
-        </div>
 
-        <div className="flex flex-wrap items-center gap-4 pt-4 text-xs text-text-muted border-t border-border/60 mt-4">
-          <div className="flex items-center gap-1.5">
-            <User className="w-3.5 h-3.5" />
-            <span>by {skill.authorDisplay}</span>
-          </div>
-
-          {skill.licenseSpdx && (
-            <div className="flex items-center gap-1.5">
-              <FileText className="w-3.5 h-3.5" />
-              <span>License: {skill.licenseSpdx}</span>
-            </div>
-          )}
-
-          {skill.publishedAt && (
-            <div className="flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5" />
-              <span>Published: {formatDate(skill.publishedAt)}</span>
-            </div>
-          )}
-
-          <div className="flex items-center gap-1.5 ml-auto">
+          <div className="flex flex-wrap items-center gap-1.5 pt-2">
             {skill.categories.map((c) => (
               <Badge key={c.id} variant="outline" className="text-[11px]">
                 {c.name}
               </Badge>
             ))}
+            {skill.tags.map((t) => (
+              <Badge key={t.id} variant="default" className="text-[10px] text-text-muted">
+                #{t.name}
+              </Badge>
+            ))}
+          </div>
+
+          <div className="pt-2">
+            <InstallBox slug={skill.slug} recipes={skill.recipes} />
           </div>
         </div>
       </div>
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-text-muted">
-          Installation Command
-        </h2>
-        <InstallBox recipes={skill.recipes} />
-      </section>
-
-      <section className="space-y-3">
+      <section className="space-y-3 pt-4 border-t border-border/60">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-text-muted">
           Showcase & Previews
         </h2>
@@ -270,17 +275,20 @@ export default async function SkillDetailPage({ params }: SkillDetailPageProps) 
         />
       </section>
 
-      <section className="space-y-3 rounded-xl bg-surface border border-border p-6">
-        <h2 className="text-base font-semibold text-text-primary">Documentation</h2>
-        <div className="prose prose-invert max-w-none text-sm text-text-secondary leading-relaxed whitespace-pre-wrap">
-          {skill.description}
-        </div>
+      <section className="space-y-3">
+        <SkillSpecViewer
+          name={skill.name}
+          slug={skill.slug}
+          description={skill.description}
+          summary={skill.summary}
+          author={skill.authorDisplay}
+        />
       </section>
 
       {otherSkills.length > 0 && (
         <section className="space-y-4 pt-6 border-t border-border">
-          <h2 className="text-lg font-semibold text-text-primary">Related Skills</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <h2 className="text-base font-semibold text-text-primary">Related Skills</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {otherSkills.map((s) => (
               <SkillCard key={s.id} skill={s as any} />
             ))}
