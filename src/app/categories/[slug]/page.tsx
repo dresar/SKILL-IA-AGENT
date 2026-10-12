@@ -5,6 +5,13 @@ import { ArrowLeft } from "lucide-react";
 import { getAllCategories, getPublishedSkills } from "@/server/services/skills";
 import { SkillCard } from "@/components/skills/skill-card";
 
+export async function generateStaticParams() {
+  const cats = await getAllCategories();
+  return cats.map((cat) => ({
+    slug: cat.slug
+  }));
+}
+
 interface CategoryPageProps {
   params: Promise<{
     slug: string;

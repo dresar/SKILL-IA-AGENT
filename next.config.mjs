@@ -1,20 +1,13 @@
+const isGithubPages = process.env.GITHUB_PAGES === "true";
+
 const nextConfig = {
   reactStrictMode: true,
+  output: isGithubPages ? "export" : undefined,
+  basePath: isGithubPages ? "/SKILL-IA-AGENT" : "",
+  assetPrefix: isGithubPages ? "/SKILL-IA-AGENT/" : undefined,
+  trailingSlash: true,
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "raw.githubusercontent.com"
-      },
-      {
-        protocol: "https",
-        hostname: "avatars.githubusercontent.com"
-      },
-      {
-        protocol: "https",
-        hostname: "cdn.jsdelivr.net"
-      }
-    ]
+    unoptimized: true
   }
 };
 

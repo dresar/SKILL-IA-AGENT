@@ -18,6 +18,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
 
+export async function generateStaticParams() {
+  const items = await getPublishedSkills({ limit: 100 });
+  return items.map((item) => ({
+    slug: item.slug
+  }));
+}
+
 interface SkillDetailPageProps {
   params: Promise<{
     slug: string;

@@ -5,6 +5,8 @@ import {
   getAllCategories
 } from "@/server/services/skills";
 
+export const dynamic = "force-static";
+
 export async function GET() {
   return NextResponse.json({
     name: "skill-uiai-mcp",

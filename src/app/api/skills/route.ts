@@ -1,21 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPublishedSkills } from "@/server/services/skills";
 
-export async function GET(req: NextRequest) {
+export const dynamic = "force-static";
+
+export async function GET() {
   try {
-    const { searchParams } = new URL(req.url);
-    const q = searchParams.get("q") || undefined;
-    const category = searchParams.get("category") || undefined;
-    const type = searchParams.get("type") || undefined;
-    const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 20;
-
-    const items = await getPublishedSkills({
-      query: q,
-      category,
-      skillType: type,
-      limit
-    });
-
+    const items = await getPublishedSkills({ limit: 50 });
     return NextResponse.json({ ok: true, data: items });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to fetch skills";
