@@ -20,13 +20,16 @@ import {
   LogOut,
   FolderGit2,
   Wand2,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/components/providers/auth-provider";
 import { SkillDemoModal } from "@/components/skills/skill-demo-modal";
 import { AiPromptStudio, PreviewMode } from "@/components/admin/ai-prompt-studio";
+import { ImageUploadZone } from "@/components/admin/image-upload-zone";
+import { AiSkillAnalyzer, SkillAnalysisResult } from "@/components/admin/ai-skill-analyzer";
 
 interface AdminSkill {
   id: string;
@@ -214,12 +217,13 @@ const INITIAL_SKILLS: AdminSkill[] = [
 export default function AdminPage() {
   const router = useRouter();
   const { user, isAuthenticated, isAdmin, switchRole, logout } = useAuth();
-  const [activeTab, setActiveTab] = useState<"dashboard" | "skills" | "create" | "ai_studio" | "sync" | "audit">("dashboard");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "skills" | "create" | "ai_analyzer" | "ai_studio" | "sync" | "audit">("dashboard");
   const [skillsList, setSkillsList] = useState<AdminSkill[]>(INITIAL_SKILLS);
   const [searchFilter, setSearchFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [demoSkill, setDemoSkill] = useState<any | null>(null);
   const [aiStudioSkill, setAiStudioSkill] = useState<AdminSkill | null>(null);
+  const [studioSkillId, setStudioSkillId] = useState<string>("sk-1");
   const [feedback, setFeedback] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
@@ -317,6 +321,25 @@ export default function AdminPage() {
       </div>
     );
   }
+
+  const handleApplyAiAnalysis = (result: SkillAnalysisResult) => {
+    setFormData({
+      ...formData,
+      name: result.name,
+      slug: result.slug,
+      category: result.category,
+      skillType: result.category,
+      summary: result.summary,
+      description: result.description,
+      command: result.installCommand,
+      previewImageUrl: result.previewSvg
+        ? `data:image/svg+xml;utf8,${encodeURIComponent(result.previewSvg)}`
+        : formData.previewImageUrl
+    });
+    setActiveTab("create");
+    setFeedback(`Formulir terisi otomatis untuk ${result.name}.`);
+    setTimeout(() => setFeedback(null), 3000);
+  };
 
   const handleCreateSkill = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -500,10 +523,11 @@ export default function AdminPage() {
         {[
           { key: "dashboard", label: "Dashboard", icon: Activity },
           { key: "skills", label: "Daftar Skill", icon: Layers },
-          { key: "create", label: "Tambah Skill", icon: Plus },
-          { key: "ai_studio", label: "Prompt AI Studio", icon: Wand2 },
-          { key: "sync", label: "GitHub Folder", icon: Github },
-          { key: "audit", label: "Audit Logs", icon: Clock }
+          { key: "create", label: "Tambah", icon: Plus },
+          { key: "ai_analyzer", label: "AI Analisis", icon: Sparkles },
+          { key: "ai_studio", label: "Prompt AI", icon: Wand2 },
+          { key: "sync", label: "GitHub", icon: Github },
+          { key: "audit", label: "Audit", icon: Clock }
         ].map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.key;
@@ -730,11 +754,23 @@ export default function AdminPage() {
 
       {activeTab === "create" && (
         <form onSubmit={handleCreateSkill} className="rounded-2xl bg-surface border border-border p-5 sm:p-8 space-y-6">
-          <div className="border-b border-border pb-3">
-            <h2 className="text-lg font-bold text-text-primary">Tambah Skill Baru</h2>
-            <p className="text-xs text-text-muted mt-0.5">
-              Definisikan skill baru, generator preview, dan sinkronisasi ke repositori otomatis.
-            </p>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3">
+            <div>
+              <h2 className="text-lg font-bold text-text-primary">Tambah Skill</h2>
+              <p className="text-xs text-text-muted mt-0.5">
+                Definisikan skill baru dan pratinjau visual.
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setActiveTab("ai_analyzer")}
+              className="text-xs h-8 min-h-[36px] gap-1.5 border-accent/40 text-accent"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>AI Analisis</span>
+            </Button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -751,14 +787,14 @@ export default function AdminPage() {
                   const autoSlug = val.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
                   setFormData({ ...formData, name: val, slug: autoSlug });
                 }}
-                placeholder="Contoh: Motion GSAP Engine"
+                placeholder="Motion GSAP Engine"
                 className="w-full px-3 py-2 text-xs rounded-xl border border-border bg-surface-raised text-text-primary focus:outline-none focus:ring-1 focus:ring-accent"
               />
             </div>
 
             <div>
               <label className="block text-xs font-semibold text-text-secondary mb-1">
-                Slug (Folder Repository)
+                Slug
               </label>
               <input
                 type="text"
@@ -791,21 +827,29 @@ export default function AdminPage() {
 
             <div>
               <label className="block text-xs font-semibold text-text-secondary mb-1">
-                Tautan Gambar AI (Opsional)
+                Perintah Pasang
               </label>
               <input
-                type="url"
-                value={formData.previewImageUrl}
-                onChange={(e) => setFormData({ ...formData, previewImageUrl: e.target.value })}
-                placeholder="https://images.unsplash.com/... atau URL ChatGPT"
+                type="text"
+                value={formData.command}
+                onChange={(e) => setFormData({ ...formData, command: e.target.value })}
+                placeholder={`npx skills add dresar/SKILL-IA-AGENT -s ${formData.slug || "skill-name"}`}
                 className="w-full px-3 py-2 text-xs rounded-xl border border-border bg-surface-raised text-text-primary font-mono focus:outline-none focus:ring-1 focus:ring-accent"
               />
             </div>
           </div>
 
           <div>
+            <ImageUploadZone
+              value={formData.previewImageUrl}
+              onChange={(val) => setFormData({ ...formData, previewImageUrl: val })}
+              label="Unggah Preview Gambar"
+            />
+          </div>
+
+          <div>
             <label className="block text-xs font-semibold text-text-secondary mb-1">
-              Ringkasan (Maksimal 1 Kalimat)
+              Ringkasan
             </label>
             <input
               type="text"
@@ -817,23 +861,10 @@ export default function AdminPage() {
             />
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-text-secondary mb-1">
-              Perintah Pasang Antigravity
-            </label>
-            <input
-              type="text"
-              value={formData.command}
-              onChange={(e) => setFormData({ ...formData, command: e.target.value })}
-              placeholder={`npx skills add dresar/SKILL-IA-AGENT -s ${formData.slug || "skill-name"}`}
-              className="w-full px-3 py-2 text-xs rounded-xl border border-border bg-surface-raised text-text-primary font-mono focus:outline-none focus:ring-1 focus:ring-accent"
-            />
-          </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-text-secondary mb-1">
-                Demo Prompt (Input Pengguna)
+                Demo Prompt
               </label>
               <textarea
                 rows={3}
@@ -845,7 +876,7 @@ export default function AdminPage() {
 
             <div>
               <label className="block text-xs font-semibold text-text-secondary mb-1">
-                Demo Output (Hasil Kode)
+                Demo Output
               </label>
               <textarea
                 rows={3}
@@ -873,23 +904,56 @@ export default function AdminPage() {
               className="text-xs h-9 min-h-[40px] font-semibold gap-1.5"
             >
               <Check className="w-3.5 h-3.5" />
-              <span>Simpan & Buat Bundle</span>
+              <span>Simpan</span>
             </Button>
           </div>
         </form>
       )}
 
+      {activeTab === "ai_analyzer" && (
+        <AiSkillAnalyzer onApply={handleApplyAiAnalysis} />
+      )}
+
       {activeTab === "ai_studio" && (
-        <AiPromptStudio
-          skillName={skillsList[0]?.name || "Frontend Design"}
-          skillSlug={skillsList[0]?.slug || "frontend-design"}
-          skillSummary={skillsList[0]?.summary || "Agency UI components"}
-          category={skillsList[0]?.categories[0]?.name || "Frontend"}
-          onSavePreview={(mode, url) => {
-            setFeedback(`Mode preview disimpan: ${mode}`);
-            setTimeout(() => setFeedback(null), 3000);
-          }}
-        />
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-surface border border-border">
+            <span className="text-xs font-semibold text-text-secondary">Pilih Target Skill:</span>
+            <select
+              value={studioSkillId}
+              onChange={(e) => setStudioSkillId(e.target.value)}
+              className="px-3 py-1.5 rounded-lg border border-border bg-surface-raised text-xs text-text-primary focus:outline-none"
+            >
+              {skillsList.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name} ({s.slug})
+                </option>
+              ))}
+            </select>
+          </div>
+          {(() => {
+            const currentSkill = skillsList.find((s) => s.id === studioSkillId) || skillsList[0];
+            return (
+              <AiPromptStudio
+                skillName={currentSkill.name}
+                skillSlug={currentSkill.slug}
+                skillSummary={currentSkill.summary}
+                category={currentSkill.categories[0]?.name || "Frontend"}
+                currentImageUrl={currentSkill.previewImageUrl}
+                onSavePreview={(mode, url) => {
+                  setSkillsList(
+                    skillsList.map((s) =>
+                      s.id === currentSkill.id
+                        ? { ...s, previewMode: mode, previewImageUrl: mode === "ai_image" ? url : s.previewImageUrl }
+                        : s
+                    )
+                  );
+                  setFeedback(`Pratinjau ${currentSkill.name} disimpan.`);
+                  setTimeout(() => setFeedback(null), 3000);
+                }}
+              />
+            );
+          })()}
+        </div>
       )}
 
       {activeTab === "sync" && (
@@ -897,7 +961,7 @@ export default function AdminPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3">
             <div>
               <h3 className="text-base font-bold text-text-primary">
-                Penyimpanan Bundle Repositori (12 Skills)
+                Bundle Repositori
               </h3>
               <p className="text-xs text-text-muted mt-0.5">
                 Struktur direktori skills/ yang siap di-commit ke branch main.
@@ -910,7 +974,7 @@ export default function AdminPage() {
               className="text-xs h-9 min-h-[40px] gap-1.5"
             >
               <UploadCloud className="w-3.5 h-3.5" />
-              <span>Sinkronkan Sekarang</span>
+              <span>Sinkronkan</span>
             </Button>
           </div>
 

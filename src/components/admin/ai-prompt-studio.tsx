@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ImageUploadZone } from "./image-upload-zone";
 
 export type PreviewMode = "svg" | "ai_image" | "code" | "terminal";
 
@@ -222,30 +223,25 @@ export function AiPromptStudio({
         </div>
 
         {previewMode === "ai_image" && (
-          <div className="space-y-2 pt-1">
-            <label className="block text-xs font-medium text-text-secondary">
-              Tautan Gambar (Hasil ChatGPT / DALL-E / Imgur / CDN)
-            </label>
-            <input
-              type="url"
+          <div className="pt-1">
+            <ImageUploadZone
               value={customImageUrl}
-              onChange={(e) => setCustomImageUrl(e.target.value)}
-              placeholder="https://images.unsplash.com/... atau URL ChatGPT"
-              className="w-full px-3 py-2 text-xs rounded-xl border border-border bg-surface-raised text-text-primary focus:outline-none focus:ring-1 focus:ring-accent font-mono"
+              onChange={(val) => setCustomImageUrl(val)}
+              label="Upload Gambar AI"
             />
           </div>
         )}
 
-        <div className="rounded-xl bg-surface-raised border border-border p-4 space-y-2">
-          <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">
-            Live Preview Kartu
+        <div className="rounded-xl bg-surface-raised border border-border p-3 space-y-2">
+          <span className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">
+            Preview
           </span>
 
           <div className="aspect-[16/9] w-full rounded-lg overflow-hidden bg-[#0A0D14] border border-border flex items-center justify-center relative">
             {previewMode === "svg" && (
               <img
                 src={`/previews/${skillSlug || "frontend-design"}.svg`}
-                alt="SVG Preview"
+                alt="Preview"
                 className="w-full h-full object-cover"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
@@ -258,7 +254,7 @@ export function AiPromptStudio({
               customImageUrl ? (
                 <img
                   src={customImageUrl}
-                  alt="AI Generated Preview"
+                  alt="Preview"
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
@@ -266,39 +262,38 @@ export function AiPromptStudio({
                   }}
                 />
               ) : (
-                <div className="text-center p-6 text-text-muted text-xs">
-                  <ImageIcon className="w-8 h-8 mx-auto mb-2 opacity-40" />
-                  <p>Tempelkan URL gambar untuk melihat pratinjau.</p>
+                <div className="text-center p-4 text-text-muted text-xs">
+                  <ImageIcon className="w-6 h-6 mx-auto mb-1 opacity-40" />
+                  <p>Upload atau tempel URL gambar.</p>
                 </div>
               )
             )}
 
             {previewMode === "code" && (
-              <div className="p-4 w-full h-full font-mono text-xs text-emerald-300 overflow-auto bg-[#07090E]">
+              <div className="p-3 w-full h-full font-mono text-[11px] text-emerald-300 overflow-auto bg-[#07090E]">
                 <pre>{`export const ${skillSlug.replace(/-/g, "_")} = {\n  status: "verified",\n  target: "antigravity"\n};`}</pre>
               </div>
             )}
 
             {previewMode === "terminal" && (
-              <div className="p-4 w-full h-full font-mono text-xs text-text-secondary bg-[#07090E] space-y-1">
+              <div className="p-3 w-full h-full font-mono text-[11px] text-text-secondary bg-[#07090E] space-y-1">
                 <p className="text-accent">$ npx skills add dresar/SKILL-IA-AGENT -s {skillSlug}</p>
-                <p className="text-text-muted">[agent] loading runtime dependencies...</p>
-                <p className="text-status-success">✓ skill {skillName} active</p>
+                <p className="text-status-success">✓ aktif</p>
               </div>
             )}
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 pt-2">
+        <div className="flex justify-end gap-2 pt-1">
           <Button
             type="button"
             variant="primary"
             size="sm"
             onClick={handleApply}
-            className="text-xs h-9 font-semibold gap-1.5 px-4"
+            className="text-xs h-8 font-semibold gap-1.5 px-4"
           >
             <Check className="w-3.5 h-3.5" />
-            <span>Terapkan Opsi Preview</span>
+            <span>Terapkan</span>
           </Button>
         </div>
       </div>
