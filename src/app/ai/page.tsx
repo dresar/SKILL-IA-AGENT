@@ -69,7 +69,7 @@ function AiAssistantContent() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Halo! Saya adalah SkillAgent Assistant bertenaga model **step-5-preview**. Anda dapat menanyakan rekomendasi skill dari seluruh database katalog, aturan SKILL.md, instruksi agentik, atau integrasi MCP server."
+      content: "Halo! Saya adalah SkillAgent Assistant. Tanyakan rekomendasi skill dari katalog, aturan SKILL.md, instruksi coding agent, atau integrasi MCP server."
     }
   ]);
   const [input, setInput] = useState("");
@@ -160,8 +160,8 @@ function AiAssistantContent() {
             <h1 className="text-2xl font-bold tracking-tight text-text-primary">
               AI Agent Assistant
             </h1>
-            <span className="font-mono text-[10px] tracking-wider uppercase px-2 py-0.5 rounded bg-accent/15 text-accent font-semibold">
-              step-5-preview
+            <span className="font-mono text-[10px] tracking-wider uppercase px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-semibold">
+              Aktif
             </span>
           </div>
         </div>

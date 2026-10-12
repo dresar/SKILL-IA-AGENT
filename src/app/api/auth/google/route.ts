@@ -16,7 +16,13 @@ export async function GET(req: NextRequest) {
     const origin = host ? `${proto}://${host}` : req.nextUrl.origin || defaultSiteUrl;
 
     const rawRedirect = req.nextUrl.searchParams.get("redirect") || "/";
-    const cleanRedirect = (rawRedirect.startsWith("/login") || rawRedirect.startsWith("/admin/login")) ? "/" : rawRedirect;
+    let cleanRedirect = rawRedirect;
+    if (cleanRedirect === "/login" || cleanRedirect === "/login/") {
+      cleanRedirect = "/";
+    } else if (cleanRedirect === "/admin/login" || cleanRedirect === "/admin/login/") {
+      cleanRedirect = "/admin/";
+    }
+
     const callbackURL = `${origin}/api/auth/callback/neon/?redirect=${encodeURIComponent(cleanRedirect)}`;
 
     const res = await fetch(`${neonAuthUrl}/sign-in/social`, {

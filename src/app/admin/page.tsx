@@ -722,9 +722,9 @@ function AdminContent() {
               </div>
 
               <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-1">
-                <p className="text-xs font-semibold text-slate-200">Model step-5-preview</p>
+                <p className="text-xs font-semibold text-slate-200">Katalog Tervalidasi</p>
                 <p className="text-[11px] text-slate-400">
-                  Didukung router byNara untuk rekomendasi cerdas dan analisis format SKILL.md.
+                  Instruksi runtime, resep CLI, dan format metadata terverifikasi.
                 </p>
               </div>
             </div>

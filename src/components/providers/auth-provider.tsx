@@ -71,33 +71,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
 
   useEffect(() => {
-    let localFound = false;
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
         if (isStoredUser(parsed)) {
           setUser(parsed);
-          writeAuthCookies(parsed);
-          localFound = true;
         }
       }
     } catch {}
 
-    const hasAuthSuccess = typeof window !== "undefined" && window.location.search.includes("auth_success");
-
-    if (!localFound || hasAuthSuccess) {
-      fetch("/api/auth/session/", { cache: "no-store" })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data && data.isAuthenticated && data.user && isStoredUser(data.user)) {
-            setUser(data.user);
-            writeAuthCookies(data.user);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(data.user));
-          }
-        })
-        .catch(() => {});
-    }
+    fetch("/api/auth/session/", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.isAuthenticated && data.user && isStoredUser(data.user)) {
+          setUser(data.user);
+          writeAuthCookies(data.user);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data.user));
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const saveUser = (newUser: AuthUser | null) => {
@@ -230,6 +223,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     saveUser(null);
+    fetch("/api/auth/logout/", { method: "POST" }).catch(() => {});
   };
 
   const isAuthenticated = Boolean(user);

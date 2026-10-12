@@ -9,10 +9,6 @@ import {
   X,
   Sparkles,
   ArrowRight,
-  Terminal,
-  ShieldCheck,
-  Cpu,
-  Layers,
   Check
 } from "lucide-react";
 import { SkillCard, SkillCardData } from "./skill-card";
@@ -112,19 +108,14 @@ export function OnePageDirectory({
 
   return (
     <div className="space-y-12">
-      <section className="space-y-8 pt-2 pb-6 border-b border-border">
-        <div className="space-y-4 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[4px] border border-border bg-surface text-[11px] font-mono text-text-muted">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span>OPEN AGENT SKILL REGISTRY // MCP 1.6 READY</span>
-          </div>
-
+      <section className="space-y-6 pt-2 pb-6 border-b border-border">
+        <div className="space-y-3 max-w-3xl">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-text-primary leading-[1.15]">
-            Katalog Resmi Skill & Protokol AI Agent
+            Katalog Skill & Protokol AI Agent
           </h1>
 
           <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
-            Pusat instruksi runtime dan ekstensi tervalidasi untuk Google Antigravity, Claude Code, OpenCode, dan Aider. Pasang langsung via satu baris perintah CLI atau gunakan asisten AI untuk rekomendasi skill yang cocok untuk proyek Anda.
+            Pusat instruksi runtime dan ekstensi untuk Google Antigravity, Claude Code, OpenCode, dan Aider. Pasang langsung via satu baris perintah CLI atau gunakan asisten AI untuk rekomendasi skill.
           </p>
         </div>
 
@@ -173,48 +164,6 @@ export function OnePageDirectory({
                 {tag}
               </button>
             ))}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-          <div className="p-3.5 sm:p-4 rounded-xl border border-border bg-surface space-y-1">
-            <div className="flex items-center gap-2 text-text-primary font-bold text-sm">
-              <ShieldCheck className="w-4 h-4 text-emerald-500" />
-              <span>12+ Terverifikasi</span>
-            </div>
-            <p className="text-[11px] text-text-muted leading-relaxed">
-              Zero-bloat, standar nokomen, dan lolos uji coba runtime.
-            </p>
-          </div>
-
-          <div className="p-3.5 sm:p-4 rounded-xl border border-border bg-surface space-y-1">
-            <div className="flex items-center gap-2 text-text-primary font-bold text-sm">
-              <Cpu className="w-4 h-4 text-accent" />
-              <span>Cross-Agent</span>
-            </div>
-            <p className="text-[11px] text-text-muted leading-relaxed">
-              Antigravity, Claude Code CLI, OpenCode, dan Aider.
-            </p>
-          </div>
-
-          <div className="p-3.5 sm:p-4 rounded-xl border border-border bg-surface space-y-1">
-            <div className="flex items-center gap-2 text-text-primary font-bold text-sm">
-              <Layers className="w-4 h-4 text-cyan-500" />
-              <span>MCP Protocol</span>
-            </div>
-            <p className="text-[11px] text-text-muted leading-relaxed">
-              Kompatibel Model Context Protocol v1.6 via stdio & SSE.
-            </p>
-          </div>
-
-          <div className="p-3.5 sm:p-4 rounded-xl border border-border bg-surface space-y-1">
-            <div className="flex items-center gap-2 text-text-primary font-bold text-sm">
-              <Terminal className="w-4 h-4 text-amber-500" />
-              <span>One-Command</span>
-            </div>
-            <p className="text-[11px] text-text-muted leading-relaxed">
-              Salin perintah instalasi langsung ke terminal kerja.
-            </p>
           </div>
         </div>
       </section>

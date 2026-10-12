@@ -54,19 +54,11 @@ export function AdminSidebar({ pendingCount = 0 }: AdminSidebarProps) {
 
   return (
     <aside className="w-full md:w-64 shrink-0 border-b md:border-b-0 md:border-r border-slate-800/80 bg-slate-950/60 flex flex-col justify-between p-4 min-h-auto md:min-h-[calc(100vh-3.5rem)]">
-      <div className="space-y-6">
-        <div className="px-2 space-y-1">
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-xs font-bold text-slate-300 uppercase tracking-wider">
-              NAVIGASI UTAMA
-            </span>
-            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/15 text-indigo-400 font-semibold">
-              ADMIN v2
-            </span>
-          </div>
-          <p className="text-[11px] text-slate-500">
-            Pusat kurasi & operasi registry
-          </p>
+      <div className="space-y-4">
+        <div className="px-2">
+          <span className="text-xs font-semibold text-slate-300">
+            Menu
+          </span>
         </div>
 
         <nav className="space-y-1">
@@ -105,7 +97,7 @@ export function AdminSidebar({ pendingCount = 0 }: AdminSidebarProps) {
           className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-slate-400 hover:bg-slate-900/60 hover:text-slate-200 transition-colors"
         >
           <ArrowLeft className="h-3.5 w-3.5 text-slate-500" />
-          <span>Kembali ke Portal Publik</span>
+          <span>Portal Publik</span>
         </Link>
 
         {user && (

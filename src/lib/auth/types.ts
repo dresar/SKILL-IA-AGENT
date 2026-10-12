@@ -20,6 +20,11 @@ export interface DemoAccount {
 
 export const ADMIN_ROLES: UserRole[] = ["SUPER_ADMIN", "CURATOR"];
 
+export const ADMIN_EMAILS = [
+  "eka.ckp16799@gmail.com",
+  "nailongping2@gmail.com"
+];
+
 export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     role: "SUPER_ADMIN",
@@ -28,6 +33,14 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
     email: "eka.ckp16799@gmail.com",
     badge: "SUPER ADMIN",
     description: "Akses penuh manajemen skill, sync GitHub, dan audit logs."
+  },
+  {
+    role: "SUPER_ADMIN",
+    roleLabel: "Super Admin",
+    name: "nailong ping Aja",
+    email: "nailongping2@gmail.com",
+    badge: "SUPER ADMIN",
+    description: "Pemilik proyek database Neon dan administrator pusat."
   },
   {
     role: "CURATOR",
@@ -55,11 +68,27 @@ export function isAdminRole(role: unknown): role is "SUPER_ADMIN" | "CURATOR" {
   return role === "SUPER_ADMIN" || role === "CURATOR";
 }
 
+export function isSuperAdminEmail(email: string): boolean {
+  return ADMIN_EMAILS.includes(email.toLowerCase().trim());
+}
+
 export function getDemoAccountByEmail(email: string) {
   return DEMO_ACCOUNTS.find((account) => account.email.toLowerCase() === email.toLowerCase());
 }
 
 export function getAdminAccountByEmail(email: string) {
+  const norm = email.toLowerCase().trim();
+  if (isSuperAdminEmail(norm)) {
+    const matched = DEMO_ACCOUNTS.find((a) => a.email.toLowerCase() === norm);
+    return matched || {
+      role: "SUPER_ADMIN" as UserRole,
+      roleLabel: "Super Admin",
+      name: norm.split("@")[0],
+      email: norm,
+      badge: "SUPER ADMIN",
+      description: "Administrator sistem"
+    };
+  }
   const account = getDemoAccountByEmail(email);
   return account && isAdminRole(account.role) ? account : null;
 }

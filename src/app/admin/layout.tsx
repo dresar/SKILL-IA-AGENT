@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { useAuth } from "@/components/providers/auth-provider";
-import { ExternalLink, LogOut, ShieldCheck, Terminal, Database, Cpu } from "lucide-react";
+import { ExternalLink, LogOut, ShieldCheck } from "lucide-react";
 
 export default function AdminLayout({
   children
@@ -48,26 +48,15 @@ export default function AdminLayout({
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
             </span>
-            <span className="text-xs font-mono font-bold tracking-wider text-slate-200">
-              OPERATIONAL CONSOLE
+            <span className="text-xs font-semibold tracking-tight text-slate-200">
+              Admin Console
             </span>
           </div>
-          <span className="text-slate-700">|</span>
-          <div className="hidden lg:flex items-center gap-3 text-[11px] font-mono text-slate-400">
-            <span className="flex items-center gap-1 text-slate-300">
-              <Database className="w-3 h-3 text-cyan-400" />
-              Neon Postgres
+          {pendingCount > 0 && (
+            <span className="px-2 py-0.5 rounded text-[11px] bg-amber-500/15 border border-amber-500/30 text-amber-400 font-medium">
+              {pendingCount} Menunggu ACC
             </span>
-            <span className="flex items-center gap-1 text-slate-300">
-              <Cpu className="w-3 h-3 text-amber-400" />
-              byNara step-5-preview
-            </span>
-            {pendingCount > 0 && (
-              <span className="px-2 py-0.5 rounded bg-amber-500/15 border border-amber-500/30 text-amber-400 font-semibold animate-pulse">
-                {pendingCount} Menunggu ACC
-              </span>
-            )}
-          </div>
+          )}
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3 text-xs">
@@ -102,12 +91,14 @@ export default function AdminLayout({
         </div>
       </header>
 
-      <div className="flex-1 flex flex-col md:flex-row min-w-0">
+      <div className="flex-1 flex flex-col md:flex-row">
         <Suspense fallback={<aside className="w-full md:w-64 shrink-0 bg-slate-950/60" />}>
           <AdminSidebar pendingCount={pendingCount} />
         </Suspense>
         <main className="flex-1 p-4 sm:p-6 lg:p-8 min-w-0 overflow-y-auto">
-          {children}
+          <Suspense fallback={<div className="p-8 text-center text-xs text-slate-500 font-mono">Memuat...</div>}>
+            {children}
+          </Suspense>
         </main>
       </div>
     </div>
