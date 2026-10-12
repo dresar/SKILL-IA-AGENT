@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Next.js build output
+.next/
+out/
+build/
+dist/
+
+# Credentials & secrets (STRICTLY PROHIBITED TO COMMIT)
+.env
+.env*.local
+.env.production
+.env.development
+krednsial.txt
+kredensial.txt
+skillnokomen.txt
+*.pem
+*.key
+*.cert
+*.secret
+
+# Logs & temporary files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+.DS_Store
+Thumbs.db
