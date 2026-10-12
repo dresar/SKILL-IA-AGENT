@@ -2,28 +2,36 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Terminal, Copy, Check, ShieldCheck, ExternalLink } from "lucide-react";
+import { Terminal, Copy, Check, Sparkles, Play, ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
-interface SkillCardProps {
-  skill: {
-    id: string;
-    slug: string;
-    name: string;
-    summary: string;
-    skillType: string;
-    authorDisplay: string;
-    licenseSpdx?: string | null;
-    sourceUrl: string;
-    verificationStatus: string;
-    categories: Array<{ id: string; slug: string; name: string }>;
-    primaryRecipe?: { command: string; target: string } | null;
-  };
+export interface SkillCardData {
+  id: string;
+  slug: string;
+  name: string;
+  summary: string;
+  description?: string;
+  skillType: string;
+  authorDisplay: string;
+  licenseSpdx?: string | null;
+  sourceUrl: string;
+  verificationStatus: string;
+  categories: Array<{ id: string; slug: string; name: string }>;
+  primaryRecipe?: { command: string; target: string; displayLabel?: string } | null;
+  recipes?: Array<{ id: string; command: string; target: string; displayLabel?: string }>;
+  previewImageUrl?: string;
 }
 
-export function SkillCard({ skill }: SkillCardProps) {
+interface SkillCardProps {
+  skill: SkillCardData;
+  onSelect?: (skill: SkillCardData) => void;
+  onDemo?: (skill: SkillCardData) => void;
+}
+
+export function SkillCard({ skill, onSelect, onDemo }: SkillCardProps) {
   const [copied, setCopied] = useState(false);
+  const previewSrc = skill.previewImageUrl || `/previews/${skill.slug}.svg`;
 
   const handleCopy = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -35,80 +43,128 @@ export function SkillCard({ skill }: SkillCardProps) {
     }
   };
 
+  const handleCardClick = () => {
+    if (onSelect) {
+      onSelect(skill);
+    }
+  };
+
+  const handleDemoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onDemo) {
+      onDemo(skill);
+    } else if (onSelect) {
+      onSelect(skill);
+    }
+  };
+
   return (
-    <div className="group relative flex flex-col justify-between rounded-xl bg-surface border border-border p-5 hover:border-accent/40 hover:bg-surface-raised/40 transition-all">
-      <div className="space-y-3">
-        <div className="flex items-start justify-between gap-2">
+    <div
+      onClick={handleCardClick}
+      className="group relative flex flex-col justify-between rounded-2xl p-1 bg-white/[0.02] ring-1 ring-white/10 hover:ring-accent/50 hover:bg-white/[0.04] transition-all duration-300 cursor-pointer shadow-lg hover:shadow-accent/5"
+    >
+      <div className="rounded-xl bg-surface p-4 flex flex-col justify-between h-full space-y-4">
+        <div className="space-y-3">
+          <div className="relative aspect-[16/9] w-full rounded-lg overflow-hidden bg-surface-raised border border-border/80 group-hover:border-accent/30 transition-colors">
+            <img
+              src={previewSrc}
+              alt={skill.name}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = "/brand/logo.svg";
+                target.className = "w-full h-full object-contain p-8 opacity-30";
+              }}
+            />
+            <div className="absolute top-2.5 right-2.5">
+              <Badge
+                variant={
+                  skill.verificationStatus === "verified"
+                    ? "success"
+                    : skill.verificationStatus === "source_checked"
+                    ? "accent"
+                    : "outline"
+                }
+                className="text-[10px] backdrop-blur-md bg-background/80"
+              >
+                {skill.verificationStatus === "verified"
+                  ? "Terverifikasi"
+                  : skill.verificationStatus === "source_checked"
+                  ? "Dicek"
+                  : "Draft"}
+              </Badge>
+            </div>
+          </div>
+
           <div className="space-y-1">
-            <Link href={`/skills/${skill.slug}`} className="hover:underline">
-              <h3 className="font-semibold text-base text-text-primary group-hover:text-white transition-colors">
-                {skill.name}
+            <div className="flex items-center justify-between gap-2">
+              <h3 className="font-bold text-base text-text-primary group-hover:text-accent transition-colors flex items-center gap-1.5">
+                <span>{skill.name}</span>
+                <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-accent" />
               </h3>
-            </Link>
+              {skill.licenseSpdx && (
+                <span className="text-[10px] text-text-muted font-mono">
+                  {skill.licenseSpdx}
+                </span>
+              )}
+            </div>
             <p className="text-xs text-text-muted">
-              by <span className="text-text-secondary">{skill.authorDisplay}</span>
+              oleh <span className="text-text-secondary font-medium">{skill.authorDisplay}</span>
             </p>
           </div>
 
-          <Badge
-            variant={
-              skill.verificationStatus === "verified"
-                ? "success"
-                : skill.verificationStatus === "source_checked"
-                ? "accent"
-                : "default"
-            }
-          >
-            {skill.verificationStatus === "verified"
-              ? "Verified"
-              : skill.verificationStatus === "source_checked"
-              ? "Checked"
-              : "Unverified"}
-          </Badge>
-        </div>
+          <p className="text-xs text-text-secondary line-clamp-2 leading-relaxed">
+            {skill.summary}
+          </p>
 
-        <p className="text-sm text-text-secondary line-clamp-2 leading-relaxed">
-          {skill.summary}
-        </p>
-
-        <div className="flex flex-wrap gap-1.5 pt-1">
-          {skill.categories.map((c) => (
-            <Badge key={c.id} variant="outline" className="text-[11px] py-0 px-2">
-              {c.name}
-            </Badge>
-          ))}
-          {skill.licenseSpdx && (
-            <span className="text-[11px] text-text-muted self-center ml-1">
-              {skill.licenseSpdx}
-            </span>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-5 pt-3 border-t border-border/70 flex items-center justify-between gap-2">
-        {skill.primaryRecipe?.command ? (
-          <div className="flex-1 flex items-center justify-between bg-background rounded-lg border border-border px-2.5 py-1.5 overflow-hidden">
-            <span className="font-mono text-xs text-text-muted truncate mr-2">
-              {skill.primaryRecipe.command}
-            </span>
-            <button
-              onClick={handleCopy}
-              className="text-text-muted hover:text-text-primary p-1 rounded transition-colors shrink-0"
-              aria-label="Copy command"
-            >
-              {copied ? <Check className="w-3.5 h-3.5 text-status-success" /> : <Copy className="w-3.5 h-3.5" />}
-            </button>
+          <div className="flex flex-wrap gap-1 pt-0.5">
+            {skill.categories.map((c) => (
+              <Badge key={c.id} variant="outline" className="text-[10px] py-0 px-2 font-mono">
+                {c.name}
+              </Badge>
+            ))}
           </div>
-        ) : (
-          <span className="text-xs text-text-muted">No install command</span>
-        )}
+        </div>
 
-        <Link
-          href={`/skills/${skill.slug}`}
-          className="text-xs font-medium text-accent hover:text-accent-strong shrink-0 px-2 py-1 rounded hover:bg-surface-raised transition-colors"
-        >
-          View
-        </Link>
+        <div className="pt-3 border-t border-border/60 space-y-2">
+          {skill.primaryRecipe?.command && (
+            <div className="flex items-center justify-between bg-surface-raised rounded-lg border border-border px-2.5 py-1.5 overflow-hidden">
+              <span className="font-mono text-[11px] text-text-muted truncate mr-2">
+                {skill.primaryRecipe.command}
+              </span>
+              <button
+                onClick={handleCopy}
+                className="text-text-muted hover:text-text-primary p-1 rounded transition-colors shrink-0"
+                aria-label="Salin perintah"
+              >
+                {copied ? <Check className="w-3.5 h-3.5 text-status-success" /> : <Copy className="w-3.5 h-3.5" />}
+              </button>
+            </div>
+          )}
+
+          <div className="flex items-center gap-2 pt-1">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleDemoClick}
+              className="flex-1 text-xs h-8 gap-1.5 font-medium border-accent/30 hover:border-accent hover:bg-accent/10 text-accent"
+            >
+              <Play className="w-3 h-3 fill-current" />
+              <span>Demo</span>
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={handleCardClick}
+              className="flex-1 text-xs h-8 text-text-secondary hover:text-text-primary"
+            >
+              <span>Detail</span>
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

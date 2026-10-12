@@ -1,0 +1,6 @@
+{
+  "slug": "ui-ux-text",
+  "name": "UI/UX Text",
+  "prompt": "Refactor verbose modal buttons and descriptions into ultra-minimalist microcopy.",
+  "output": "<Button variant=\\"primary\\">Simpan</Button>\\n<p className=\\"text-xs text-text-muted\\">Perubahan disimpan secara otomatis.</p>"
+}

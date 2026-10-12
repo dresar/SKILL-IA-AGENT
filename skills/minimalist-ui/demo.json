@@ -1,0 +1,6 @@
+{
+  "slug": "minimalist-ui",
+  "name": "Minimalist UI",
+  "prompt": "Generate high-density bento grid layout with subtle borders and flat surfaces.",
+  "output": "<div className=\\"grid grid-cols-1 md:grid-cols-3 gap-4\\">\\n  <div className=\\"md:col-span-2 p-6 rounded-2xl bg-surface border border-border\\">\\n    <h3 className=\\"text-lg font-bold\\">Featured Metric</h3>\\n  </div>\\n  <div className=\\"p-6 rounded-2xl bg-surface border border-border\\">\\n    <h3 className=\\"text-lg font-bold\\">Status</h3>\\n  </div>\\n</div>"
+}
