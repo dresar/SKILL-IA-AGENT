@@ -1,0 +1,65 @@
+# SKILL UIAI
+
+> Open-source AI-agent skill discovery platform with verified recipes, Model Context Protocol (MCP) server, and truthful showcases.
+
+## Overview
+SKILL UIAI is a curated, verified registry of production-ready skills for AI coding agents including Google Antigravity, Claude Code, Cursor, Devin, and GitHub Copilot. Each skill includes verified prompts, rules, executable installation commands, and test suites.
+
+## AI Discovery & Agent Integration Endpoints
+- Full Skills Catalog API: https://dresar.github.io/api/skills
+- Model Context Protocol (MCP) Server: https://dresar.github.io/api/mcp
+- Complete LLM Specification & Prompts: https://dresar.github.io/llms-full.txt
+- Sitemap Index: https://dresar.github.io/sitemap.xml
+- MCP Discovery: https://dresar.github.io/.well-known/mcp.json
+- AI Plugin Spec: https://dresar.github.io/.well-known/ai-plugin.json
+
+## Verified Skills Catalog
+
+### Frontend & Design
+- [Frontend Design](https://dresar.github.io/skills/frontend-design/): High-end tactile UI components, dark developer aesthetic, and responsive layout systems.
+  - Install: `npx skills add dresar/SKILL-IA-AGENT -s frontend-design`
+  - Raw Skill: https://dresar.github.io/skills/frontend-design/SKILL.md
+- [Minimalist UI](https://dresar.github.io/skills/minimalist-ui/): Clean editorial web layouts, warm monochrome palettes, and gapless bento grid architectures.
+  - Install: `npx skills add dresar/SKILL-IA-AGENT -s minimalist-ui`
+  - Raw Skill: https://dresar.github.io/skills/minimalist-ui/SKILL.md
+- [Taste Filter](https://dresar.github.io/skills/taste-filter/): Advanced aesthetic filter blocking generic AI templates, harsh drop shadows, and bootstrap clichés.
+  - Command: `/taste-filter`
+  - Raw Skill: https://dresar.github.io/skills/taste-filter/SKILL.md
+
+### Code Quality & Standards
+- [Nokomen](https://dresar.github.io/skills/nokomen/): Strict zero-comment and self-documenting code discipline. Prohibits redundant comments and ensures clean code.
+  - Command: `/nokomen`
+  - Raw Skill: https://dresar.github.io/skills/nokomen/SKILL.md
+- [UI/UX Text](https://dresar.github.io/skills/ui-ux-text/): Ultra-minimalist microcopy standard with strictly zero generic fluff, 1-3 words titles, 1-2 words buttons.
+  - Command: `/ui-ux-text`
+  - Raw Skill: https://dresar.github.io/skills/ui-ux-text/SKILL.md
+- [Superpowers TDD](https://dresar.github.io/skills/superpowers-tdd/): Disciplined test-driven development workflow, red-green-refactor loop, and coverage verification.
+  - Install: `npx skills add obra/superpowers -s superpowers-tdd`
+  - Raw Skill: https://dresar.github.io/skills/superpowers-tdd/SKILL.md
+- [Security Audit](https://dresar.github.io/skills/security-audit/): Automated AST vulnerability scanning, hardcoded secret and token detection, and input sanitization.
+  - Command: `/security-audit`
+  - Raw Skill: https://dresar.github.io/skills/security-audit/SKILL.md
+
+### Database & Backend
+- [Neon Postgres](https://dresar.github.io/skills/neon-postgres/): Serverless PostgreSQL schema migrations, connection pooling, and branch-aware database operations.
+  - Install: `npx skills add neondatabase/agent-skills -s neon-postgres`
+  - Raw Skill: https://dresar.github.io/skills/neon-postgres/SKILL.md
+
+### Workflows & Agent Coordination
+- [Antigravity Guide](https://dresar.github.io/skills/antigravity-guide/): Comprehensive manual for Google Antigravity CLI, subagent delegation, and slash commands.
+  - Command: `/antigravity-guide`
+  - Raw Skill: https://dresar.github.io/skills/antigravity-guide/SKILL.md
+- [Caveman Compress](https://dresar.github.io/skills/caveman-compress/): Token compression protocol reducing agent verbosity by up to 65% without loss of precision.
+  - Command: `/caveman-compress`
+  - Raw Skill: https://dresar.github.io/skills/caveman-compress/SKILL.md
+- [Git Workflow](https://dresar.github.io/skills/git-workflow/): Conventional commits, atomic feature branching, and automated release changelogs.
+  - Command: `/git-workflow`
+  - Raw Skill: https://dresar.github.io/skills/git-workflow/SKILL.md
+- [Docker DevOps](https://dresar.github.io/skills/docker-devops/): Ephemeral container sandboxing for autonomous agent code execution and verification.
+  - Install: `npx skills add dresar/SKILL-IA-AGENT -s docker-devops`
+  - Raw Skill: https://dresar.github.io/skills/docker-devops/SKILL.md
+
+## Installation Methods for AI Agents
+1. CLI Package Manager: Run `npx skills add dresar/SKILL-IA-AGENT -s <skill-name>`
+2. Slash Command: Invoke directly via `/<skill-name>` in supporting agents (Google Antigravity, Claude Code, Cursor).
+3. Model Context Protocol: Connect via stdio `npx tsx scripts/mcp-stdio.ts` or HTTP `/api/mcp` and use `get_install_command` or `get_skill_content`.

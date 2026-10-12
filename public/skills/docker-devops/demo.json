@@ -1,0 +1,6 @@
+{
+  "slug": "docker-devops",
+  "name": "Docker DevOps",
+  "prompt": "Spin up ephemeral Linux container for unprivileged agent execution.",
+  "output": "FROM node:20-alpine\\nWORKDIR /app\\nCOPY package*.json ./\\nRUN npm ci --only=production\\nUSER node\\nCMD [\\"npm\\", \\"start\\"]"
+}

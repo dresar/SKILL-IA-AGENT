@@ -25,7 +25,12 @@ export const metadata: Metadata = {
     "model context protocol",
     "antigravity",
     "agent directory",
-    "prompt engineering"
+    "prompt engineering",
+    "claude code skills",
+    "cursor rules",
+    "agent skills directory",
+    "llms.txt",
+    "generative ai tools"
   ],
   authors: [{ name: "Eka Syarif Maulana", url: "https://github.com/dresar" }],
   creator: "Eka Syarif Maulana",
@@ -120,6 +125,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
+        <link rel="help" href="/llms.txt" title="LLM Context Specification" type="text/plain" />
+        <link rel="alternate" type="application/json" href="/api/skills" title="Skills JSON API" />
+        <link rel="alternate" type="text/plain" href="/llms.txt" title="LLMs Index" />
+        <link rel="alternate" type="text/plain" href="/llms-full.txt" title="Complete LLMs Specification" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-caveman-compress" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#292524" />
+      <stop offset="100%" stop-color="#141210" />
+    </linearGradient>
+    <linearGradient id="glow-caveman-compress" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#FCD34D" stop-opacity="0.1" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" rx="24" fill="url(#bg-caveman-compress)" />
+  <circle cx="700" cy="100" r="220" fill="#F59E0B" opacity="0.14" />
+  <circle cx="120" cy="380" r="180" fill="#FCD34D" opacity="0.09" />
+  <rect x="50" y="50" width="700" height="350" rx="16" fill="none" stroke="url(#glow-caveman-compress)" stroke-width="1.5" />
+  
+  <rect x="70" y="75" width="130" height="28" rx="14" fill="#F59E0B" fill-opacity="0.15" stroke="#F59E0B" stroke-width="1" />
+  <text x="135" y="94" fill="#FCD34D" font-family="system-ui, sans-serif" font-size="12" font-weight="700" text-anchor="middle">Token Saver</text>
+  
+  <text x="70" y="160" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="36" font-weight="800" letter-spacing="-0.5">Caveman Compress</text>
+  <text x="70" y="195" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="16" font-weight="400">Protokol kompresi token agent yang memangkas 65% verbositas tanpa degradasi logika.</text>
+  
+  <rect x="70" y="230" width="660" height="140" rx="12" fill="#000000" fill-opacity="0.5" stroke="#334155" stroke-width="1" />
+  <circle cx="95" cy="252" r="5" fill="#EF4444" />
+  <circle cx="112" cy="252" r="5" fill="#EAB308" />
+  <circle cx="129" cy="252" r="5" fill="#22C55E" />
+  <text x="150" y="256" fill="#64748B" font-family="monospace" font-size="11">preview/caveman-compress.sh</text>
+  <text x="95" y="295" fill="#FCD34D" font-family="monospace" font-size="14">$ npx skills add dresar/SKILL-IA-AGENT -s caveman-compress</text>
+  <text x="95" y="325" fill="#38BDF8" font-family="monospace" font-size="13">[SKILL UIAI] verified &amp; ready</text>
+</svg>

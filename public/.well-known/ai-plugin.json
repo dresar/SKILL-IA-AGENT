@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_model": "skill_uiai",
+  "name_for_human": "SKILL UIAI Agent Registry",
+  "description_for_model": "Plugin and skill discovery registry for AI coding agents. Allows searching, retrieving, and installing verified agent skills, prompts, and recipes.",
+  "description_for_human": "Discover and install verified skills for AI coding agents.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://dresar.github.io/api/skills"
+  },
+  "logo_url": "https://dresar.github.io/brand/logo.svg",
+  "contact_email": "support@dresar.github.io",
+  "legal_info_url": "https://dresar.github.io"
+}

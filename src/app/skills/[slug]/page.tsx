@@ -45,11 +45,28 @@ export async function generateMetadata({ params }: SkillDetailPageProps): Promis
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dresar.github.io";
   const previewImg = `/previews/${skill.slug}.svg`;
 
+  const installCommand = (skill.recipes && skill.recipes.length > 0 ? skill.recipes[0].command : "") || `npx skills add dresar/SKILL-IA-AGENT -s ${skill.slug}`;
+
   return {
     title: skill.name,
     description: skill.summary,
+    keywords: [
+      skill.name,
+      skill.slug,
+      "ai skill",
+      "agent skill",
+      "mcp tool",
+      "antigravity",
+      ...skill.tags.map((t) => t.name)
+    ],
     alternates: {
       canonical: `/skills/${slug}/`
+    },
+    other: {
+      "ai-install-command": installCommand,
+      "ai-skill-slug": skill.slug,
+      "ai-skill-name": skill.name,
+      "ai-skill-type": skill.skillType
     },
     openGraph: {
       type: "article",
@@ -85,6 +102,7 @@ export default async function SkillDetailPage({ params }: SkillDetailPageProps) 
   const related = await getPublishedSkills({ limit: 3 });
   const otherSkills = related.filter((s) => s.slug !== skill.slug).slice(0, 3);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dresar.github.io";
+  const installCommand = (skill.recipes && skill.recipes.length > 0 ? skill.recipes[0].command : "") || `npx skills add dresar/SKILL-IA-AGENT -s ${skill.slug}`;
 
   const skillJsonLd = {
     "@context": "https://schema.org",
@@ -96,12 +114,19 @@ export default async function SkillDetailPage({ params }: SkillDetailPageProps) 
         name: skill.name,
         description: skill.summary,
         applicationCategory: "DeveloperApplication",
+        applicationSubCategory: "AI Agent Skill",
         operatingSystem: "Any",
+        softwareRequirements: "Google Antigravity, Claude Code, Cursor, Node.js",
         image: `${siteUrl}/previews/${skill.slug}.svg`,
         offers: {
           "@type": "Offer",
           price: "0",
           priceCurrency: "USD"
+        },
+        potentialAction: {
+          "@type": "ConsumeAction",
+          actionStatus: "PotentialActionStatus",
+          target: installCommand
         },
         author: {
           "@type": "Person",

@@ -1,0 +1,6 @@
+{
+  "slug": "superpowers-tdd",
+  "name": "Superpowers TDD",
+  "prompt": "Enforce red-green-refactor testing loop before writing production implementation.",
+  "output": "describe(\\"AuthenticationService\\", () => {\\n  it(\\"rejects unauthorized token signature\\", async () => {\\n    const res = await verifyAuthToken(\\"invalid-token\\");\\n    expect(res.isValid).toBe(false);\\n  });\\n});"
+}

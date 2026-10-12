@@ -1,0 +1,431 @@
+# SKILL UIAI
+
+> Open-source AI-agent skill discovery platform with verified recipes, Model Context Protocol (MCP) server, and truthful showcases.
+
+## Overview
+SKILL UIAI is a curated, verified registry of production-ready skills for AI coding agents including Google Antigravity, Claude Code, Cursor, Devin, and GitHub Copilot. Each skill includes verified prompts, rules, executable installation commands, and test suites.
+
+## AI Discovery & Agent Integration Endpoints
+- Full Skills Catalog API: https://dresar.github.io/api/skills
+- Model Context Protocol (MCP) Server: https://dresar.github.io/api/mcp
+- Complete LLM Specification & Prompts: https://dresar.github.io/llms-full.txt
+- Sitemap Index: https://dresar.github.io/sitemap.xml
+- MCP Discovery: https://dresar.github.io/.well-known/mcp.json
+- AI Plugin Spec: https://dresar.github.io/.well-known/ai-plugin.json
+
+## Verified Skills Catalog
+
+### Frontend & Design
+- [Frontend Design](https://dresar.github.io/skills/frontend-design/): High-end tactile UI components, dark developer aesthetic, and responsive layout systems.
+  - Install: `npx skills add dresar/SKILL-IA-AGENT -s frontend-design`
+  - Raw Skill: https://dresar.github.io/skills/frontend-design/SKILL.md
+- [Minimalist UI](https://dresar.github.io/skills/minimalist-ui/): Clean editorial web layouts, warm monochrome palettes, and gapless bento grid architectures.
+  - Install: `npx skills add dresar/SKILL-IA-AGENT -s minimalist-ui`
+  - Raw Skill: https://dresar.github.io/skills/minimalist-ui/SKILL.md
+- [Taste Filter](https://dresar.github.io/skills/taste-filter/): Advanced aesthetic filter blocking generic AI templates, harsh drop shadows, and bootstrap clichés.
+  - Command: `/taste-filter`
+  - Raw Skill: https://dresar.github.io/skills/taste-filter/SKILL.md
+
+### Code Quality & Standards
+- [Nokomen](https://dresar.github.io/skills/nokomen/): Strict zero-comment and self-documenting code discipline. Prohibits redundant comments and ensures clean code.
+  - Command: `/nokomen`
+  - Raw Skill: https://dresar.github.io/skills/nokomen/SKILL.md
+- [UI/UX Text](https://dresar.github.io/skills/ui-ux-text/): Ultra-minimalist microcopy standard with strictly zero generic fluff, 1-3 words titles, 1-2 words buttons.
+  - Command: `/ui-ux-text`
+  - Raw Skill: https://dresar.github.io/skills/ui-ux-text/SKILL.md
+- [Superpowers TDD](https://dresar.github.io/skills/superpowers-tdd/): Disciplined test-driven development workflow, red-green-refactor loop, and coverage verification.
+  - Install: `npx skills add obra/superpowers -s superpowers-tdd`
+  - Raw Skill: https://dresar.github.io/skills/superpowers-tdd/SKILL.md
+- [Security Audit](https://dresar.github.io/skills/security-audit/): Automated AST vulnerability scanning, hardcoded secret and token detection, and input sanitization.
+  - Command: `/security-audit`
+  - Raw Skill: https://dresar.github.io/skills/security-audit/SKILL.md
+
+### Database & Backend
+- [Neon Postgres](https://dresar.github.io/skills/neon-postgres/): Serverless PostgreSQL schema migrations, connection pooling, and branch-aware database operations.
+  - Install: `npx skills add neondatabase/agent-skills -s neon-postgres`
+  - Raw Skill: https://dresar.github.io/skills/neon-postgres/SKILL.md
+
+### Workflows & Agent Coordination
+- [Antigravity Guide](https://dresar.github.io/skills/antigravity-guide/): Comprehensive manual for Google Antigravity CLI, subagent delegation, and slash commands.
+  - Command: `/antigravity-guide`
+  - Raw Skill: https://dresar.github.io/skills/antigravity-guide/SKILL.md
+- [Caveman Compress](https://dresar.github.io/skills/caveman-compress/): Token compression protocol reducing agent verbosity by up to 65% without loss of precision.
+  - Command: `/caveman-compress`
+  - Raw Skill: https://dresar.github.io/skills/caveman-compress/SKILL.md
+- [Git Workflow](https://dresar.github.io/skills/git-workflow/): Conventional commits, atomic feature branching, and automated release changelogs.
+  - Command: `/git-workflow`
+  - Raw Skill: https://dresar.github.io/skills/git-workflow/SKILL.md
+- [Docker DevOps](https://dresar.github.io/skills/docker-devops/): Ephemeral container sandboxing for autonomous agent code execution and verification.
+  - Install: `npx skills add dresar/SKILL-IA-AGENT -s docker-devops`
+  - Raw Skill: https://dresar.github.io/skills/docker-devops/SKILL.md
+
+## Installation Methods for AI Agents
+1. CLI Package Manager: Run `npx skills add dresar/SKILL-IA-AGENT -s <skill-name>`
+2. Slash Command: Invoke directly via `/<skill-name>` in supporting agents (Google Antigravity, Claude Code, Cursor).
+3. Model Context Protocol: Connect via stdio `npx tsx scripts/mcp-stdio.ts` or HTTP `/api/mcp` and use `get_install_command` or `get_skill_content`.
+
+---
+
+# Complete Skill Instruction Specifications
+
+## Skill: antigravity-guide
+
+# Antigravity Guide
+
+> Panduan arsitektur Google Antigravity CLI, subagents, dan slash commands.
+
+## Kategori
+Workflows
+
+## Instalasi
+```bash
+npx skills add dresar/SKILL-IA-AGENT -s antigravity-guide
+```
+
+## Demo Prompt
+```text
+Spawn specialized subagent for concurrent background task execution.
+```
+
+## Demo Output
+```typescript
+await invoke_subagent({
+  Subagents: [{
+    TypeName: "research",
+    Role: "Codebase Researcher",
+    Prompt: "Audit database schema relationships and verify foreign keys."
+  }]
+});
+```
+
+---
+
+## Skill: caveman-compress
+
+# Caveman Compress
+
+> Protokol kompresi token agent yang memangkas 65% verbositas tanpa degradasi logika.
+
+## Kategori
+Workflows
+
+## Instalasi
+```bash
+npx skills add dresar/SKILL-IA-AGENT -s caveman-compress
+```
+
+## Demo Prompt
+```text
+Compress chatty agent explanation into ultra-dense bullet points.
+```
+
+## Demo Output
+```typescript
+// Caveman protocol activated: 65% tokens saved.
+// Action: migrate db schema -> verify 19 tables -> pass
+```
+
+---
+
+## Skill: docker-devops
+
+# Docker DevOps
+
+> Eksekusi container sandbox efemeral untuk evaluasi kode agent mandiri.
+
+## Kategori
+Workflows
+
+## Instalasi
+```bash
+npx skills add dresar/SKILL-IA-AGENT -s docker-devops
+```
+
+## Demo Prompt
+```text
+Spin up ephemeral Linux container for unprivileged agent execution.
+```
+
+## Demo Output
+```typescript
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+USER node
+CMD ["npm", "start"]
+```
+
+---
+
+## Skill: frontend-design
+
+# Frontend Design
+
+> Komponen UI berkualitas agency tinggi dan estetika gelap taktil.
+
+## Kategori
+Frontend
+
+## Instalasi
+```bash
+npx skills add dresar/SKILL-IA-AGENT -s frontend-design
+```
+
+## Demo Prompt
+```text
+Design responsive landing page hero with double-bezel cards and kinetic hover.
+```
+
+## Demo Output
+```typescript
+export function HeroBanner() {
+  return (
+    <div className="p-1.5 rounded-[2rem] bg-white/5 ring-1 ring-white/10">
+      <div className="p-8 rounded-[calc(2rem-0.375rem)] bg-[#0B0D13] shadow-inner">
+        <h1 className="text-4xl font-bold tracking-tight text-white">Obsidian Interface</h1>
+        <p className="text-sm text-neutral-400 mt-2">Precision typography and haptic depth.</p>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+## Skill: git-workflow
+
+# Git Workflow
+
+> Manajemen commit konvensional, percabangan atomik, dan otomatisasi changelog.
+
+## Kategori
+Workflows
+
+## Instalasi
+```bash
+npx skills add dresar/SKILL-IA-AGENT -s git-workflow
+```
+
+## Demo Prompt
+```text
+Generate semantic commit message matching conventional standard.
+```
+
+## Demo Output
+```typescript
+feat(skills): add automated git workflow skill bundle and verification tests
+```
+
+---
+
+## Skill: minimalist-ui
+
+# Minimalist UI
+
+> Layout web editorial bersih, palet monokrom hangat, dan grid bento rapat.
+
+## Kategori
+Frontend
+
+## Instalasi
+```bash
+npx skills add dresar/SKILL-IA-AGENT -s minimalist-ui
+```
+
+## Demo Prompt
+```text
+Generate high-density bento grid layout with subtle borders and flat surfaces.
+```
+
+## Demo Output
+```typescript
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <div className="md:col-span-2 p-6 rounded-2xl bg-surface border border-border">
+    <h3 className="text-lg font-bold">Featured Metric</h3>
+  </div>
+  <div className="p-6 rounded-2xl bg-surface border border-border">
+    <h3 className="text-lg font-bold">Status</h3>
+  </div>
+</div>
+```
+
+---
+
+## Skill: neon-postgres
+
+# Neon Postgres
+
+> Migrasi PostgreSQL serverless, connection pooling, dan branching schema.
+
+## Kategori
+Database
+
+## Instalasi
+```bash
+npx skills add dresar/SKILL-IA-AGENT -s neon-postgres
+```
+
+## Demo Prompt
+```text
+Configure Neon serverless pooled connection with Drizzle ORM.
+```
+
+## Demo Output
+```typescript
+import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
+
+const sql = neon(process.env.DATABASE_URL!);
+export const db = drizzle(sql);
+```
+
+---
+
+## Skill: nokomen
+
+# Nokomen
+
+> Standar zero-comment mutlak yang melarang segala komentar dan docstring.
+
+## Kategori
+Code Quality
+
+## Instalasi
+```bash
+npx skills add dresar/SKILL-IA-AGENT -s nokomen
+```
+
+## Demo Prompt
+```text
+Enforce zero comments policy across TypeScript codebase.
+```
+
+## Demo Output
+```typescript
+export interface SkillPayload {
+  id: string;
+  slug: string;
+  name: string;
+}
+
+export function validateSkillPayload(payload: SkillPayload): boolean {
+  return Boolean(payload.id && payload.slug && payload.name.trim().length > 0);
+}
+```
+
+---
+
+## Skill: security-audit
+
+# Security Audit
+
+> Pemindaian kerentanan AST otomatis, deteksi bocoran rahasia, dan audit input.
+
+## Kategori
+Code Quality
+
+## Instalasi
+```bash
+npx skills add dresar/SKILL-IA-AGENT -s security-audit
+```
+
+## Demo Prompt
+```text
+Scan codebase for hardcoded connection strings and AST injection risks.
+```
+
+## Demo Output
+```typescript
+export function sanitizeInput(input: string): string {
+  return input.replace(/[<>"'&]/g, (char) => `&#${char.charCodeAt(0)};`);
+}
+```
+
+---
+
+## Skill: superpowers-tdd
+
+# Superpowers TDD
+
+> Framework rekayasa software agentik dengan siklus test-driven development.
+
+## Kategori
+Code Quality
+
+## Instalasi
+```bash
+npx skills add dresar/SKILL-IA-AGENT -s superpowers-tdd
+```
+
+## Demo Prompt
+```text
+Enforce red-green-refactor testing loop before writing production implementation.
+```
+
+## Demo Output
+```typescript
+describe("AuthenticationService", () => {
+  it("rejects unauthorized token signature", async () => {
+    const res = await verifyAuthToken("invalid-token");
+    expect(res.isValid).toBe(false);
+  });
+});
+```
+
+---
+
+## Skill: taste-filter
+
+# Taste Filter
+
+> Filter estetika tingkat lanjut untuk memblokir pola AI template generik.
+
+## Kategori
+Design Systems
+
+## Instalasi
+```bash
+npx skills add dresar/SKILL-IA-AGENT -s taste-filter
+```
+
+## Demo Prompt
+```text
+Detect and replace generic bootstrap gradient cards with bespoke styling.
+```
+
+## Demo Output
+```typescript
+// Banned: generic rounded-lg border shadow-md gradient-to-r
+// Replaced with: bespoke hairline bezel + OLED surface
+```
+
+---
+
+## Skill: ui-ux-text
+
+# UI/UX Text
+
+> Standar microcopy ultra-minimalis dengan batas maksimal 1 kalimat.
+
+## Kategori
+Design Systems
+
+## Instalasi
+```bash
+npx skills add dresar/SKILL-IA-AGENT -s ui-ux-text
+```
+
+## Demo Prompt
+```text
+Refactor verbose modal buttons and descriptions into ultra-minimalist microcopy.
+```
+
+## Demo Output
+```typescript
+<Button variant="primary">Simpan</Button>
+<p className="text-xs text-text-muted">Perubahan disimpan secara otomatis.</p>
+```
+
+---
+
