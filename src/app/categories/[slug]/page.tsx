@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
       canonical: `/categories/${slug}/`
     },
     openGraph: {
-      title: `${currentCategory.name} Skills — SKILL UIAI`,
+      title: `${currentCategory.name} Skills — SkillAgent`,
       description: currentCategory.description || `Verified agent skills in ${currentCategory.name}.`,
       url: `${siteUrl}/categories/${slug}/`,
       type: "website",
@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
     },
     twitter: {
       card: "summary_large_image",
-      title: `${currentCategory.name} Skills — SKILL UIAI`,
+      title: `${currentCategory.name} Skills — SkillAgent`,
       description: currentCategory.description || `Verified agent skills in ${currentCategory.name}.`,
       images: ["/brand/logo.svg"]
     }

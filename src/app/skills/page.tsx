@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     canonical: "/skills/"
   },
   openGraph: {
-    title: "Skills — SKILL UIAI",
+    title: "Skills — SkillAgent",
     description: "Explore and install verified agent skills.",
     url: `${siteUrl}/skills/`,
     type: "website",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Skills — SKILL UIAI",
+    title: "Skills — SkillAgent",
     description: "Explore and install verified agent skills.",
     images: ["/brand/logo.svg"]
   }

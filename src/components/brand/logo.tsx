@@ -56,7 +56,7 @@ export function Logo({ className, showText = true, size = "md" }: LogoProps) {
       </span>
       {showText && (
         <span className={cn("font-bold tracking-tight text-text-primary flex items-baseline gap-0.5", textStyles)}>
-          <span>AgenticSkills</span>
+          <span>SkillAgent</span>
           <span className="text-[10px] font-normal text-text-muted leading-none">™</span>
         </span>
       )}

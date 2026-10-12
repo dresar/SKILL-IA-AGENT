@@ -5,7 +5,7 @@ import { ArrowLeft, BookOpen, Cpu, Terminal, FileCode, ShieldCheck, Sparkles } f
 import { McpPlayground } from "@/components/mcp/mcp-playground";
 
 export const metadata: Metadata = {
-  title: "Dokumentasi MCP & Arsitektur Agent — SKILL UIAI",
+  title: "Dokumentasi MCP & Arsitektur Agent — SkillAgent",
   description: "Dokumentasi teknis Model Context Protocol (MCP), integrasi Claude Code & Antigravity, spesifikasi endpoints, dan panduan SDK.",
   alternates: {
     canonical: "/dokumentasi/"

@@ -34,7 +34,7 @@ export default function AiAssistantPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Halo! Saya adalah SKILL UIAI Agentic Assistant berbasis model **step-5-preview**. Anda dapat menanyakan rekomendasi skill, format SKILL.md, instruksi coding agent, atau panduan MCP server."
+      content: "Halo! Saya adalah SkillAgent Assistant berbasis model **step-5-preview**. Anda dapat menanyakan rekomendasi skill, format SKILL.md, instruksi coding agent, atau panduan MCP server."
     }
   ]);
   const [input, setInput] = useState("");

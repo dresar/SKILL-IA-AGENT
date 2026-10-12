@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     canonical: "/library/"
   },
   openGraph: {
-    title: "Library — SKILL UIAI",
+    title: "Library — SkillAgent",
     description: "Personal favorites and curated collections.",
     url: `${siteUrl}/library/`,
     type: "website",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Library — SKILL UIAI",
+    title: "Library — SkillAgent",
     description: "Personal favorites and curated collections.",
     images: ["/brand/logo.svg"]
   }

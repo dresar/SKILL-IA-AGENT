@@ -67,7 +67,7 @@ export async function generateMetadata({ params }: SkillDetailPageProps): Promis
     },
     openGraph: {
       type: "article",
-      title: `${skill.name} — SKILL UIAI`,
+      title: `${skill.name} — SkillAgent`,
       description: skill.summary,
       url: `${siteUrl}/skills/${slug}/`,
       images: [
@@ -81,7 +81,7 @@ export async function generateMetadata({ params }: SkillDetailPageProps): Promis
     },
     twitter: {
       card: "summary_large_image",
-      title: `${skill.name} — SKILL UIAI`,
+      title: `${skill.name} — SkillAgent`,
       description: skill.summary,
       images: [previewImg]
     }
@@ -259,14 +259,16 @@ export default async function SkillDetailPage({ params }: SkillDetailPageProps) 
         <InstallBox recipes={skill.recipes} />
       </section>
 
-      {skill.showcases && skill.showcases.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-text-muted">
-            Showcase & Previews
-          </h2>
-          <ShowcaseViewer showcases={skill.showcases} skillName={skill.name} />
-        </section>
-      )}
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-text-muted">
+          Showcase & Previews
+        </h2>
+        <ShowcaseViewer
+          showcases={skill.showcases || []}
+          skillName={skill.name}
+          defaultPreviewUrl={previewImg}
+        />
+      </section>
 
       <section className="space-y-3 rounded-xl bg-surface border border-border p-6">
         <h2 className="text-base font-semibold text-text-primary">Documentation</h2>

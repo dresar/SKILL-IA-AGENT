@@ -20,11 +20,16 @@ interface InstallBoxProps {
 }
 
 export function InstallBox({ recipes }: InstallBoxProps) {
-  const [activeTab, setActiveTab] = useState(recipes[0]?.target || "antigravity");
+  const uniqueRecipes = React.useMemo(() => {
+    if (!recipes) return [];
+    return Array.from(new Map(recipes.map((r) => [r.target.toLowerCase(), r])).values());
+  }, [recipes]);
+
+  const [activeTab, setActiveTab] = useState(uniqueRecipes[0]?.target || "antigravity");
   const [copied, setCopied] = useState(false);
 
   const currentRecipe =
-    recipes.find((r) => r.target.toLowerCase() === activeTab.toLowerCase()) || recipes[0];
+    uniqueRecipes.find((r) => r.target.toLowerCase() === activeTab.toLowerCase()) || uniqueRecipes[0];
 
   const handleCopy = () => {
     if (currentRecipe?.command) {
@@ -34,7 +39,7 @@ export function InstallBox({ recipes }: InstallBoxProps) {
     }
   };
 
-  if (!recipes || recipes.length === 0) {
+  if (!uniqueRecipes || uniqueRecipes.length === 0) {
     return (
       <div className="rounded-xl bg-surface border border-border p-4 text-sm text-text-muted">
         No installation recipe provided.
@@ -45,13 +50,13 @@ export function InstallBox({ recipes }: InstallBoxProps) {
   return (
     <div className="rounded-xl bg-surface border border-border overflow-hidden">
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-surface-raised/40">
-        <div className="flex items-center gap-1.5">
-          {recipes.map((r) => (
+        <div className="flex items-center gap-1.5 overflow-x-auto">
+          {uniqueRecipes.map((r) => (
             <button
-              key={r.id}
+              key={r.target}
               onClick={() => setActiveTab(r.target)}
               className={cn(
-                "px-3 py-1 text-xs font-medium rounded-md transition-colors",
+                "px-3 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap",
                 activeTab.toLowerCase() === r.target.toLowerCase()
                   ? "bg-accent/15 text-accent font-semibold"
                   : "text-text-muted hover:text-text-secondary"

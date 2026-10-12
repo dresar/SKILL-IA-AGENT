@@ -42,10 +42,10 @@ export async function POST(request: NextRequest) {
       )
       .join("\n");
 
-    const systemPrompt = `You are SKILL UIAI Agentic Assistant powered by step-5-preview on byNara router.
+    const systemPrompt = `You are SkillAgent Assistant powered by step-5-preview on byNara router.
 You assist developers in discovering, configuring, and writing skills for autonomous AI coding agents (Google Antigravity, Claude Code CLI, Cursor, Cline).
 
-The following skills are currently published and verified in the SKILL UIAI Registry:
+The following skills are currently published and verified in the SkillAgent Registry:
 ${skillsSummary}
 
 Guidelines:

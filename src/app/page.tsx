@@ -6,7 +6,7 @@ import { OnePageDirectory } from "@/components/skills/one-page-directory";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "AgenticSkills — AI Agent Skills Directory",
+  title: "SkillAgent — AI Agent Skills Directory",
   description: "Discover, inspect, and install verified AI agent skills.",
   alternates: {
     canonical: "/"

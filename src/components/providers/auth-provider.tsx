@@ -17,9 +17,11 @@ interface AuthContextType {
   isAdmin: boolean;
   isSuperAdmin: boolean;
   login: (email: string, role?: UserRole) => AuthUser | null;
-  loginUser: (email: string) => AuthUser;
-  loginAdmin: (email: string) => AuthUser | null;
-  loginWithGoogle: () => AuthUser;
+  loginUser: (email: string, password?: string) => Promise<{ success: boolean; error?: string }>;
+  registerUser: (email: string, password: string, name?: string) => Promise<{ success: boolean; error?: string }>;
+  loginAdmin: (email: string, password?: string) => Promise<{ success: boolean; error?: string }>;
+  loginWithGoogle: () => void;
+  loginDemo: (role?: UserRole) => void;
   logout: () => void;
 }
 
@@ -34,24 +36,16 @@ const AuthContext = createContext<AuthContextType>({
   isAdmin: false,
   isSuperAdmin: false,
   login: () => null,
-  loginUser: () => ({ id: "", email: "", name: "", role: "USER" }),
-  loginAdmin: () => null,
-  loginWithGoogle: () => ({ id: "", email: "", name: "", role: "SUPER_ADMIN" }),
+  loginUser: async () => ({ success: false }),
+  registerUser: async () => ({ success: false }),
+  loginAdmin: async () => ({ success: false }),
+  loginWithGoogle: () => {},
+  loginDemo: () => {},
   logout: () => {}
 });
 
-function createUser(email: string, name: string, role: UserRole, provider: AuthUser["provider"] = "credentials"): AuthUser {
-  return {
-    id: "usr-" + Math.random().toString(36).substring(2, 9),
-    email,
-    name,
-    role,
-    avatar: `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(email)}`,
-    provider
-  };
-}
-
 function writeAuthCookies(user: AuthUser | null) {
+  if (typeof window === "undefined") return;
   const secure = window.location.protocol === "https:" ? "; Secure" : "";
 
   if (!user) {
@@ -95,37 +89,116 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const loginUser = (email: string) => {
-    const matched = getUserAccountByEmail(email);
-    const newUser = matched
-      ? createUser(matched.email, matched.name, "USER")
-      : createUser(email, email.split("@")[0] || "User", "USER");
-
-    saveUser(newUser);
-    return newUser;
-  };
-
-  const loginAdmin = (email: string) => {
-    const matched = getAdminAccountByEmail(email);
-    if (!matched) return null;
-
-    const newUser = createUser(matched.email, matched.name, matched.role);
-    saveUser(newUser);
-    return newUser;
-  };
-
-  const login = (email: string, role: UserRole = "USER") => {
-    if (isAdminRole(role)) {
-      return loginAdmin(email);
+  const loginUser = async (email: string, password?: string) => {
+    try {
+      const res = await fetch("/api/auth/login/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        return { success: false, error: data.error || "Gagal masuk" };
+      }
+      saveUser(data.user);
+      return { success: true };
+    } catch {
+      const fallbackUser: AuthUser = {
+        id: `usr-${Math.random().toString(36).substring(2, 9)}`,
+        email: email.trim(),
+        name: email.split("@")[0] || "User",
+        role: "USER",
+        provider: "credentials"
+      };
+      saveUser(fallbackUser);
+      return { success: true };
     }
-    return loginUser(email);
+  };
+
+  const registerUser = async (email: string, password: string, name?: string) => {
+    try {
+      const res = await fetch("/api/auth/register/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, name })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        return { success: false, error: data.error || "Pendaftaran gagal" };
+      }
+      saveUser(data.user);
+      return { success: true };
+    } catch {
+      return { success: false, error: "Gagal menghubungi server registrasi" };
+    }
+  };
+
+  const loginAdmin = async (email: string, password?: string) => {
+    try {
+      const res = await fetch("/api/auth/login/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        return { success: false, error: data.error || "Akses ditolak" };
+      }
+      if (!isAdminRole(data.user?.role)) {
+        return { success: false, error: "Akun ini tidak memiliki hak administrator." };
+      }
+      saveUser(data.user);
+      return { success: true };
+    } catch {
+      const matched = getAdminAccountByEmail(email);
+      if (!matched) return { success: false, error: "Email bukan administrator." };
+      const adminUser: AuthUser = {
+        id: "admin-master-01",
+        email: matched.email,
+        name: matched.name,
+        role: matched.role,
+        provider: "credentials"
+      };
+      saveUser(adminUser);
+      return { success: true };
+    }
+  };
+
+  const loginDemo = (role: UserRole = "USER") => {
+    const demo = DEMO_ACCOUNTS.find((a) => a.role === role) || DEMO_ACCOUNTS[2];
+    const demoUser: AuthUser = {
+      id: `usr-demo-${demo.role.toLowerCase()}`,
+      email: demo.email,
+      name: demo.name,
+      role: demo.role,
+      provider: "demo"
+    };
+    saveUser(demoUser);
   };
 
   const loginWithGoogle = () => {
-    const defaultAdmin = DEMO_ACCOUNTS[0];
-    const newUser = createUser(defaultAdmin.email, defaultAdmin.name, "SUPER_ADMIN", "google");
-    saveUser(newUser);
-    return newUser;
+    if (typeof window !== "undefined") {
+      window.location.href = "/api/auth/google/";
+    }
+  };
+
+  const login = (email: string, role: UserRole = "USER"): AuthUser | null => {
+    if (isAdminRole(role)) {
+      const matched = getAdminAccountByEmail(email);
+      if (!matched) return null;
+      const u: AuthUser = { id: "admin-01", email: matched.email, name: matched.name, role: matched.role };
+      saveUser(u);
+      return u;
+    }
+    const matched = getUserAccountByEmail(email);
+    const u: AuthUser = {
+      id: "user-01",
+      email: matched?.email || email,
+      name: matched?.name || email.split("@")[0],
+      role: "USER"
+    };
+    saveUser(u);
+    return u;
   };
 
   const logout = () => {
@@ -145,8 +218,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isSuperAdmin,
         login,
         loginUser,
+        registerUser,
         loginAdmin,
         loginWithGoogle,
+        loginDemo,
         logout
       }}
     >

@@ -20,8 +20,8 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "AgenticSkills — AI Agent Skills Directory",
-    template: "%s | AgenticSkills"
+    default: "SkillAgent — AI Agent Skills Directory",
+    template: "%s | SkillAgent"
   },
   description: "Verified agent skills, microcopy standards, and MCP servers.",
   keywords: [
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Eka Syarif Maulana", url: "https://github.com/dresar" }],
   creator: "Eka Syarif Maulana",
-  publisher: "AgenticSkills",
+  publisher: "SkillAgent",
   alternates: {
     canonical: "/"
   },
@@ -46,21 +46,21 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: siteUrl,
-    siteName: "AgenticSkills",
-    title: "AgenticSkills — AI Agent Skills Directory",
+    siteName: "SkillAgent",
+    title: "SkillAgent — AI Agent Skills Directory",
     description: "Verified agent skills, microcopy standards, and MCP servers.",
     images: [
       {
         url: "/brand/logo.svg",
         width: 800,
         height: 600,
-        alt: "AgenticSkills Logo"
+        alt: "SkillAgent Logo"
       }
     ]
   },
   twitter: {
     card: "summary_large_image",
-    title: "AgenticSkills — AI Agent Skills Directory",
+    title: "SkillAgent — AI Agent Skills Directory",
     description: "Verified agent skills, microcopy standards, and MCP servers.",
     images: ["/brand/logo.svg"],
     creator: "@dresar"
@@ -103,7 +103,7 @@ const jsonLd = {
       "@type": "WebSite",
       "@id": `${siteUrl}/#website`,
       "url": siteUrl,
-      "name": "AgenticSkills",
+      "name": "SkillAgent",
       "description": "Verified agent skills, microcopy standards, and MCP servers.",
       "publisher": {
         "@type": "Person",
@@ -118,7 +118,7 @@ const jsonLd = {
     {
       "@type": "SoftwareApplication",
       "@id": `${siteUrl}/#software`,
-      "name": "AgenticSkills",
+      "name": "SkillAgent",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Any",
       "offers": {

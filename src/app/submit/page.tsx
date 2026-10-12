@@ -83,7 +83,7 @@ export default function SubmitSkillPage() {
             Submit a New Skill
           </h1>
           <p className="text-sm text-text-secondary leading-relaxed">
-            Daftarkan skill agen open-source Anda ke indeks resmi SKILL UIAI. Kurator kami akan memverifikasi berkas SKILL.md dan resep runtime.
+            Daftarkan skill agen open-source Anda ke indeks resmi SkillAgent. Kurator kami akan memverifikasi berkas SKILL.md dan resep runtime.
           </p>
         </div>
       </div>
