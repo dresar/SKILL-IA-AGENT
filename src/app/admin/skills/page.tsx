@@ -13,11 +13,11 @@ export default async function AdminSkillsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <Link
-            href="/admin/"
+            href="/admin/?tab=registry"
             className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors mb-2 font-mono"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            Curator Studio
+            Kembali ke Admin Registry
           </Link>
           <h1 className="text-2xl font-bold tracking-tight text-slate-100">
             Registry Records

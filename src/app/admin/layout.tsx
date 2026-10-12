@@ -41,14 +41,13 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#070b14] text-slate-100 flex flex-col font-sans">
-      <header className="sticky top-0 z-40 border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md px-4 sm:px-6 h-14 flex items-center justify-between">
+    <div className="h-screen bg-[#070b14] text-slate-100 flex flex-col font-sans overflow-hidden">
+      <header className="h-14 shrink-0 border-b border-slate-800/80 bg-slate-950 px-4 sm:px-6 flex items-center justify-between z-30 select-none">
         <div className="flex items-center gap-3">
           <Logo size="sm" />
           <div className="h-4 w-px bg-slate-800" />
           <div className="flex items-center gap-2">
             <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
             </span>
             <span className="text-xs font-semibold tracking-tight text-slate-200">
@@ -94,11 +93,11 @@ export default function AdminLayout({
         </div>
       </header>
 
-      <div className="flex-1 flex flex-col md:flex-row">
-        <Suspense fallback={<aside className="w-full md:w-64 shrink-0 bg-slate-950/60" />}>
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden min-h-0">
+        <Suspense fallback={<aside className="w-full md:w-64 shrink-0 bg-slate-950 border-r border-slate-800" />}>
           <AdminSidebar pendingCount={pendingCount} />
         </Suspense>
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 min-w-0 overflow-y-auto">
+        <main className="flex-1 h-full overflow-y-auto p-4 sm:p-6 lg:p-8 min-w-0 bg-[#070b14]">
           <Suspense fallback={<div className="p-8 text-center text-xs text-slate-500 font-mono">Memuat...</div>}>
             {children}
           </Suspense>

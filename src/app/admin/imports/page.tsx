@@ -73,11 +73,11 @@ export default function AdminImportsPage() {
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
         <Link
-          href="/admin/"
+          href="/admin/?tab=registry"
           className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors mb-2 font-mono"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          Curator Studio
+          Kembali ke Admin Registry
         </Link>
         <h1 className="text-2xl font-bold tracking-tight text-slate-100">
           Import Ingestion

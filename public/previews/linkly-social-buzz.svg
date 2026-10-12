@@ -1,37 +1,48 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
   <defs>
-    <linearGradient id="bg-linkly" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#180b22" />
-      <stop offset="100%" stop-color="#07020a" />
+    <linearGradient id="bg-linkly-social-buzz" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A0E17" />
+      <stop offset="100%" stop-color="#04060A" />
     </linearGradient>
-    <linearGradient id="glow-linkly" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#ec4899" stop-opacity="0.8" />
-      <stop offset="100%" stop-color="#a855f7" stop-opacity="0.2" />
+    <linearGradient id="accent-grad-linkly-social-buzz" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#EC4899" />
+      <stop offset="100%" stop-color="#BE185D" />
     </linearGradient>
+    <pattern id="grid-linkly-social-buzz" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1E293B" stroke-width="0.5" stroke-opacity="0.35" />
+    </pattern>
   </defs>
-  <rect width="500" height="500" rx="20" fill="url(#bg-linkly)" />
-  <circle cx="420" cy="80" r="140" fill="#ec4899" opacity="0.12" />
-  <circle cx="80" cy="420" r="140" fill="#a855f7" opacity="0.1" />
-  <rect x="25" y="25" width="450" height="450" rx="16" fill="none" stroke="url(#glow-linkly)" stroke-width="1.5" />
-  
-  <rect x="45" y="50" width="90" height="24" rx="12" fill="#ec4899" fill-opacity="0.18" stroke="#ec4899" stroke-width="1" />
-  <text x="90" y="66" fill="#f472b6" font-family="system-ui, sans-serif" font-size="11" font-weight="700" text-anchor="middle">LINKLY AI</text>
-  
-  <text x="45" y="125" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="28" font-weight="800" letter-spacing="-0.5">Linkly Social Buzz</text>
-  <text x="45" y="152" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="12" font-weight="400">Viral AI skill telemetry across ClawHub &amp; SkillHub</text>
-  
-  <rect x="45" y="180" width="410" height="200" rx="12" fill="#000000" fill-opacity="0.6" stroke="#2e1065" stroke-width="1" />
-  <circle cx="68" cy="202" r="4" fill="#EF4444" />
-  <circle cx="82" cy="202" r="4" fill="#EAB308" />
-  <circle cx="96" cy="202" r="4" fill="#22C55E" />
-  <text x="115" y="206" fill="#64748B" font-family="monospace" font-size="10">linkly/telemetry/social-buzz.sh</text>
-  
-  <text x="65" y="240" fill="#f472b6" font-family="monospace" font-size="12">$ npx skills add LinklyAI/linkly-ai-skills -s linkly-social-buzz</text>
-  <text x="65" y="270" fill="#e879f9" font-family="monospace" font-size="11">✓ Cross-Registry Installs (ClawHub, SkillHub, GitHub)</text>
-  <text x="65" y="295" fill="#c084fc" font-family="monospace" font-size="11">✓ Social Buzz Signal Scorer (HN, X, Bluesky)</text>
-  <text x="65" y="320" fill="#f43f5e" font-family="monospace" font-size="11">✓ 7-Day Velocity &amp; Adoption Predictor</text>
-  <text x="65" y="350" fill="#a855f7" font-family="monospace" font-size="10">Rank: #1 AI Skill Telemetry Platform</text>
 
-  <rect x="45" y="405" width="410" height="40" rx="8" fill="#4a044e" fill-opacity="0.4" stroke="#701a75" stroke-width="1" />
-  <text x="65" y="430" fill="#fbcfe8" font-family="monospace" font-size="11">Compatible with linkly.ai/skills/llms.txt</text>
+  <rect width="500" height="500" rx="20" fill="url(#bg-linkly-social-buzz)" />
+  <rect width="500" height="500" fill="url(#grid-linkly-social-buzz)" rx="20" />
+  
+  <rect x="20" y="20" width="460" height="460" rx="14" fill="none" stroke="#1E293B" stroke-width="1" />
+  <rect x="21" y="21" width="458" height="458" rx="13" fill="none" stroke="#EC4899" stroke-width="0.75" stroke-opacity="0.25" />
+
+  <rect x="42" y="42" width="105" height="26" rx="5" fill="#111827" stroke="#EC4899" stroke-width="0.75" stroke-opacity="0.6" />
+  <text x="94" y="59" fill="#EC4899" font-family="monospace" font-size="10" font-weight="700" text-anchor="middle" letter-spacing="1">COPYWRITING</text>
+
+  <circle cx="445" cy="55" r="4.5" fill="#EC4899" opacity="0.9" />
+
+  <text x="42" y="135" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-size="26" font-weight="800" letter-spacing="-0.5">LINKLY SOCIAL BUZZ</text>
+  <text x="42" y="165" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="400">Generasi copywriting teknis & engagement multi-platform.</text>
+
+  <rect x="42" y="200" width="416" height="175" rx="10" fill="#030712" fill-opacity="0.85" stroke="#1E293B" stroke-width="1" />
+  
+  <circle cx="62" cy="222" r="3.5" fill="#EF4444" opacity="0.8" />
+  <circle cx="75" cy="222" r="3.5" fill="#EAB308" opacity="0.8" />
+  <circle cx="88" cy="222" r="3.5" fill="#10B981" opacity="0.8" />
+  <text x="105" y="226" fill="#475569" font-family="monospace" font-size="10">runtime/linkly-social-buzz.sh</text>
+
+  <rect x="58" y="246" width="384" height="38" rx="6" fill="#0B0F19" stroke="#1E293B" stroke-width="0.75" />
+  <text x="70" y="270" fill="#EC4899" font-family="monospace" font-size="11">$ npx skills add LinklyAI/linkly-ai-skills -s social-buzz</text>
+
+  <text x="62" y="318" fill="#38BDF8" font-family="monospace" font-size="11">✓ status: published &amp; verified</text>
+  <text x="62" y="342" fill="#34D399" font-family="monospace" font-size="10">✓ zero-comment standard enforced</text>
+  <text x="62" y="360" fill="#64748B" font-family="monospace" font-size="10">✓ cross-agent: antigravity | claude | opencode</text>
+
+  <line x1="42" y1="415" x2="458" y2="415" stroke="#1E293B" stroke-width="1" />
+
+  <text x="42" y="445" fill="#475569" font-family="monospace" font-size="9" letter-spacing="1">AGENT REGISTRY v2.4</text>
+  <text x="458" y="445" fill="#64748B" opacity="0.6" font-family="monospace" font-size="9" text-anchor="end" letter-spacing="1.5">BY: EKA SYARIF MAULANA</text>
 </svg>

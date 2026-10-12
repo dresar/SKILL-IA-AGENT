@@ -12,10 +12,19 @@ import {
   ArrowLeft,
   CheckSquare,
   ShieldCheck,
-  Cpu
+  Cpu,
+  Wand2
 } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";
 import { cn } from "@/lib/utils";
+
+interface NavItem {
+  label: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  tabKey?: string;
+  badge?: number | null;
+}
 
 interface AdminSidebarProps {
   pendingCount?: number;
@@ -29,43 +38,48 @@ export function AdminSidebar({ pendingCount = 0 }: AdminSidebarProps) {
 
   const isItemActive = (href: string, tabKey?: string) => {
     if (tabKey) {
+      if (tabKey === "registry") {
+        return pathname === "/admin" && (currentTab === "registry" || currentTab === "dashboard" || !currentTab);
+      }
       return pathname === "/admin" && currentTab === tabKey;
     }
     const normPath = (pathname || "").replace(/\/$/, "");
     const normHref = href.replace(/\/$/, "");
-    if (normHref === "/admin") {
-      return normPath === "/admin" && currentTab === "dashboard";
-    }
     return normPath === normHref;
   };
 
-  const navGroups = [
+  const navGroups: Array<{ group: string; items: NavItem[] }> = [
     {
       group: "CORE OPERATIONS",
       items: [
-        { label: "Dashboard Overview", href: "/admin/", icon: Activity, tabKey: "dashboard" },
+        { label: "Manajemen Registry (CRUD)", href: "/admin/?tab=registry", icon: Layers, tabKey: "registry" },
         {
           label: "Persetujuan Skill (ACC)",
           href: "/admin/?tab=approvals",
           icon: CheckSquare,
           badge: pendingCount > 0 ? pendingCount : null,
           tabKey: "approvals"
-        },
-        { label: "Manajemen Registry", href: "/admin/skills/", icon: Layers }
+        }
       ]
     },
     {
-      group: "AUTOMATION & INTEGRATION",
+      group: "AI TOOLS & PREVIEW",
       items: [
-        { label: "Sinkronisasi GitHub", href: "/admin/imports/", icon: UploadCloud },
-        { label: "Dokumentasi & MCP", href: "/dokumentasi/", icon: FileCode },
-        { label: "AI Registry Assistant", href: "/ai/", icon: Sparkles }
+        { label: "Prompt Studio 1:1", href: "/admin/?tab=prompt_studio", icon: Wand2, tabKey: "prompt_studio" },
+        { label: "AI Skill Analyzer", href: "/admin/?tab=ai_analyzer", icon: Sparkles, tabKey: "ai_analyzer" }
+      ]
+    },
+    {
+      group: "OPERATIONAL & DOCS",
+      items: [
+        { label: "Sinkronisasi GitHub", href: "/admin/?tab=sync", icon: UploadCloud, tabKey: "sync" },
+        { label: "Dokumentasi & MCP", href: "/dokumentasi/", icon: FileCode }
       ]
     }
   ];
 
   return (
-    <aside className="w-full md:w-64 shrink-0 border-b md:border-b-0 md:border-r border-slate-800/80 bg-slate-950/80 flex flex-col justify-between p-4 min-h-auto md:min-h-[calc(100vh-3.5rem)]">
+    <aside className="w-full md:w-64 shrink-0 border-b md:border-b-0 md:border-r border-slate-800/80 bg-slate-950 flex flex-col justify-between p-4 h-full overflow-y-auto select-none">
       <div className="space-y-6">
         <div className="px-2 pt-1 flex items-center justify-between">
           <span className="text-xs font-mono font-semibold tracking-wider text-slate-300 uppercase">
@@ -104,7 +118,7 @@ export function AdminSidebar({ pendingCount = 0 }: AdminSidebarProps) {
                       <span className="truncate">{item.label}</span>
                     </div>
                     {item.badge !== null && item.badge !== undefined && (
-                      <span className="ml-2 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse">
+                      <span className="ml-2 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
                         {item.badge}
                       </span>
                     )}
