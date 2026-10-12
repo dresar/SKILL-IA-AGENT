@@ -4,7 +4,8 @@ import { AppShell } from "@/components/layout/app-shell";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dresar.github.io";
+const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://skills-smoky.vercel.app";
+const siteUrl = rawSiteUrl.replace(/[\uFEFF\u200B\u00A0]/g, "").trim() || "https://skills-smoky.vercel.app";
 
 export const viewport: Viewport = {
   themeColor: [
