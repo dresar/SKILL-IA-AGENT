@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   Send,
   Sparkles,
@@ -29,18 +30,22 @@ const STARTER_PROMPTS = [
   "Tulis draf SKILL.md untuk aturan refactoring kode ketat"
 ];
 
-export default function AiAssistantPage() {
-  const { user, isAuthenticated } = useAuth();
+function AiAssistantContent() {
+  const searchParams = useSearchParams();
+  const queryParam = searchParams.get("q");
+
+  const { user, isAuthenticated, loginDemo } = useAuth();
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Halo! Saya adalah SkillAgent Assistant berbasis model **step-5-preview**. Anda dapat menanyakan rekomendasi skill, format SKILL.md, instruksi coding agent, atau panduan MCP server."
+      content: "Halo! Saya adalah SkillAgent Assistant bertenaga model **step-5-preview**. Anda dapat menanyakan rekomendasi skill dari seluruh katalog, aturan SKILL.md, instruksi agentik, atau integrasi MCP server."
     }
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const initialSentRef = useRef(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -85,7 +90,7 @@ export default function AiAssistantPage() {
           ...newMessages,
           {
             role: "assistant",
-            content: `Maaf, terjadi kendala: ${data.error || "Gagal mendapatkan tanggapan dari model."}`
+            content: `Kendala: ${data.error || "Gagal mendapatkan tanggapan dari model."}`
           }
         ]);
       }
@@ -94,13 +99,20 @@ export default function AiAssistantPage() {
         ...newMessages,
         {
           role: "assistant",
-          content: "Terjadi kesalahan koneksi saat menghubungi server AI."
+          content: "Terjadi kesalahan jaringan saat menghubungi server AI."
         }
       ]);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (queryParam && isAuthenticated && !initialSentRef.current) {
+      initialSentRef.current = true;
+      handleSend(queryParam);
+    }
+  }, [queryParam, isAuthenticated]);
 
   if (!isAuthenticated) {
     return (
@@ -111,28 +123,32 @@ export default function AiAssistantPage() {
 
         <div className="space-y-2">
           <h1 className="text-2xl font-bold tracking-tight text-text-primary">
-            Login Diperlukan
+            Masuk untuk Konsultasi AI
           </h1>
           <p className="text-xs sm:text-sm text-text-secondary leading-relaxed">
-            Untuk menggunakan AI Assistant bertenaga model <span className="font-mono text-accent font-semibold">step-5-preview</span>, Anda harus masuk (login) terlebih dahulu.
+            Asisten AI bertenaga model <span className="font-mono text-accent font-semibold">step-5-preview</span> siap membaca dan merekomendasikan skill dari seluruh database.
           </p>
         </div>
 
         <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             href="/login?redirect=/ai/"
-            className="w-full sm:w-auto h-10 px-6 rounded-[4px] bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
+            className="w-full sm:w-auto h-10 px-5 rounded-[4px] bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
           >
-            <span>Masuk Sekarang</span>
+            <span>Masuk / Google</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
 
-          <Link
-            href="/"
-            className="w-full sm:w-auto h-10 px-4 rounded-[4px] border border-border text-xs font-medium text-text-secondary hover:text-text-primary flex items-center justify-center transition-colors"
+          <button
+            type="button"
+            onClick={() => {
+              loginDemo("USER");
+            }}
+            className="w-full sm:w-auto h-10 px-4 rounded-[4px] border border-border text-xs font-medium text-text-primary hover:bg-surface-raised flex items-center justify-center gap-1.5 transition-colors"
           >
-            Kembali ke Katalog
-          </Link>
+            <Sparkles className="w-3.5 h-3.5 text-accent" />
+            <span>Coba Cepat (Mode Tamu)</span>
+          </button>
         </div>
       </div>
     );
@@ -144,7 +160,7 @@ export default function AiAssistantPage() {
         <div>
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-text-primary transition-colors mb-2"
+            className="inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-text-primary transition-colors mb-2 font-mono"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             Katalog Skill
@@ -221,7 +237,7 @@ export default function AiAssistantPage() {
               </div>
               <div className="p-3 rounded-lg bg-surface-raised border border-border text-xs text-text-muted flex items-center gap-2">
                 <RefreshCw className="w-3.5 h-3.5 animate-spin text-accent" />
-                <span>Memproses dengan model step-5-preview...</span>
+                <span>Membaca database & mencocokkan skill...</span>
               </div>
             </div>
           )}
@@ -272,5 +288,13 @@ export default function AiAssistantPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AiAssistantPage() {
+  return (
+    <Suspense fallback={<div className="max-w-4xl mx-auto py-12 text-center text-xs text-text-muted font-mono">Memuat AI Assistant...</div>}>
+      <AiAssistantContent />
+    </Suspense>
   );
 }

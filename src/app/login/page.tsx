@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, Suspense } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, ArrowRight, Lock, Mail, User, AlertCircle, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, Lock, Mail, User, AlertCircle, Sparkles, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/brand/logo";
 import { useAuth } from "@/components/providers/auth-provider";
@@ -11,7 +11,7 @@ import { useAuth } from "@/components/providers/auth-provider";
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { loginUser, registerUser, loginWithGoogle, loginDemo } = useAuth();
+  const { user, isAuthenticated, loginUser, registerUser, loginWithGoogle, loginDemo } = useAuth();
 
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [name, setName] = useState("");
@@ -19,8 +19,40 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   const redirectTo = searchParams.get("redirect") || "/";
+  const errorParam = searchParams.get("error");
+  const authSuccess = searchParams.get("auth_success");
+
+  useEffect(() => {
+    if (authSuccess === "true" && isAuthenticated) {
+      setSuccessMsg("Berhasil masuk akun.");
+      const t = setTimeout(() => {
+        router.push(redirectTo);
+      }, 500);
+      return () => clearTimeout(t);
+    }
+    if (isAuthenticated) {
+      router.push(redirectTo);
+    }
+  }, [isAuthenticated, authSuccess, redirectTo, router]);
+
+  useEffect(() => {
+    if (errorParam) {
+      if (errorParam === "neon_auth_unconfigured") {
+        setError("Layanan Neon Auth belum dikonfigurasi.");
+      } else if (errorParam === "oauth_init_failed") {
+        setError("Gagal memulai Google OAuth. Silakan coba lagi.");
+      } else if (errorParam === "neon_session_not_found") {
+        setError("Sesi Neon Auth tidak ditemukan setelah login Google.");
+      } else if (errorParam === "neon_callback_exception") {
+        setError("Kendala sinkronisasi sesi callback Neon Auth.");
+      } else {
+        setError(`Otentikasi gagal: ${errorParam}`);
+      }
+    }
+  }, [errorParam]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,7 +109,7 @@ function LoginForm() {
           onClick={loginWithGoogle}
           className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-lg border border-border bg-background hover:bg-surface-raised text-xs font-medium text-text-primary transition shadow-sm"
         >
-          <svg className="w-4 h-4" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
             <path
               fill="#4285F4"
               d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -121,6 +153,13 @@ function LoginForm() {
             Daftar Akun Baru
           </button>
         </div>
+
+        {successMsg && (
+          <div className="flex items-center gap-2 p-3 rounded-lg border border-status-success/30 bg-status-success/10 text-status-success text-xs">
+            <CheckCircle2 className="w-4 h-4 shrink-0" />
+            <span>{successMsg}</span>
+          </div>
+        )}
 
         {error && (
           <div className="flex items-center gap-2 p-3 rounded-lg border border-status-error/30 bg-status-error/10 text-status-error text-xs">

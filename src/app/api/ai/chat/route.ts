@@ -11,9 +11,10 @@ export async function POST(request: NextRequest) {
     const cookieStore = await cookies();
     const cookieEmail = cookieStore.get("skill_uiai_email")?.value;
     const cookieRole = cookieStore.get("skill_uiai_role")?.value;
+    const authCookie = cookieStore.get("skill_uiai_auth")?.value;
     const headerEmail = request.headers.get("x-user-email");
 
-    const isAuthenticated = Boolean(cookieEmail || headerEmail || cookieRole);
+    const isAuthenticated = Boolean(cookieEmail || headerEmail || cookieRole || authCookie);
     if (!isAuthenticated) {
       return NextResponse.json(
         {
@@ -34,24 +35,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const skillsCatalog = await getPublishedSkills({ limit: 50 });
+    const skillsCatalog = await getPublishedSkills({ limit: 200 });
     const skillsSummary = skillsCatalog
-      .map(
-        (s) =>
-          `- ${s.name} (slug: ${s.slug}, category: ${s.categories.map((c) => c.name).join(", ")}): ${s.summary}. Install: ${s.primaryRecipe?.command || "npx skills add " + s.slug}`
-      )
+      .map((s) => {
+        const catNames = s.categories.map((c) => c.name).join(", ") || s.skillType;
+        const installCmd = s.primaryRecipe?.command || `npx skills add dresar/SKILL-IA-AGENT -s ${s.slug}`;
+        const briefDesc = ((s as any).description || s.summary || "").slice(0, 150).replace(/\n/g, " ");
+        return `- [${s.name}](/skills/${s.slug}) (slug: ${s.slug}, kategori: ${catNames}): ${s.summary}. Deskripsi: ${briefDesc}. Perintah: ${installCmd}`;
+      })
       .join("\n");
 
-    const systemPrompt = `You are SkillAgent Assistant powered by step-5-preview on byNara router.
-You assist developers in discovering, configuring, and writing skills for autonomous AI coding agents (Google Antigravity, Claude Code CLI, Cursor, Cline).
+    const systemPrompt = `Anda adalah SkillAgent Assistant cerdas bertenaga model step-5-preview pada router byNara.
+Tugas utama Anda adalah merekomendasikan skill agen pengkodean otomatis (Google Antigravity, Claude Code CLI, Cursor, Cline, Aider) berdasarkan kebutuhan pengguna.
 
-The following skills are currently published and verified in the SkillAgent Registry:
+Berikut adalah daftar seluruh skill tervalidasi yang ada di dalam database SkillAgent Registry saat ini:
 ${skillsSummary}
 
-Guidelines:
-1. Provide accurate install commands for Antigravity, Claude Code, and Cursor.
-2. Encourage anti-slop, clean minimal UI, and the strict zero-comment (nokomen) standard when asked.
-3. Be direct, concise, and helpful. Do not use filler or excessive conversational fluff.`;
+Aturan Penanganan Permintaan:
+1. BACA dan COCOKKAN seluruh judul skill, ringkasan, dan kategori di atas dengan kebutuhan yang ditanyakan pengguna.
+2. Ketika merekomendasikan skill, WAJIB sebutkan nama skill dengan link Markdown: [Nama Skill](/skills/{slug}).
+3. Berikan penjelasan singkat 1-2 kalimat MENGAPA skill tersebut cocok untuk kebutuhan pengguna.
+4. Sertakan perintah instalasi CLI satu baris yang sesuai.
+5. Jika pengguna menanyakan skill yang belum ada di katalog, sarankan skill terdekat yang relevan dan beri tahu bahwa mereka dapat mengajukan skill baru melalui menu [Submit Skill](/submit).
+6. Terapkan gaya bahasa ringkas, profesional, anti-slop (tanpa basa-basi berlebih), dan dukung standar clean code zero-comment (nokomen).`;
 
     const conversation = [
       { role: "system", content: systemPrompt },

@@ -28,6 +28,7 @@ interface AuthContextType {
 const STORAGE_KEY = "skill_uiai_auth";
 const ROLE_COOKIE = "skill_uiai_role";
 const EMAIL_COOKIE = "skill_uiai_email";
+const AUTH_COOKIE = "skill_uiai_auth";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 
 const AuthContext = createContext<AuthContextType>({
@@ -51,11 +52,13 @@ function writeAuthCookies(user: AuthUser | null) {
   if (!user) {
     document.cookie = `${ROLE_COOKIE}=; path=/; max-age=0; SameSite=Lax${secure}`;
     document.cookie = `${EMAIL_COOKIE}=; path=/; max-age=0; SameSite=Lax${secure}`;
+    document.cookie = `${AUTH_COOKIE}=; path=/; max-age=0; SameSite=Lax${secure}`;
     return;
   }
 
   document.cookie = `${ROLE_COOKIE}=${encodeURIComponent(user.role)}; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax${secure}`;
   document.cookie = `${EMAIL_COOKIE}=${encodeURIComponent(user.email)}; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax${secure}`;
+  document.cookie = `${AUTH_COOKIE}=${encodeURIComponent(JSON.stringify(user))}; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax${secure}`;
 }
 
 function isStoredUser(value: unknown): value is AuthUser {
@@ -68,15 +71,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
 
   useEffect(() => {
+    let localFound = false;
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (!stored) return;
-      const parsed = JSON.parse(stored);
-      if (isStoredUser(parsed)) {
-        setUser(parsed);
-        writeAuthCookies(parsed);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (isStoredUser(parsed)) {
+          setUser(parsed);
+          writeAuthCookies(parsed);
+          localFound = true;
+        }
       }
     } catch {}
+
+    const hasAuthSuccess = typeof window !== "undefined" && window.location.search.includes("auth_success");
+
+    if (!localFound || hasAuthSuccess) {
+      fetch("/api/auth/session/", { cache: "no-store" })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && data.isAuthenticated && data.user && isStoredUser(data.user)) {
+            setUser(data.user);
+            writeAuthCookies(data.user);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data.user));
+          }
+        })
+        .catch(() => {});
+    }
   }, []);
 
   const saveUser = (newUser: AuthUser | null) => {
@@ -178,7 +199,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loginWithGoogle = () => {
     if (typeof window !== "undefined") {
-      window.location.href = "/api/auth/google/";
+      const redirectTarget = window.location.pathname + window.location.search;
+      window.location.href = `/api/auth/google/?redirect=${encodeURIComponent(redirectTarget)}`;
     }
   };
 
