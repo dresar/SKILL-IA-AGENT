@@ -6,7 +6,7 @@ import { getPublishedSkills } from "@/server/services/skills";
 import { SkillCard } from "@/components/skills/skill-card";
 import { Button } from "@/components/ui/button";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dresar.github.io";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://skills-smoky.vercel.app";
 
 export const metadata: Metadata = {
   title: "Library",

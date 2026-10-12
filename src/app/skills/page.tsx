@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { getPublishedSkills, getAllCategories } from "@/server/services/skills";
 import { SkillsDirectory } from "@/components/skills/skills-directory";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dresar.github.io";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://skills-smoky.vercel.app";
 
 export const metadata: Metadata = {
   title: "Skills",

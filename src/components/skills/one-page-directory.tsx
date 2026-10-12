@@ -3,10 +3,6 @@
 import React, { useMemo, useState } from "react";
 import { ChevronDown, Search, X } from "lucide-react";
 import { SkillCard, SkillCardData } from "./skill-card";
-import { SkillDetailDrawer } from "./skill-detail-drawer";
-import { SkillDemoModal } from "./skill-demo-modal";
-import { SubmitSkillModal } from "./submit-skill-modal";
-import { McpPlayground } from "@/components/mcp/mcp-playground";
 
 interface CategoryItem {
   id: string;
@@ -27,26 +23,23 @@ export function OnePageDirectory({
   initialCategories
 }: OnePageDirectoryProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("design-ui-ux");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [sortBy, setSortBy] = useState<SortOption>("popular");
   const [sortOpen, setSortOpen] = useState(false);
-  const [selectedSkill, setSelectedSkill] = useState<SkillCardData | null>(null);
-  const [demoSkill, setDemoSkill] = useState<SkillCardData | null>(null);
-  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
 
   const activeCategoryObj = useMemo(() => {
     if (selectedCategory === "all") {
       return {
         slug: "all",
         name: "All Skills",
-        description: "Verified agent skills, microcopy standards, and MCP servers."
+        description: "Verified agent skills, microcopy standards, and MCP tools."
       };
     }
     return (
       initialCategories.find((c) => c.slug === selectedCategory) || {
-        slug: "design-ui-ux",
-        name: "Design & UI/UX",
-        description: "UI design systems, accessibility, and user experience patterns"
+        slug: selectedCategory,
+        name: selectedCategory.toUpperCase(),
+        description: "Curated skills for autonomous agents."
       }
     );
   }, [selectedCategory, initialCategories]);
@@ -63,7 +56,7 @@ export function OnePageDirectory({
 
       const matchCat =
         selectedCategory === "all" ||
-        s.categories.some((c) => c.slug === selectedCategory || (selectedCategory === "design-ui-ux" && (c.slug === "design-ui-ux" || c.slug === "frontend" || c.slug === "design-systems")));
+        s.categories.some((c) => c.slug === selectedCategory);
 
       return matchSearch && matchCat;
     });
@@ -83,13 +76,6 @@ export function OnePageDirectory({
       return 0;
     });
   }, [initialSkills, searchQuery, selectedCategory, sortBy]);
-
-  const categorySkillsCount = useMemo(() => {
-    if (selectedCategory === "design-ui-ux") {
-      return 23;
-    }
-    return filteredSkills.length;
-  }, [selectedCategory, filteredSkills.length]);
 
   return (
     <div className="space-y-10">
@@ -118,16 +104,16 @@ export function OnePageDirectory({
 
         <div className="space-y-2">
           <p className="text-[11px] font-mono tracking-widest text-neutral-400 dark:text-neutral-500 uppercase font-semibold">
-            CATEGORY
+            CATALOG
           </p>
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
             {activeCategoryObj.name}
           </h1>
           <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 max-w-2xl">
-            {activeCategoryObj.description || "UI design systems, accessibility, and user experience patterns"}
+            {activeCategoryObj.description || "Discover verified AI agent skills and production-ready tools."}
           </p>
           <p className="text-xs font-mono tracking-wider text-neutral-400 dark:text-neutral-500 uppercase pt-1">
-            {categorySkillsCount} SKILLS IN THIS CATEGORY
+            {filteredSkills.length} SKILLS AVAILABLE
           </p>
         </div>
       </div>
@@ -171,7 +157,7 @@ export function OnePageDirectory({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={`Search ${activeCategoryObj.name.toLowerCase()} skills...`}
+            placeholder={`Search ${activeCategoryObj.name.toLowerCase()}...`}
             className="h-11 w-full rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 pl-10 pr-10 text-xs sm:text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 outline-none transition focus:border-neutral-900 dark:focus:border-neutral-100 focus:ring-1 focus:ring-neutral-900 dark:focus:ring-neutral-100"
           />
           {searchQuery && (
@@ -244,8 +230,6 @@ export function OnePageDirectory({
             <SkillCard
               key={skill.id}
               skill={skill}
-              onSelect={(s) => setSelectedSkill(s)}
-              onDemo={(s) => setDemoSkill(s)}
             />
           ))}
         </div>
@@ -269,29 +253,6 @@ export function OnePageDirectory({
           </button>
         </div>
       )}
-
-      <div className="pt-8 border-t border-neutral-200 dark:border-neutral-800">
-        <McpPlayground />
-      </div>
-
-      <SkillDetailDrawer
-        skill={selectedSkill}
-        onClose={() => setSelectedSkill(null)}
-        onOpenDemo={(s) => {
-          setSelectedSkill(null);
-          setDemoSkill(s);
-        }}
-      />
-
-      <SkillDemoModal
-        skill={demoSkill}
-        onClose={() => setDemoSkill(null)}
-      />
-
-      <SubmitSkillModal
-        isOpen={isSubmitModalOpen}
-        onClose={() => setIsSubmitModalOpen(false)}
-      />
     </div>
   );
 }

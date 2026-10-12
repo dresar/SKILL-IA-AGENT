@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { FilterBar } from "@/components/skills/filter-bar";
 import { SkillCard, SkillCardData } from "@/components/skills/skill-card";
-import { SkillDetailDrawer } from "@/components/skills/skill-detail-drawer";
-import { SkillDemoModal } from "@/components/skills/skill-demo-modal";
 
 interface Category {
   id: string;
@@ -23,9 +21,6 @@ export function SkillsDirectory({ initialSkills, categories }: SkillsDirectoryPr
   const query = (searchParams.get("q") || "").toLowerCase().trim();
   const category = searchParams.get("category") || "";
   const type = searchParams.get("type") || "";
-
-  const [selectedSkill, setSelectedSkill] = useState<SkillCardData | null>(null);
-  const [demoSkill, setDemoSkill] = useState<SkillCardData | null>(null);
 
   const filtered = useMemo(() => {
     return initialSkills.filter((skill) => {
@@ -57,8 +52,6 @@ export function SkillsDirectory({ initialSkills, categories }: SkillsDirectoryPr
             <SkillCard
               key={skill.id}
               skill={skill}
-              onSelect={(s) => setSelectedSkill(s)}
-              onDemo={(s) => setDemoSkill(s)}
             />
           ))}
         </div>
@@ -70,20 +63,6 @@ export function SkillsDirectory({ initialSkills, categories }: SkillsDirectoryPr
           </p>
         </div>
       )}
-
-      <SkillDetailDrawer
-        skill={selectedSkill}
-        onClose={() => setSelectedSkill(null)}
-        onOpenDemo={(s) => {
-          setSelectedSkill(null);
-          setDemoSkill(s);
-        }}
-      />
-
-      <SkillDemoModal
-        skill={demoSkill}
-        onClose={() => setDemoSkill(null)}
-      />
     </div>
   );
 }

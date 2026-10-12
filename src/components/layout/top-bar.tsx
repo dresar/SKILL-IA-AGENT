@@ -3,30 +3,23 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LogOut, Menu, Search, X } from "lucide-react";
+import { LogOut, Menu, Search, Sparkles, X } from "lucide-react";
 import { Logo } from "@/components/brand/logo";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useAuth } from "@/components/providers/auth-provider";
-import { SubmitSkillModal } from "@/components/skills/submit-skill-modal";
-
-interface TopBarProps {
-  onSubmitSkillClick?: () => void;
-}
 
 const navLinks = [
   { href: "/", label: "Skills" },
-  { href: "/#mcp-tools", label: "MCP Servers" },
-  { href: "/?category=workflows", label: "Workflows" },
-  { href: "/#tools", label: "Tools" },
-  { href: "/library", label: "Learn" }
+  { href: "/dokumentasi", label: "Dokumentasi" },
+  { href: "/ai", label: "AI Assistant" },
+  { href: "/submit", label: "Submit Skill" }
 ];
 
-export function TopBar({ onSubmitSkillClick }: TopBarProps) {
+export function TopBar() {
   const router = useRouter();
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [isSubmitOpen, setIsSubmitOpen] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -61,15 +54,18 @@ export function TopBar({ onSubmitSkillClick }: TopBarProps) {
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="text-text-secondary hover:text-text-primary transition-colors py-1"
+                  className="text-text-secondary hover:text-text-primary transition-colors py-1 flex items-center gap-1.5"
                 >
-                  {link.label}
+                  {link.label === "AI Assistant" && (
+                    <Sparkles className="h-3.5 w-3.5 text-accent" />
+                  )}
+                  <span>{link.label}</span>
                 </Link>
               ))}
               {isAdmin && (
                 <Link
                   href="/admin"
-                  className="text-text-secondary hover:text-text-primary transition-colors py-1"
+                  className="text-text-secondary hover:text-text-primary transition-colors py-1 font-semibold text-accent"
                 >
                   Admin
                 </Link>
@@ -78,14 +74,14 @@ export function TopBar({ onSubmitSkillClick }: TopBarProps) {
           </div>
 
           <div className="flex items-center gap-3">
-            <form onSubmit={handleSearch} className="relative hidden md:block w-64 lg:w-72">
+            <form onSubmit={handleSearch} className="relative hidden md:block w-60 lg:w-68">
               <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-muted" />
               <input
                 data-search-input="true"
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search 193 skills..."
+                placeholder="Search skills..."
                 className="h-9 w-full rounded-[4px] border border-border bg-background pl-8 pr-9 text-xs text-text-primary placeholder:text-text-muted outline-none transition focus:border-neutral-900 dark:focus:border-neutral-200 focus:ring-1 focus:ring-neutral-900 dark:focus:ring-neutral-200"
               />
               <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 rounded border border-border bg-surface px-1.5 py-0.5 text-[10px] font-mono text-text-muted">
@@ -93,19 +89,12 @@ export function TopBar({ onSubmitSkillClick }: TopBarProps) {
               </span>
             </form>
 
-            <button
-              type="button"
-              onClick={() => {
-                if (onSubmitSkillClick) {
-                  onSubmitSkillClick();
-                } else {
-                  setIsSubmitOpen(true);
-                }
-              }}
-              className="hidden sm:inline-flex items-center justify-center h-9 px-4 rounded-[4px] bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 hover:bg-neutral-800 dark:hover:bg-neutral-200 text-xs font-semibold tracking-wider uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 active:scale-[0.98]"
+            <Link
+              href="/submit"
+              className="hidden sm:inline-flex items-center justify-center h-9 px-3.5 rounded-[4px] bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 hover:bg-neutral-800 dark:hover:bg-neutral-200 text-xs font-semibold tracking-wider uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 active:scale-[0.98]"
             >
               Submit a Skill
-            </button>
+            </Link>
 
             <ThemeToggle />
 
@@ -152,7 +141,7 @@ export function TopBar({ onSubmitSkillClick }: TopBarProps) {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search 193 skills..."
+              placeholder="Search skills..."
               className="h-10 w-full rounded-[4px] border border-border bg-background pl-9 pr-3 text-sm text-text-primary placeholder:text-text-muted outline-none focus:border-neutral-900 dark:focus:border-neutral-200"
             />
           </form>
@@ -163,34 +152,30 @@ export function TopBar({ onSubmitSkillClick }: TopBarProps) {
                 key={link.label}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className="rounded px-3 py-2 text-text-secondary hover:bg-surface-raised hover:text-text-primary transition-colors"
+                className="rounded px-3 py-2 text-text-secondary hover:bg-surface-raised hover:text-text-primary transition-colors flex items-center justify-between"
               >
-                {link.label}
+                <span>{link.label}</span>
+                {link.label === "AI Assistant" && (
+                  <Sparkles className="h-4 w-4 text-accent" />
+                )}
               </Link>
             ))}
             {isAdmin && (
               <Link
                 href="/admin"
                 onClick={() => setMobileOpen(false)}
-                className="rounded px-3 py-2 text-text-secondary hover:bg-surface-raised hover:text-text-primary transition-colors"
+                className="rounded px-3 py-2 text-accent font-semibold hover:bg-surface-raised transition-colors"
               >
                 Admin Panel
               </Link>
             )}
-            <button
-              type="button"
-              onClick={() => {
-                setMobileOpen(false);
-                if (onSubmitSkillClick) {
-                  onSubmitSkillClick();
-                } else {
-                  setIsSubmitOpen(true);
-                }
-              }}
+            <Link
+              href="/submit"
+              onClick={() => setMobileOpen(false)}
               className="mt-2 flex h-10 w-full items-center justify-center rounded-[4px] bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 font-semibold text-xs uppercase tracking-wider"
             >
               Submit a Skill
-            </button>
+            </Link>
             {isAuthenticated ? (
               <button
                 type="button"
@@ -214,11 +199,6 @@ export function TopBar({ onSubmitSkillClick }: TopBarProps) {
           </nav>
         </div>
       )}
-
-      <SubmitSkillModal
-        isOpen={isSubmitOpen}
-        onClose={() => setIsSubmitOpen(false)}
-      />
     </header>
   );
 }

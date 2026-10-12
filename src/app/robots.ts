@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 export const dynamic = "force-static";
 
 export default function robots(): MetadataRoute.Robots {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dresar.github.io";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://skills-smoky.vercel.app";
   return {
     rules: [
       {
@@ -25,7 +25,19 @@ export default function robots(): MetadataRoute.Robots {
           "Bytespider",
           "Diffbot"
         ],
-        allow: ["/", "/skills/", "/categories/", "/library/", "/llms.txt", "/llms-full.txt", "/api/skills", "/api/mcp"],
+        allow: [
+          "/",
+          "/skills/",
+          "/categories/",
+          "/dokumentasi/",
+          "/ai/",
+          "/submit/",
+          "/library/",
+          "/llms.txt",
+          "/llms-full.txt",
+          "/api/skills",
+          "/api/mcp"
+        ],
         disallow: ["/admin", "/admin/", "/login", "/login/", "/api/admin/"]
       }
     ],

@@ -4,7 +4,7 @@ import { getPublishedSkills, getAllCategories } from "@/server/services/skills";
 export const dynamic = "force-static";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dresar.github.io";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://skills-smoky.vercel.app";
   const [skillsList, categoriesList] = await Promise.all([
     getPublishedSkills({ limit: 100 }),
     getAllCategories()
@@ -36,6 +36,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: "daily" as const,
       priority: 0.9
+    },
+    {
+      url: `${siteUrl}/dokumentasi/`,
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: 0.9
+    },
+    {
+      url: `${siteUrl}/ai/`,
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: 0.8
+    },
+    {
+      url: `${siteUrl}/submit/`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8
     },
     {
       url: `${siteUrl}/library/`,

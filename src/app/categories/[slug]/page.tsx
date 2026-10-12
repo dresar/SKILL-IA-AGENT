@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
     };
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dresar.github.io";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://skills-smoky.vercel.app";
 
   return {
     title: `${currentCategory.name} Skills`,
@@ -68,7 +68,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     limit: 24
   });
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dresar.github.io";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://skills-smoky.vercel.app";
 
   const jsonLd = {
     "@context": "https://schema.org",

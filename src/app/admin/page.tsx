@@ -522,7 +522,9 @@ export default function AdminPage() {
             <div className="rounded-2xl bg-surface border border-border p-4 sm:p-5 space-y-1">
               <p className="text-xs font-medium text-text-muted">Total Skill</p>
               <p className="text-2xl sm:text-3xl font-extrabold text-text-primary">{skillsList.length}</p>
-              <span className="text-[10px] text-status-success font-medium">12 Terverifikasi</span>
+              <span className="text-[10px] text-status-success font-medium">
+                {skillsList.filter((s) => s.verificationStatus === "verified").length} Terverifikasi
+              </span>
             </div>
 
             <div className="rounded-2xl bg-surface border border-border p-4 sm:p-5 space-y-1">

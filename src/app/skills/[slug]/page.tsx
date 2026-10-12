@@ -3,7 +3,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   ExternalLink,
-  ShieldCheck,
   Calendar,
   User,
   FileText,
@@ -15,7 +14,6 @@ import { InstallBox } from "@/components/skills/install-box";
 import { ShowcaseViewer } from "@/components/skills/showcase-viewer";
 import { SkillCard } from "@/components/skills/skill-card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import type { Metadata } from "next";
 import { formatDate } from "@/lib/utils";
 
@@ -42,9 +40,8 @@ export async function generateMetadata({ params }: SkillDetailPageProps): Promis
     };
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dresar.github.io";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://skills-smoky.vercel.app";
   const previewImg = `/previews/${skill.slug}.svg`;
-
   const installCommand = (skill.recipes && skill.recipes.length > 0 ? skill.recipes[0].command : "") || `npx skills add dresar/SKILL-IA-AGENT -s ${skill.slug}`;
 
   return {
@@ -99,10 +96,11 @@ export default async function SkillDetailPage({ params }: SkillDetailPageProps) 
     notFound();
   }
 
-  const related = await getPublishedSkills({ limit: 3 });
+  const related = await getPublishedSkills({ limit: 4 });
   const otherSkills = related.filter((s) => s.slug !== skill.slug).slice(0, 3);
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dresar.github.io";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://skills-smoky.vercel.app";
   const installCommand = (skill.recipes && skill.recipes.length > 0 ? skill.recipes[0].command : "") || `npx skills add dresar/SKILL-IA-AGENT -s ${skill.slug}`;
+  const previewImg = `/previews/${skill.slug}.svg`;
 
   const skillJsonLd = {
     "@context": "https://schema.org",
@@ -117,7 +115,7 @@ export default async function SkillDetailPage({ params }: SkillDetailPageProps) 
         applicationSubCategory: "AI Agent Skill",
         operatingSystem: "Any",
         softwareRequirements: "Google Antigravity, Claude Code, Cursor, Node.js",
-        image: `${siteUrl}/previews/${skill.slug}.svg`,
+        image: `${siteUrl}${previewImg}`,
         offers: {
           "@type": "Offer",
           price: "0",
@@ -169,12 +167,20 @@ export default async function SkillDetailPage({ params }: SkillDetailPageProps) 
       />
       <div>
         <Link
-          href="/skills"
+          href="/"
           className="inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-text-primary transition-colors mb-4"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          Back to Skills
+          Back to Skills Catalog
         </Link>
+
+        <div className="rounded-xl overflow-hidden border border-border bg-neutral-950 mb-6 aspect-[21/9] max-h-72 w-full relative">
+          <img
+            src={previewImg}
+            alt={`${skill.name} Preview`}
+            className="w-full h-full object-cover"
+          />
+        </div>
 
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
           <div className="space-y-2">
@@ -253,12 +259,14 @@ export default async function SkillDetailPage({ params }: SkillDetailPageProps) 
         <InstallBox recipes={skill.recipes} />
       </section>
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-text-muted">
-          Showcase & Previews
-        </h2>
-        <ShowcaseViewer showcases={skill.showcases} skillName={skill.name} />
-      </section>
+      {skill.showcases && skill.showcases.length > 0 && (
+        <section className="space-y-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-text-muted">
+            Showcase & Previews
+          </h2>
+          <ShowcaseViewer showcases={skill.showcases} skillName={skill.name} />
+        </section>
+      )}
 
       <section className="space-y-3 rounded-xl bg-surface border border-border p-6">
         <h2 className="text-base font-semibold text-text-primary">Documentation</h2>
@@ -272,7 +280,7 @@ export default async function SkillDetailPage({ params }: SkillDetailPageProps) 
           <h2 className="text-lg font-semibold text-text-primary">Related Skills</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {otherSkills.map((s) => (
-              <SkillCard key={s.id} skill={s} />
+              <SkillCard key={s.id} skill={s as any} />
             ))}
           </div>
         </section>

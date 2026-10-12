@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const [publishedSkills, categories] = await Promise.all([
-    getPublishedSkills({ limit: 50 }),
+    getPublishedSkills({ limit: 100 }),
     getAllCategories()
   ]);
 

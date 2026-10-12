@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Compass, Folder, Github, Layers, LogOut, ShieldCheck, Terminal } from "lucide-react";
+import { Compass, Folder, Github, Layers, LogOut, ShieldCheck, Terminal, Sparkles } from "lucide-react";
 import { Logo } from "@/components/brand/logo";
 import { useAuth } from "@/components/providers/auth-provider";
 import { cn } from "@/lib/utils";
@@ -16,9 +16,9 @@ interface NavItem {
 
 const mainNav: NavItem[] = [
   { label: "Katalog", href: "/", icon: Compass },
-  { label: "Skill", href: "/skills", icon: Layers },
-  { label: "Library", href: "/library", icon: Folder },
-  { label: "MCP", href: "/#mcp-tools", icon: Terminal }
+  { label: "Dokumentasi", href: "/dokumentasi", icon: Terminal },
+  { label: "AI Assistant", href: "/ai", icon: Sparkles },
+  { label: "Submit Skill", href: "/submit", icon: Folder }
 ];
 
 export function Sidebar() {
@@ -43,7 +43,7 @@ export function Sidebar() {
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-surface-raised text-text-primary"
+                    ? "bg-surface-raised text-text-primary font-semibold"
                     : "text-text-secondary hover:bg-surface-raised/70 hover:text-text-primary"
                 )}
               >
@@ -59,7 +59,7 @@ export function Sidebar() {
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                 pathname.startsWith("/admin")
-                  ? "bg-surface-raised text-text-primary"
+                  ? "bg-surface-raised text-text-primary font-semibold"
                   : "text-text-secondary hover:bg-surface-raised/70 hover:text-text-primary"
               )}
             >
