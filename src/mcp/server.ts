@@ -15,7 +15,7 @@ import { eq, and } from "drizzle-orm";
 export function createMcpServer() {
   const server = new Server(
     {
-      name: "skill-uiai-registry",
+      name: "skillagent-registry",
       version: "1.0.0"
     },
     {
