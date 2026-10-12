@@ -13,7 +13,9 @@ import {
   CheckSquare,
   ShieldCheck,
   Cpu,
-  Wand2
+  Wand2,
+  FolderGit2,
+  Clock
 } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";
 import { cn } from "@/lib/utils";
@@ -36,43 +38,40 @@ export function AdminSidebar({ pendingCount = 0 }: AdminSidebarProps) {
   const { user } = useAuth();
   const currentTab = searchParams.get("tab") || "dashboard";
 
-  const isItemActive = (href: string, tabKey?: string) => {
-    if (tabKey) {
-      if (tabKey === "registry") {
-        return pathname === "/admin" && (currentTab === "registry" || currentTab === "dashboard" || !currentTab);
-      }
-      return pathname === "/admin" && currentTab === tabKey;
-    }
+  const isItemActive = (href: string) => {
     const normPath = (pathname || "").replace(/\/$/, "");
     const normHref = href.replace(/\/$/, "");
-    return normPath === normHref;
+    if (normHref === "/admin") {
+      return normPath === "/admin";
+    }
+    return normPath.startsWith(normHref);
   };
 
   const navGroups: Array<{ group: string; items: NavItem[] }> = [
     {
       group: "CORE OPERATIONS",
       items: [
-        { label: "Manajemen Registry (CRUD)", href: "/admin/?tab=registry", icon: Layers, tabKey: "registry" },
+        { label: "Registry Skills (Grid)", href: "/admin/", icon: Layers },
         {
           label: "Persetujuan Skill (ACC)",
-          href: "/admin/?tab=approvals",
+          href: "/admin/approvals/",
           icon: CheckSquare,
-          badge: pendingCount > 0 ? pendingCount : null,
-          tabKey: "approvals"
+          badge: pendingCount > 0 ? pendingCount : null
         }
       ]
     },
     {
-      group: "AI TOOLS & PREVIEW",
+      group: "AI & REPOSITORY",
       items: [
-        { label: "Prompt Studio 1:1", href: "/admin/?tab=prompt_studio", icon: Wand2, tabKey: "prompt_studio" },
-        { label: "AI Skill Analyzer", href: "/admin/?tab=ai_analyzer", icon: Sparkles, tabKey: "ai_analyzer" }
+        { label: "AI Skill Analyzer", href: "/admin/analyzer/", icon: Sparkles },
+        { label: "Import GitHub Ingestion", href: "/admin/imports/", icon: UploadCloud },
+        { label: "Sinkronisasi GitHub", href: "/admin/sync/", icon: FolderGit2 }
       ]
     },
     {
-      group: "OPERATIONAL & DOCS",
+      group: "SYSTEM & AUDIT",
       items: [
-        { label: "Sinkronisasi GitHub", href: "/admin/?tab=sync", icon: UploadCloud, tabKey: "sync" },
+        { label: "Log Audit Operasional", href: "/admin/audit/", icon: Clock },
         { label: "Dokumentasi & MCP", href: "/dokumentasi/", icon: FileCode }
       ]
     }
@@ -101,7 +100,7 @@ export function AdminSidebar({ pendingCount = 0 }: AdminSidebarProps) {
             <nav className="space-y-1">
               {group.items.map((item) => {
                 const Icon = item.icon;
-                const active = isItemActive(item.href, item.tabKey);
+                const active = isItemActive(item.href);
                 return (
                   <Link
                     key={item.label}
