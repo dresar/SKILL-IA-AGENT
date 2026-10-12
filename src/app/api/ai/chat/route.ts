@@ -88,6 +88,18 @@ Guidelines:
     }
 
     const data = await res.json();
+    if (data.error) {
+      const errMsg = typeof data.error === "string" ? data.error : data.error.message || "Model upstream error.";
+      return NextResponse.json(
+        {
+          ok: false,
+          error: errMsg,
+          details: data.error
+        },
+        { status: 502 }
+      );
+    }
+
     const answer = data.choices?.[0]?.message?.content || "Tidak ada tanggapan dari model.";
 
     return NextResponse.json({
